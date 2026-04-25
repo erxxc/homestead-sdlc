@@ -1,0 +1,23 @@
+name: Deploy to VPS
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 2222
+          script: |
+            echo "Deploying $(date)"
+            cd /opt/minecraft
+            sudo systemctl daemon-reload
+            sudo systemctl reload nginx 2>/dev/null || true
+            echo "Deploy complete"
