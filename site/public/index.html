@@ -4,28 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Homestead SMP</title>
-
-  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="shortcut icon" href="/favicon.ico">
-
-  <!-- Apple touch icon (iOS home screen) -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-
-  <!-- Web app manifest -->
   <link rel="manifest" href="/site.webmanifest">
-
-  <!-- Theme color (browser chrome on mobile) -->
   <meta name="theme-color" content="#166534">
-
-  <!-- Open Graph — shows sprout image when link shared on Discord/social -->
   <meta property="og:title" content="Homestead SMP">
   <meta property="og:description" content="Fabric 1.20.1 · Homestead 1.3.1 · mc.geigercapital.us">
   <meta property="og:image" content="https://play.geigercapital.us/apple-touch-icon.png">
   <meta property="og:url" content="https://play.geigercapital.us">
   <meta name="twitter:card" content="summary">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e8e8e8; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .container { max-width: 600px; padding: 48px 24px; text-align: center; }
+    h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { color: #888; margin-bottom: 48px; }
+    .status { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+    .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #22c55e; margin-right: 8px; animation: pulse 2s infinite; }
+    .status-dot.offline { background: #ef4444; animation: none; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .address { font-family: monospace; font-size: 1.1rem; color: #60a5fa; margin: 16px 0; }
+    .players { font-size: 0.9rem; color: #888; margin-top: 8px; }
+    .version { font-size: 0.8rem; color: #555; margin-top: 4px; }
+    .links { display: flex; gap: 12px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
+    .link { padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; transition: opacity 0.2s; }
+    .link:hover { opacity: 0.8; }
+    .link-primary { background: #1a56db; color: white; }
+    .link-secondary { border: 1px solid #2a2a2a; color: #888; }
+    .updated { font-size: 0.75rem; color: #444; margin-top: 24px; }
+  </style>
 </head>
 <body>
   <div class="container">
