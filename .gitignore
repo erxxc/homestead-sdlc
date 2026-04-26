@@ -28,3 +28,6 @@ Thumbs.db
 reports/raw/
 reports/lynis-baseline.txt
 reports/lynis-after.txt
+reports/nmap-full.txt
+reports/nmap-udp.txt
+reports/nikto-bluemap.txt.txt
