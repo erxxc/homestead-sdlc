@@ -26,3 +26,27 @@ Full Lynis report was initially staged for commit. Pre-commit review identified
 sensitive system details unsuitable for public repository. PR was closed without
 merging. Sanitised summary committed instead. Demonstrates branch protection and
 PR review controls functioning as intended.
+
+## Post-Remediation Result
+
+### Hardening Index
+67 / 100 (+2 from baseline)
+
+### Remediations Applied
+- Kernel hardening via sysctl.conf (accept_redirects, syncookies, dmesg_restrict)
+- Secure shared memory via fstab
+- auditd installed and enabled
+- Core dumps disabled
+- Login banner configured
+- VA space randomization enforced
+
+### Remaining Gaps (accepted)
+- Full disk encryption — not feasible on running VPS
+- AppArmor/SELinux — risk of breaking Minecraft service
+- Compiler tools installed — required for build dependencies
+- Some kernel parameters require reboot to fully apply
+
+### Notes
+Score improvement limited by game server operational requirements.
+Further hardening possible on dedicated security infrastructure.
+Full report retained locally — not committed per security best practice.
