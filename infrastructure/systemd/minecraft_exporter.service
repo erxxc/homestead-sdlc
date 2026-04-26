@@ -1,0 +1,17 @@
+[Unit]
+Description=Minecraft Exporter
+After=network.target minecraft.service
+
+[Service]
+User=minecraft
+EnvironmentFile=/etc/minecraft/secrets/rcon
+ExecStart=/usr/local/bin/minecraft-exporter \
+  --mc.rcon-password=${RCON_PASSWORD} \
+  --mc.rcon-address=localhost:25575 \
+  --mc.config-path=/opt/minecraft/exporter-config.yml \
+  --mc.world=/opt/minecraft/homestead/world
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,7 @@
+disabled-metrics:
+  minecraft:mined: true
+  minecraft:crafted: true
+  minecraft:used: true
+  minecraft:picked_up: true
+  minecraft:dropped: true
+listen-address: '127.0.0.1:9225'
