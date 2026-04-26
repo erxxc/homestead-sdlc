@@ -1,0 +1,13 @@
+[Unit]
+Description=Homestead Minecraft Security Audit Logger
+After=minecraft.service
+Requires=minecraft.service
+
+[Service]
+User=minecraft
+ExecStart=/usr/bin/python3 /opt/minecraft/security-monitor.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
