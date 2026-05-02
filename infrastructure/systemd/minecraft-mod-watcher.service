@@ -1,0 +1,12 @@
+[Unit]
+Description=Minecraft Mod Directory Watcher
+After=network.target
+
+[Service]
+User=minecraft
+ExecStart=/usr/local/bin/mod-watcher
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
