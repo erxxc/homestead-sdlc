@@ -24,13 +24,13 @@ sleep 10
 
 log_event "SERVER_STOP" "scheduled restart"
 
-mc "save-all flush"
+mcrcon -H localhost -P 25575 -p "$RCON_PASS" "save-all flush"
 sleep 5
 
-sudo systemctl restart minecraft
+/usr/bin/sudo /usr/bin/systemctl restart minecraft
 sleep 30
 
-if systemctl is-active --quiet minecraft; then
+if /usr/bin/sudo /usr/bin/systemctl is-active --quiet minecraft; then
     log_event "SERVER_START" "scheduled restart complete"
     echo "$TIMESTAMP PASS scheduled restart complete" >> "$LOG"
 else
