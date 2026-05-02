@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog — Homestead SMP</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <meta name="theme-color" content="#166634">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e8e8e8; min-height: 100vh; display: flex; flex-direction: column; }
+    .nav { padding: 14px 24px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; gap: 24px; }
+    .nav a { color: #888; text-decoration: none; font-size: 0.9rem; }
+    .nav a:hover { color: #e8e8e8; }
+    .container { max-width: 720px; margin: 0 auto; padding: 48px 24px; }
+    h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { color: #888; margin-bottom: 48px; }
+    .version-block { border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; margin-bottom: 16px; background: #1a1a1a; }
+    .version-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .version-tag { background: #166534; color: #4ade80; font-size: 0.8rem; font-weight: 600; padding: 4px 10px; border-radius: 6px; }
+    .version-date { color: #555; font-size: 0.85rem; }
+    .version-title { font-size: 1.1rem; font-weight: 600; }
+    .change-list { list-style: none; }
+    .change-list li { color: #aaa; font-size: 0.9rem; line-height: 1.7; padding: 3px 0; padding-left: 16px; position: relative; }
+    .change-list li::before { content: '—'; position: absolute; left: 0; color: #555; }
+    .change-list li.added::before { content: '+'; color: #4ade80; }
+    .change-list li.fixed::before { content: '✓'; color: #60a5fa; }
+    .change-list li.removed::before { content: '−'; color: #f87171; }
+    .section-label { font-size: 0.75rem; color: #555; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin: 12px 0 4px; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" style="font-weight:700;font-size:1rem;color:#e8e8e8;">🌿 Homestead SMP</a>
+    <a href="/guide.html">Getting Started</a>
+    <a href="/changelog.html" style="color:#e8e8e8;">Changelog</a>
+  </nav>
+  <div class="container">
+    <h1>Changelog</h1>
+    <p class="subtitle">Server and modpack updates for Homestead SMP.</p>
+
+    <div class="version-block">
+      <div class="version-header">
+        <span class="version-tag">1.3.4</span>
+        <span class="version-date">May 2, 2026</span>
+      </div>
+      <div class="version-title">Homestead 1.3.4 Upgrade</div>
+      <div class="section-label">Fixed</div>
+      <ul class="change-list">
+        <li class="fixed">Obsidian smithing template now obtainable — quest progression unblocked</li>
+        <li class="fixed">Abacus out-of-memory error resolved — more stable memory usage</li>
+        <li class="fixed">Server crashes from JER removed</li>
+      </ul>
+      <div class="section-label">Added</div>
+      <ul class="change-list">
+        <li class="added">Create: Slice & Dice — food automation with Create</li>
+        <li class="added">Automated mod checksum verification on every server start</li>
+        <li class="added">This changelog page</li>
+      </ul>
+      <div class="section-label">Updated</div>
+      <ul class="change-list">
+        <li>Obsidian Equipment Reworked → 0.4</li>
+        <li>Open Parties and Claims → 0.26.1</li>
+        <li>Moonlight Lib → 2.16.30</li>
+        <li>Simple Voice Chat → 2.6.16</li>
+        <li>Entity Culling → 1.10.1</li>
+        <li>JEI → 15.20.0.130</li>
+      </ul>
+    </div>
+
+    <div class="version-block">
+      <div class="version-header">
+        <span class="version-tag" style="background:#1a3a5c;color:#60a5fa;">1.3.1</span>
+        <span class="version-date">April 10, 2026</span>
+      </div>
+      <div class="version-title">Initial Server Launch</div>
+      <ul class="change-list">
+        <li>Server launched on Hetzner CX43</li>
+        <li>Homestead 1.3.1 on Fabric 1.20.1</li>
+        <li>BlueMap live map at map.geigercapital.us</li>
+        <li>Voice chat enabled on UDP 24454</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
