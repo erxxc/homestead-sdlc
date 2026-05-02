@@ -10,8 +10,9 @@
 ## Mod Sources
 | Source | Count | Verification |
 |---|---|---|
-| Modrinth (mrpack) | ~290 | SHA-256 checksum |
-| CurseForge (manual transfer) | 6 FTB mods | SHA-256 checksum |
+| CurseForge client pack (1.3.4) | 344 | SHA-256 checksum |
+| Client-only mods removed | 45 | Excluded from server deployment |
+| FTB mods (manual transfer) | 6 | SHA-256 checksum |
 | Manual compilation | 0 | N/A |
 
 ## FTB Mods (CurseForge — manual transfer)
@@ -25,11 +26,12 @@
 | ftb-xmod-compat-fabric | 2.1.2 | 2026-04-12 |
 
 ## Integrity Controls
-- SHA-256 checksums generated for all mod jars
+- SHA-256 checksums generated for all 344 server-side mod jars
 - Checksum file stored at /opt/minecraft/homestead/mod_checksums.sha256
 - Automated verification runs as systemd ExecStartPre on every server start
 - Any checksum failure stops the server and logs to /var/log/minecraft-integrity.log
 - Checksum baseline regenerated after any approved mod addition or update
+- Modpack version: Homestead 1.3.4 (upgraded from 1.3.1 on 2026-05-02)
 
 ## Infrastructure Dependencies
 | Component | Version | Source |
