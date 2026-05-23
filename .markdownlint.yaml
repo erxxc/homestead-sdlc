@@ -1,0 +1,13 @@
+# Markdownlint config — Homestead SDLC PoC
+# Default rule set with practical exclusions for compliance documentation
+# that uses wide tables, embedded HTML, and repeating section headers.
+
+default: true
+
+# Disabled rules (with rationale):
+MD013: false  # line-length — STRIDE/finding tables and risk-register rows exceed 80 chars by design
+MD024: false  # duplicate-heading — "### Added", "### Changed", "### Fixed" repeat across CHANGELOG version blocks
+MD041: false  # first-line-h1 — some docs lead with a metadata block instead of H1
+MD033: false  # no-inline-html — controlled HTML used in a few places (e.g. status badges)
+MD034: false  # bare-url — pentest evidence references include bare URLs by design
+MD060: false  # table-column-style — compact pipe-table style preferred for readability in raw markdown

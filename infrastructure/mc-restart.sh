@@ -1,10 +1,53 @@
 #!/bin/bash
-RCON_PASS=$(sed 's/^RCON_PASSWORD=//' /etc/minecraft/secrets/rcon)
 LOG="/var/log/minecraft-audit.json"
 TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
+rcon() {
+    python3 - "$1" <<'PY'
+import socket
+import struct
+import sys
+
+
+def read_secret():
+    with open("/etc/minecraft/secrets/rcon", encoding="utf-8") as f:
+        return f.read().strip().replace("RCON_PASSWORD=", "")
+
+
+def request(conn, request_id, request_type, body):
+    payload = struct.pack("<ii", request_id, request_type)
+    payload += body.encode("utf-8") + b"\x00\x00"
+    conn.sendall(struct.pack("<i", len(payload)) + payload)
+
+
+def response(conn):
+    length_data = conn.recv(4)
+    if len(length_data) != 4:
+        raise RuntimeError("short RCON length read")
+    (length,) = struct.unpack("<i", length_data)
+    payload = b""
+    while len(payload) < length:
+        chunk = conn.recv(length - len(payload))
+        if not chunk:
+            raise RuntimeError("short RCON payload read")
+        payload += chunk
+    return struct.unpack("<ii", payload[:8])[0]
+
+
+command = sys.argv[1]
+password = read_secret()
+with socket.create_connection(("localhost", 25575), timeout=5) as conn:
+    conn.settimeout(5)
+    request(conn, 1, 3, password)
+    if response(conn) == -1:
+        raise RuntimeError("RCON authentication failed")
+    request(conn, 2, 2, command)
+    response(conn)
+PY
+}
+
 announce() {
-    mcrcon -H localhost -P 25575 -p "$RCON_PASS" "say $1" 2>/dev/null
+    rcon "say $1" 2>/dev/null
 }
 
 log_event() {
@@ -24,7 +67,7 @@ sleep 10
 
 log_event "SERVER_STOP" "scheduled restart"
 
-mcrcon -H localhost -P 25575 -p "$RCON_PASS" "save-all flush"
+rcon "save-all flush"
 sleep 5
 
 /usr/bin/sudo /usr/bin/systemctl restart minecraft

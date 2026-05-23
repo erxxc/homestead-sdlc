@@ -1,3 +1,4 @@
+# Deployed from security/audit-logger/security-monitor.py
 [Unit]
 Description=Homestead Minecraft Security Audit Logger
 After=minecraft.service

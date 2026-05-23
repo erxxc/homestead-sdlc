@@ -1,3 +1,4 @@
+# Deployed from security/mod-watcher.sh (installed as /usr/local/bin/mod-watcher)
 [Unit]
 Description=Minecraft Mod Directory Watcher
 After=network.target

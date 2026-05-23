@@ -12,9 +12,8 @@ jobs:
       - name: Install black
         run: pip install black
       - name: Check Python formatting
-        run: black --check api/ security/ --diff || true
+        run: black --check api/ security/ --diff
       - name: Markdown lint
         uses: DavidAnson/markdownlint-cli2-action@v23
         with:
           globs: 'docs/**/*.md'
-        continue-on-error: true

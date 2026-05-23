@@ -1,6 +1,7 @@
 # Control Framework — Homestead SDLC PoC
 
 ## Mapping Methodology
+
 Controls mapped to SOC 2 Trust Services Criteria (TSC),
 ISO 27001 Annex A, and NIST Cybersecurity Framework (CSF).
 
@@ -42,6 +43,7 @@ ISO 27001 Annex A, and NIST Cybersecurity Framework (CSF).
 ## Coverage Summary
 
 ### SOC 2 Trust Services Criteria
+
 | Category | Controls | Coverage |
 |---|---|---|
 | Security (CC) | C-001 through C-029 | High |
@@ -51,6 +53,7 @@ ISO 27001 Annex A, and NIST Cybersecurity Framework (CSF).
 | Privacy (P) | See privacy-notice.md | Medium |
 
 ### ISO 27001 Annex A Coverage
+
 | Domain | Controls Addressed |
 |---|---|
 | A.9 Access Control | C-001 through C-007, C-028 |
@@ -62,6 +65,7 @@ ISO 27001 Annex A, and NIST Cybersecurity Framework (CSF).
 | A.17 Business Continuity | C-019, C-021 |
 
 ### NIST CSF Coverage
+
 | Function | Controls |
 |---|---|
 | Identify | C-012, C-029 |

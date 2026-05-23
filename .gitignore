@@ -4,7 +4,6 @@
 *.pem
 secrets/
 *password*
-secrets/
 *.secret
 rcon_secret
 *_secret.txt
@@ -30,4 +29,6 @@ reports/lynis-baseline.txt
 reports/lynis-after.txt
 reports/nmap-full.txt
 reports/nmap-udp.txt
-reports/nikto-bluemap.txt.txt
+
+# Local post-PR planning
+POST_PR_AUDIT_LAUNDRY_LIST.md
