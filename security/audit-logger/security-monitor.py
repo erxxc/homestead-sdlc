@@ -38,7 +38,7 @@ def get_position():
     try:
         with open(STATE_FILE) as f:
             return int(f.read().strip())
-    except:
+    except (OSError, ValueError):
         return 0
 
 
