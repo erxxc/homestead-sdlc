@@ -15,4 +15,5 @@ jobs:
         with:
           target: 'https://map.geigercapital.us'
           fail_action: false
+          allow_issue_writing: false
           artifact_name: zap-report
