@@ -52,6 +52,51 @@ changes made after the public PR readiness review.
   and `https://map.geigercapital.us/robots.txt` return `200` with the expected
   security headers.
 
+## Closed Follow-Up Items
+
+- Runtime deployment to the VPS is now handled by GitHub Actions instead of
+  manual copy steps.
+- A dedicated `github-actions` VPS user exists for workflow deployments.
+- Deploy sudoers syntax was corrected and validated with `visudo`.
+- The live status API service name was confirmed as
+  `minecraft-status-api.service`.
+- Deploy validation now checks local status API JSON and player metric output.
+- Backup verification no longer fails silently and no longer depends on listing
+  the full archive.
+- Backup verification was removed from the deploy path to avoid coupling code
+  deploys to unrelated backup state.
+- ZAP issue creation was disabled.
+- ZAP, CodeQL, and Checkov now support manual evidence launches.
+- The failed custom ZAP User-Agent experiment was reverted.
+- BlueMap origin Nginx now serves `/robots.txt` explicitly.
+- BlueMap origin Nginx now applies security headers with `always`.
+
+## Recommended Security Priority Backlog
+
+1. Replace or rework `minecraft_exporter` RCON handling.
+   This is the highest-priority technical debt because the exporter exposes the
+   RCON password through process arguments. Preferred remediation is a small
+   local metrics exporter or replacement exporter that reads a restricted config
+   or secret file without passing credentials on the command line.
+2. Add systemd hardening to custom services.
+   Start with lower-risk services such as `minecraft-status-api.service`,
+   `minecraft-audit.service`, and `minecraft-mod-watcher.service`; test
+   `NoNewPrivileges`, `PrivateTmp`, `ProtectSystem`, `ProtectHome`, and narrow
+   `ReadWritePaths` one service at a time.
+3. Add a repeatable evidence collection workflow.
+   A manual workflow should gather the deployed commit, status API health,
+   latest backup verification PASS line, service states, Nginx header checks,
+   and scan run references.
+4. Strengthen backup verification operations.
+   Add operator procedures for failed verification, quarantined backups, and
+   restore-validation evidence.
+5. Tune or formally accept remaining ZAP warnings.
+   Remaining candidates include HSTS noise, BlueMap CSP fallback directives,
+   timestamp disclosure, proxy disclosure, and Cross-Origin-Resource-Policy.
+6. Reduce origin exposure where feasible.
+   Consider Cloudflare Tunnel or equivalent for web surfaces if the operational
+   tradeoff is acceptable.
+
 ## Remaining Follow-Up
 
 - Re-run ZAP manually after the Cloudflare and Nginx changes when final evidence
