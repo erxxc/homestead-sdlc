@@ -6,18 +6,112 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      SSH_PORT: 2222
+      DEPLOY_STAGING_DIR: /tmp/homestead-deploy
+      DEPLOY_ARCHIVE: /tmp/homestead-deploy.tar.gz
+      STATUS_API_SERVICE: status-api
+      STATUS_API_DEST: /opt/minecraft/status-api.py
+      AUDIT_SERVICE: minecraft-audit
+      MOD_WATCHER_SERVICE: minecraft-mod-watcher
+      SECURITY_MONITOR_DEST: /opt/minecraft/security-monitor.py
+      MOD_WATCHER_DEST: /usr/local/bin/mod-watcher
+      MC_RESTART_DEST: /usr/local/bin/mc-restart
+      VERIFY_BACKUP_DEST: /usr/local/bin/verify-backup
+      ONLINE_PLAYERS_DEST: /usr/local/bin/minecraft-online-players
+      LOGROTATE_DEST: /etc/logrotate.d/minecraft
+      BLUEMAP_WORLD_DEST: /opt/minecraft/homestead/config/bluemap/maps/world.conf
     steps:
       - uses: actions/checkout@v6
-      - name: Deploy to VPS
+
+      - name: Configure SSH
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$SSH_PORT" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Stage runtime files on VPS
+        run: |
+          set -euo pipefail
+          tar -czf homestead-deploy.tar.gz \
+            api/status-api/status-api.py \
+            infrastructure/bluemap-world.conf \
+            infrastructure/mc-restart.sh \
+            infrastructure/minecraft-logrotate.conf \
+            infrastructure/systemd/minecraft-audit.service \
+            infrastructure/systemd/minecraft-mod-watcher.service \
+            security/audit-logger/minecraft-online-players.sh \
+            security/audit-logger/security-monitor.py \
+            security/mod-watcher.sh \
+            security/verify-backup.sh
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "rm -rf '$DEPLOY_STAGING_DIR' '$DEPLOY_ARCHIVE' && mkdir -p '$DEPLOY_STAGING_DIR'"
+          scp -i ~/.ssh/deploy_key -P "$SSH_PORT" homestead-deploy.tar.gz \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:$DEPLOY_ARCHIVE"
+
+      - name: Install, restart, and validate on VPS
         uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 2222
+          port: ${{ env.SSH_PORT }}
+          envs: DEPLOY_STAGING_DIR,DEPLOY_ARCHIVE,STATUS_API_SERVICE,STATUS_API_DEST,AUDIT_SERVICE,MOD_WATCHER_SERVICE,SECURITY_MONITOR_DEST,MOD_WATCHER_DEST,MC_RESTART_DEST,VERIFY_BACKUP_DEST,ONLINE_PLAYERS_DEST,LOGROTATE_DEST,BLUEMAP_WORLD_DEST,GITHUB_SHA
           script: |
-            echo "Deploying $(date)"
-            cd /opt/minecraft
+            set -euo pipefail
+
+            echo "Deploying ${GITHUB_SHA} at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            tar -xzf "$DEPLOY_ARCHIVE" -C "$DEPLOY_STAGING_DIR"
+            find "$DEPLOY_STAGING_DIR" -type f | sort
+
+            for dest in \
+              "$STATUS_API_DEST" \
+              "$SECURITY_MONITOR_DEST" \
+              "$MOD_WATCHER_DEST" \
+              "$MC_RESTART_DEST" \
+              "$VERIFY_BACKUP_DEST" \
+              "$ONLINE_PLAYERS_DEST" \
+              "$LOGROTATE_DEST" \
+              "$BLUEMAP_WORLD_DEST"
+            do
+              sudo mkdir -p "$(dirname "$dest")"
+            done
+
+            sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/api/status-api/status-api.py" "$STATUS_API_DEST"
+            sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/security/audit-logger/security-monitor.py" "$SECURITY_MONITOR_DEST"
+            sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/security/mod-watcher.sh" "$MOD_WATCHER_DEST"
+            sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/infrastructure/mc-restart.sh" "$MC_RESTART_DEST"
+            sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/security/verify-backup.sh" "$VERIFY_BACKUP_DEST"
+            sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/security/audit-logger/minecraft-online-players.sh" "$ONLINE_PLAYERS_DEST"
+            sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/minecraft-logrotate.conf" "$LOGROTATE_DEST"
+            sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/bluemap-world.conf" "$BLUEMAP_WORLD_DEST"
+            sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/minecraft-audit.service" "/etc/systemd/system/${AUDIT_SERVICE}.service"
+            sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/minecraft-mod-watcher.service" "/etc/systemd/system/${MOD_WATCHER_SERVICE}.service"
+
             sudo systemctl daemon-reload
+            sudo systemctl restart "$STATUS_API_SERVICE"
+            sudo systemctl restart "$AUDIT_SERVICE"
+            sudo systemctl restart "$MOD_WATCHER_SERVICE"
             sudo systemctl reload nginx 2>/dev/null || true
+
+            bash -n "$MC_RESTART_DEST"
+            bash -n "$VERIFY_BACKUP_DEST"
+            bash -n "$ONLINE_PLAYERS_DEST"
+            sudo logrotate -d "$LOGROTATE_DEST" >/tmp/minecraft-logrotate-check.log
+
+            sudo "$ONLINE_PLAYERS_DEST"
+            sudo "$VERIFY_BACKUP_DEST"
+
+            sudo systemctl is-active --quiet "$STATUS_API_SERVICE"
+            sudo systemctl is-active --quiet "$AUDIT_SERVICE"
+            sudo systemctl is-active --quiet "$MOD_WATCHER_SERVICE"
+
+            curl -fsS https://api.geigercapital.us/status | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["map"] == "https://map.geigercapital.us"; assert isinstance(data["players"]["current"], int)'
+            sudo test -s /var/lib/node_exporter/textfile_collector/minecraft_players.prom
+
+            echo "$GITHUB_SHA" | sudo tee /opt/minecraft/.homestead-sdlc-deployed-commit >/dev/null
+            rm -rf "$DEPLOY_STAGING_DIR" "$DEPLOY_ARCHIVE"
             echo "Deploy complete"
