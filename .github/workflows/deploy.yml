@@ -10,7 +10,7 @@ jobs:
       SSH_PORT: 2222
       DEPLOY_STAGING_DIR: /tmp/homestead-deploy
       DEPLOY_ARCHIVE: /tmp/homestead-deploy.tar.gz
-      STATUS_API_SERVICE: status-api
+      STATUS_API_SERVICE: minecraft-status-api
       STATUS_API_DEST: /opt/minecraft/status-api.py
       AUDIT_SERVICE: minecraft-audit
       MOD_WATCHER_SERVICE: minecraft-mod-watcher
