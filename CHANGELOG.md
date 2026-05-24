@@ -1,6 +1,18 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Manual GitHub Actions launch triggers for ZAP, CodeQL, and Checkov evidence scans.
+- Post-PR audit follow-up report covering VPS deploy, backup verification, Nginx tuning, and scan evidence updates.
+
+### Changed
+- Expanded GitHub Actions deploy to install runtime files on the VPS, restart affected services, and validate local API and metric health.
+- Updated backup verification logging and archive path checks for clearer PASS/FAIL evidence.
+- Tightened Minecraft logrotate validation with explicit `su root root` directives.
+
+### Security
+- Disabled ZAP GitHub issue writing while preserving scan artifacts.
+- Tuned live BlueMap Nginx handling for `robots.txt` and security headers on non-2xx responses.
 
 ## [1.3.6] — 2026-05-15
 - Minor modpack update — no notable changes

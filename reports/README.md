@@ -27,6 +27,7 @@ For current state, **use v1.1**. The v1.0 PDF is kept for audit-trail continuity
 | File | Origin | Notes |
 |---|---|---|
 | `2026-04-26-ZAP-Report.html` (+ asset dir) | OWASP ZAP DAST | Generated against api.geigercapital.us and map.geigercapital.us |
+| `2026-05-24-post-pr-audit-follow-up.md` | Post-PR audit follow-up | Additional findings, VPS deploy changes, Nginx tuning, and CI evidence triggers |
 | `lynis-baseline-summary.md` | Lynis CIS benchmark | Post-remediation score 67/100 (baseline was 65) |
 | `lynis-baseline.txt` | Lynis raw output | Gitignored — re-run on the VPS to regenerate |
 | `nikto-api.txt` | Nikto web scanner | API endpoint findings |
@@ -39,4 +40,5 @@ For current state, **use v1.1**. The v1.0 PDF is kept for audit-trail continuity
 - Lynis baseline: `sudo lynis audit system --report-file /tmp/lynis-report.txt` on the VPS
 - nmap: `nmap -sV -p- mc.geigercapital.us` (full TCP) + `nmap -sU -F mc.geigercapital.us` (UDP)
 - nikto: `nikto -h https://api.geigercapital.us -o reports/nikto-api.txt`
-- ZAP: triggered by `.github/workflows/zap.yml` on a schedule
+- ZAP: triggered by `.github/workflows/zap.yml` on push, weekly schedule, or manual dispatch
+- CodeQL and Checkov: triggered by their GitHub Actions workflows on push/PR paths or manual dispatch
