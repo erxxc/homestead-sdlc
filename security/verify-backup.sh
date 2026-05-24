@@ -23,10 +23,8 @@ fi
 
 log "INFO verifying $latest"
 
-LEVEL_DAT=$(tar -tzf "$latest" 2>/dev/null | grep -E '(^|/)world/level\.dat$' | head -1)
-
-if [ -n "$LEVEL_DAT" ]; then
-    tar -xzf "$latest" -C "$TEMP_DIR" "$LEVEL_DAT" 2>/dev/null
+if tar -xzf "$latest" -C "$TEMP_DIR" world/level.dat 2>/dev/null ||
+    tar -xzf "$latest" -C "$TEMP_DIR" ./world/level.dat 2>/dev/null; then
     SIZE=$(stat -c%s "$latest")
     log "PASS backup verified — $latest (${SIZE} bytes)"
     exit 0
