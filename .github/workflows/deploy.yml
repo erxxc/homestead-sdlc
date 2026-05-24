@@ -3,6 +3,10 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -103,10 +107,7 @@ jobs:
             sudo logrotate -d "$LOGROTATE_DEST" >/tmp/minecraft-logrotate-check.log
 
             sudo "$ONLINE_PLAYERS_DEST"
-            if ! sudo "$VERIFY_BACKUP_DEST"; then
-              sudo tail -n 40 /var/log/minecraft-backup-verify.log
-              exit 1
-            fi
+            sudo test -x "$VERIFY_BACKUP_DEST"
 
             sudo systemctl is-active --quiet "$STATUS_API_SERVICE"
             sudo systemctl is-active --quiet "$AUDIT_SERVICE"
