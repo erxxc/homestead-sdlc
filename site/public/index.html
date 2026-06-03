@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Homestead SMP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -16,83 +19,259 @@
   <meta property="og:image" content="https://play.geigercapital.us/apple-touch-icon.png">
   <meta property="og:url" content="https://play.geigercapital.us">
   <meta name="twitter:card" content="summary">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e8e8e8; min-height: 100vh; display: flex; flex-direction: column; }
-    .nav { padding: 14px 24px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; gap: 24px; }
-    .nav a { color: #888; text-decoration: none; font-size: 0.9rem; }
-    .nav a:hover { color: #e8e8e8; }
-    .main { flex: 1; display: flex; align-items: center; justify-content: center; }
-    .container { max-width: 600px; padding: 48px 24px; text-align: center; width: 100%; }
-    h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 8px; }
-    .subtitle { color: #888; margin-bottom: 48px; }
-    .status { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
-    .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #22c55e; margin-right: 8px; animation: pulse 2s infinite; }
-    .status-dot.offline { background: #ef4444; animation: none; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    .address { font-family: monospace; font-size: 1.1rem; color: #60a5fa; margin: 16px 0; }
-    .players { font-size: 0.9rem; color: #888; margin-top: 8px; }
-    .version { font-size: 0.8rem; color: #555; margin-top: 4px; }
-    .links { display: flex; gap: 12px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
-    .link { padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; transition: opacity 0.2s; }
-    .link:hover { opacity: 0.8; }
-    .link-primary { background: #1a56db; color: white; }
-    .link-secondary { border: 1px solid #2a2a2a; color: #888; }
-    .updated { font-size: 0.75rem; color: #444; margin-top: 24px; }
-  </style>
+  <script src="/main.js" defer></script>
 </head>
 <body>
+  <div class="gate">
+    <div class="gate-title">Homestead SMP</div>
+    <div class="gate-since">Since April 2026</div>
+    <button class="gate-enter">Enter</button>
+  </div>
+
+  <div class="scroll-progress"></div>
+  <div class="mouse-glow" aria-hidden="true"></div>
+  <div class="konami-toast" aria-hidden="true"></div>
+
+  <div class="palette-overlay">
+    <div class="palette">
+      <div class="palette-input-wrap">
+        <span class="palette-icon">⌘</span>
+        <input class="palette-input" type="text" placeholder="Search or jump to..." autocomplete="off">
+      </div>
+      <div class="palette-results"></div>
+      <div class="palette-footer">
+        <span><span class="palette-kbd">↑↓</span> navigate</span>
+        <span><span class="palette-kbd">↵</span> select</span>
+        <span><span class="palette-kbd">esc</span> close</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="particles" aria-hidden="true">
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
   <nav class="nav">
-    <span style="font-weight:700;font-size:1rem;">🌿 Homestead SMP</span>
-    <a href="/guide.html">Getting Started</a>
+    <a href="/" class="nav-logo">🌿 Homestead SMP</a>
+    <ul class="nav-links">
+      <li><a href="/" class="nav-link" aria-current="page">Status</a></li>
+      <li><a href="/guide.html" class="nav-link">Guide</a></li>
+      <li><a href="/changelog.html" class="nav-link">Changelog</a></li>
+    </ul>
   </nav>
-  <div class="main">
-    <div class="container">
-      <h1>🌿 Homestead SMP</h1>
-      <p class="subtitle">Fabric 1.20.1 · Homestead 1.3.6</p>
-      <div class="status">
-        <div id="status-indicator">
+
+  <div class="main main--hero">
+    <div class="container container--narrow hero" style="text-align:center;">
+      <h1 class="reveal reveal-stagger-1" data-typewriter="Homestead SMP">Homestead SMP</h1>
+      <p class="subtitle reveal reveal-stagger-2">Fabric 1.20.1 · Homestead 1.3.6</p>
+      <div class="status reveal reveal-stagger-3">
+        <div id="status-indicator" role="status" aria-live="polite">
           <span class="status-dot" id="dot"></span>
           <span id="status-text">Checking...</span>
         </div>
         <div class="address">mc.geigercapital.us</div>
         <div class="players" id="players"></div>
-        <div class="version" id="version"></div>
+        <div class="version-info" id="version"></div>
       </div>
-      <div class="links">
-        <a href="https://map.geigercapital.us" class="link link-primary">Live Map</a>
-        <a href="/guide.html" class="link link-secondary">Getting Started</a>
-        <a href="https://www.curseforge.com/minecraft/modpacks/homestead-cozy" class="link link-secondary">Modpack</a>
+      <div class="btn-group reveal reveal-stagger-4" style="justify-content:center;">
+        <a href="https://map.geigercapital.us" class="btn btn--primary">Live Map</a>
+        <a href="/guide.html" class="btn btn--secondary">Getting Started</a>
+        <a href="https://www.curseforge.com/minecraft/modpacks/homestead-cozy" class="btn btn--secondary">Modpack</a>
       </div>
       <div class="updated" id="updated"></div>
     </div>
   </div>
+
+  <div class="ticker">
+    <div class="ticker-track">
+      <span class="ticker-item ticker-item--accent">Fabric 1.20.1</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">Homestead 1.3.6</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">143 Mods Loaded</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item ticker-item--accent">Create</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">Simple Voice Chat</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">Farmer's Delight</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item ticker-item--accent">BlueMap</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">Supplementaries</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">Open Parties &amp; Claims</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item ticker-item--accent">Comforts</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">Moonlight Lib</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">mc.geigercapital.us</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item ticker-item--accent">Fabric 1.20.1</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">Homestead 1.3.6</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">143 Mods Loaded</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item ticker-item--accent">Create</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">Simple Voice Chat</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">Farmer's Delight</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item ticker-item--accent">BlueMap</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">Supplementaries</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">Open Parties &amp; Claims</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item ticker-item--accent">Comforts</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">Moonlight Lib</span>
+      <span class="ticker-sep">·</span>
+      <span class="ticker-item">mc.geigercapital.us</span>
+    </div>
+  </div>
+
+  <section class="pull-quotes">
+    <blockquote class="pull-quote reveal pull-quote--offset-left">
+      We didn't just build a town — we built a place worth coming back to every night.
+    </blockquote>
+    <blockquote class="pull-quote reveal pull-quote--offset-right pull-quote--right">
+      There's something about watching the sun rise over someone else's chimney that makes the world feel alive.
+    </blockquote>
+    <blockquote class="pull-quote reveal pull-quote--offset-left">
+      I joined looking for a server. I stayed because it felt like home.
+    </blockquote>
+  </section>
+
+  <div class="divider reveal"><span class="divider-label">· 01 ·</span></div>
+
+  <section class="stats">
+    <div class="stats-grid">
+      <div class="stat reveal">
+        <div class="stat-number stat-number--green" data-count="2500+">2500+</div>
+        <div class="stat-label">Days Online</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat-number" data-count="5">5</div>
+        <div class="stat-label">Total Players</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat-number stat-number--green" data-count="300+">300+</div>
+        <div class="stat-label">Mods Loaded</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat-number" data-count="100+">100+</div>
+        <div class="stat-label">Builds Completed</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider reveal"><span class="divider-label">· 02 ·</span></div>
+
+  <div class="skew-break">
+    <section class="spotlight">
+      <div class="spotlight-card reveal tilt-card">
+        <img class="spotlight-image" src="/screenshots/featured.png" alt="The Nether Portal build by zChromatic" loading="lazy">
+        <div class="spotlight-body">
+          <div class="spotlight-label">Featured Build</div>
+          <div class="spotlight-title">The Nether Portal</div>
+          <div class="spotlight-builder">Built by zChromatic</div>
+          <p class="spotlight-desc">Nether portal that was casually rerouted to zChromatic's basement. We are all forced to use his elevators now.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="divider reveal"><span class="divider-label">· 03 ·</span></div>
+
+  <section class="gallery">
+    <div class="gallery-heading reveal">Gallery</div>
+    <div class="gallery-grid">
+      <img class="gallery-item gallery-item--large reveal" src="/screenshots/panorama.png" alt="Panoramic view of the Homestead lake and surrounding builds" loading="lazy">
+      <img class="gallery-item gallery-item--small reveal" src="/screenshots/beach.png" alt="Beach hangout area with seating" loading="lazy">
+      <img class="gallery-item gallery-item--small reveal" src="/screenshots/cave.png" alt="Underground cave base with ambient lighting" loading="lazy">
+    </div>
+  </section>
+
+  <div class="divider reveal"><span class="divider-label">· 04 ·</span></div>
+
+  <section class="roster">
+    <div class="roster-heading reveal">Community</div>
+    <div class="roster-grid">
+      <div class="roster-card reveal tilt-card">
+        <div class="roster-role">Admin</div>
+        <div class="roster-name"><span class="roster-status roster-status--online"></span>sierracarrera</div>
+        <p class="roster-bio">Server founder. Builds elaborate storage mechanisms and maintains the modpack.</p>
+      </div>
+      <div class="roster-card reveal tilt-card">
+        <div class="roster-role">Builder</div>
+        <div class="roster-name"><span class="roster-status roster-status--online"></span>zChromatic</div>
+        <p class="roster-bio">Landscape architect. Responsible for the beautiful hillside house that totally doesn't steal power from windmills nearby.</p>
+      </div>
+      <div class="roster-card reveal tilt-card">
+        <div class="roster-role">Engineer</div>
+        <div class="roster-name"><span class="roster-status"></span>scottrod</div>
+        <p class="roster-bio">Create mod specialist. Built the server's automated iron and tree farming systems.</p>
+      </div>
+      <div class="roster-card reveal tilt-card">
+        <div class="roster-role">Explorer</div>
+        <div class="roster-name"><span class="roster-status"></span>HazayHD</div>
+        <p class="roster-bio">Maps uncharted territory. Also completely destroyed the bedrock layer in 2 dimensions.</p>
+      </div>
+      <div class="roster-card reveal tilt-card">
+        <div class="roster-role">Farmer</div>
+        <div class="roster-name"><span class="roster-status roster-status--online"></span>Beaver</div>
+        <p class="roster-bio">He is literally a beaver. Runs the community farm and dam. Supplies half the server with Farmer's Delight meals.</p>
+      </div>
+      <div class="roster-card reveal tilt-card">
+        <div class="roster-role">Good Boy</div>
+        <div class="roster-name"><span class="roster-status roster-status--online"></span>Bartholomew</div>
+        <p class="roster-bio">Woof.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-text">Homestead SMP · Fabric 1.20.1 · est. April 2026</div>
+  </footer>
+
   <script>
     async function fetchStatus() {
+      const dot = document.getElementById('dot');
+      const statusText = document.getElementById('status-text');
+      const players = document.getElementById('players');
+      const versionEl = document.getElementById('version');
+      const updated = document.getElementById('updated');
       try {
         const res = await fetch('https://api.geigercapital.us/status');
         const data = await res.json();
-        const dot = document.getElementById('dot');
-        const statusText = document.getElementById('status-text');
-        const players = document.getElementById('players');
-        const version = document.getElementById('version');
-        const updated = document.getElementById('updated');
         if (data.online) {
-          dot.classList.remove('offline');
+          dot.className = 'status-dot status-dot--online';
           statusText.textContent = 'Server Online';
-          players.textContent = `${data.players.current} / ${data.players.max} players online`;
-          version.textContent = `${data.server.version} · Minecraft ${data.server.minecraft}`;
+          players.textContent = data.players.current + ' / ' + data.players.max + ' players online';
+          versionEl.textContent = data.server.version + ' · Minecraft ' + data.server.minecraft;
         } else {
-          dot.classList.add('offline');
+          dot.className = 'status-dot status-dot--offline';
           statusText.textContent = 'Server Offline';
           players.textContent = '';
-          version.textContent = '';
+          versionEl.textContent = '';
         }
-        const ts = new Date(data.timestamp);
-        updated.textContent = `Last updated: ${ts.toUTCString()}`;
-      } catch (e) {
-        document.getElementById('status-text').textContent = 'Status unavailable';
-        document.getElementById('dot').classList.add('offline');
+        updated.textContent = 'Last updated: ' + new Date(data.timestamp).toUTCString();
+        window.dispatchEvent(new CustomEvent('server-status', { detail: { online: data.online } }));
+      } catch {
+        statusText.textContent = 'Status unavailable';
+        dot.className = 'status-dot status-dot--offline';
       }
     }
     fetchStatus();

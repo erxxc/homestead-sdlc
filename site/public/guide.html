@@ -4,95 +4,101 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Getting Started — Homestead SMP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#166534">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e8e8e8; min-height: 100vh; }
-    .nav { padding: 16px 24px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; gap: 24px; }
-    .nav a { color: #888; text-decoration: none; font-size: 0.9rem; }
-    .nav a:hover { color: #e8e8e8; }
-    .nav .logo { color: #e8e8e8; font-weight: 700; font-size: 1rem; }
-    .container { max-width: 720px; margin: 0 auto; padding: 48px 24px; }
-    h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
-    .subtitle { color: #888; margin-bottom: 48px; }
-    h2 { font-size: 1.2rem; font-weight: 600; margin: 40px 0 16px; color: #e8e8e8; }
-    h3 { font-size: 1rem; font-weight: 600; margin: 24px 0 8px; color: #aaa; }
-    p { color: #aaa; line-height: 1.7; margin-bottom: 12px; }
-    .step { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px 24px; margin-bottom: 12px; display: flex; gap: 16px; align-items: flex-start; }
-    .step-num { background: #166534; color: #4ade80; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
-    .step-content { flex: 1; }
-    .step-title { font-weight: 600; margin-bottom: 4px; font-size: 0.95rem; }
-    .step-desc { color: #888; font-size: 0.9rem; line-height: 1.6; }
-    .address { font-family: monospace; background: #111; border: 1px solid #2a2a2a; padding: 12px 16px; border-radius: 8px; color: #60a5fa; font-size: 1rem; margin: 16px 0; text-align: center; }
-    .tip { background: #0f1f0f; border: 1px solid #166534; border-radius: 8px; padding: 12px 16px; margin: 16px 0; }
-    .tip-label { color: #4ade80; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; }
-    .tip p { color: #888; font-size: 0.9rem; margin: 0; }
-    .tab-buttons { display: flex; gap: 8px; margin-bottom: 24px; }
-    .tab-btn { padding: 8px 20px; border-radius: 8px; border: 1px solid #2a2a2a; background: #1a1a1a; color: #888; cursor: pointer; font-size: 0.9rem; transition: all .15s; }
-    .tab-btn.active { background: #166534; color: #4ade80; border-color: #166534; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    .links { display: flex; gap: 12px; margin-top: 40px; flex-wrap: wrap; }
-    .link { padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; }
-    .link-primary { background: #1a56db; color: white; }
-    .link-secondary { border: 1px solid #2a2a2a; color: #888; }
-    .req { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
-    .req-item { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
-    .req-name { font-size: 0.9rem; }
-    .req-val { font-size: 0.85rem; color: #888; }
-  </style>
+  <script src="/main.js" defer></script>
 </head>
 <body>
+  <div class="scroll-progress"></div>
+  <div class="mouse-glow" aria-hidden="true"></div>
+  <div class="konami-toast" aria-hidden="true"></div>
+
+  <div class="palette-overlay">
+    <div class="palette">
+      <div class="palette-input-wrap">
+        <span class="palette-icon">⌘</span>
+        <input class="palette-input" type="text" placeholder="Search or jump to..." autocomplete="off">
+      </div>
+      <div class="palette-results"></div>
+      <div class="palette-footer">
+        <span><span class="palette-kbd">↑↓</span> navigate</span>
+        <span><span class="palette-kbd">↵</span> select</span>
+        <span><span class="palette-kbd">esc</span> close</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="particles" aria-hidden="true">
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
   <nav class="nav">
-    <a href="/" class="logo">🌿 Homestead SMP</a>
-    <a href="/guide.html">Getting Started</a>
-    <a href="/changelog.html">Changelog</a>
+    <a href="/" class="nav-logo">🌿 Homestead SMP</a>
+    <ul class="nav-links">
+      <li><a href="/" class="nav-link">Status</a></li>
+      <li><a href="/guide.html" class="nav-link" aria-current="page">Guide</a></li>
+      <li><a href="/changelog.html" class="nav-link">Changelog</a></li>
+    </ul>
   </nav>
 
   <div class="container">
-    <h1>Getting Started</h1>
-    <p class="subtitle">Everything you need to join the server in under 10 minutes.</p>
+    <h1 class="reveal">Getting Started</h1>
+    <p class="subtitle reveal reveal-stagger-1">Everything you need to join the server in under 10 minutes.</p>
 
-    <h2>Requirements</h2>
-    <div class="req">
+    <h2 class="reveal">Requirements</h2>
+    <div class="req reveal">
       <div class="req-item"><span class="req-name">Minecraft Java Edition</span><span class="req-val">1.20.1</span></div>
       <div class="req-item"><span class="req-name">Launcher</span><span class="req-val">CurseForge App (recommended) or Modrinth</span></div>
       <div class="req-item"><span class="req-name">RAM allocated</span><span class="req-val">6GB minimum, 8GB recommended</span></div>
       <div class="req-item"><span class="req-name">Modpack version</span><span class="req-val">Homestead 1.3.6</span></div>
     </div>
 
-    <h2>Installation</h2>
+    <h2 class="reveal">Installation</h2>
 
-    <div class="tab-buttons">
-      <button class="tab-btn active" onclick="switchTab('curseforge')">CurseForge</button>
-      <button class="tab-btn" onclick="switchTab('modrinth')">Modrinth</button>
+    <div role="tablist" aria-label="Installation method" class="reveal">
+      <button role="tab" id="tab-curseforge" aria-controls="panel-curseforge" aria-selected="true" tabindex="0">CurseForge</button>
+      <button role="tab" id="tab-modrinth" aria-controls="panel-modrinth" aria-selected="false" tabindex="-1">Modrinth</button>
     </div>
 
-    <div class="tab-content active" id="tab-curseforge">
-      <div class="step">
+    <div role="tabpanel" id="panel-curseforge" aria-labelledby="tab-curseforge" class="active">
+      <div class="step reveal">
         <div class="step-num">1</div>
         <div class="step-content">
           <div class="step-title">Download and install the CurseForge app</div>
           <div class="step-desc">Go to curseforge.com and download the CurseForge app for your operating system. Open and log in with your Minecraft account.</div>
         </div>
       </div>
-      <div class="step">
+      <div class="step reveal">
         <div class="step-num">2</div>
         <div class="step-content">
           <div class="step-title">Find Homestead</div>
           <div class="step-desc">Click Browse Modpacks, search for "Homestead Cozy" and select the pack by Toekimi. Make sure to select version 1.3.6.</div>
         </div>
       </div>
-      <div class="step">
+      <div class="step reveal">
         <div class="step-num">3</div>
         <div class="step-content">
           <div class="step-title">Install and allocate RAM</div>
           <div class="step-desc">Click Install and wait for all mods to download. Once installed, click the three dots next to the Play button → Profile Options → set Memory to at least 6144 MB (6GB).</div>
         </div>
       </div>
-      <div class="step">
+      <div class="step reveal">
         <div class="step-num">4</div>
         <div class="step-content">
           <div class="step-title">Launch and join</div>
@@ -101,29 +107,29 @@
       </div>
     </div>
 
-    <div class="tab-content" id="tab-modrinth">
-      <div class="step">
+    <div role="tabpanel" id="panel-modrinth" aria-labelledby="tab-modrinth">
+      <div class="step reveal">
         <div class="step-num">1</div>
         <div class="step-content">
           <div class="step-title">Download and install the Modrinth app</div>
           <div class="step-desc">Go to modrinth.com/app and download the Modrinth launcher for your operating system.</div>
         </div>
       </div>
-      <div class="step">
+      <div class="step reveal">
         <div class="step-num">2</div>
         <div class="step-content">
           <div class="step-title">Find Homestead</div>
           <div class="step-desc">Click Browse, search for "Homestead" and select the pack by Toekimi. Select version 1.3.6 from the version dropdown.</div>
         </div>
       </div>
-      <div class="step">
+      <div class="step reveal">
         <div class="step-num">3</div>
         <div class="step-content">
           <div class="step-title">Install and allocate RAM</div>
           <div class="step-desc">Click Install. Once complete, click the three dots on the instance → Edit → Java Settings → set Maximum Memory to at least 6144 MB.</div>
         </div>
       </div>
-      <div class="step">
+      <div class="step reveal">
         <div class="step-num">4</div>
         <div class="step-content">
           <div class="step-title">Launch and join</div>
@@ -132,36 +138,50 @@
       </div>
     </div>
 
-    <h2>Server Address</h2>
-    <div class="address">mc.geigercapital.us</div>
+    <h2 class="reveal">Server Address</h2>
+    <div class="address-block reveal">
+      <span>mc.geigercapital.us</span>
+      <button class="copy-btn" data-copy="mc.geigercapital.us">Copy</button>
+    </div>
 
-    <div class="tip">
+    <div class="tip reveal">
       <div class="tip-label">Performance tip</div>
       <p>If you experience low FPS, disable shaders in Video Settings → Shader Packs → Disable. Homestead runs well without shaders on most systems.</p>
     </div>
 
-    <h2>Voice Chat</h2>
-    <p>Homestead includes Simple Voice Chat. Once in-game press <strong>V</strong> to open voice chat settings. Make sure your microphone is selected and set to push-to-talk or open mic based on your preference.</p>
+    <h2 class="reveal">Voice Chat</h2>
+    <p class="reveal">Homestead includes Simple Voice Chat. Once in-game press <strong>V</strong> to open voice chat settings. Make sure your microphone is selected and set to push-to-talk or open mic based on your preference.</p>
 
-    <div class="tip">
-      <div class="tip-label">Having trouble?</div>
-      <p>Join our Discord and post in #community-support. Include your launcher, modpack version, and a description of the issue.</p>
+    <h2 class="reveal">Community Tips</h2>
+    <div class="tip-cards">
+      <div class="tip-card reveal">
+        <div class="tip-card-title">Shaders</div>
+        <p class="tip-card-body">Complementary Reimagined pairs beautifully with Homestead and runs well on mid-range hardware. Find it in Shader Packs.</p>
+      </div>
+      <div class="tip-card reveal">
+        <div class="tip-card-title">Claiming Land</div>
+        <p class="tip-card-body">Use a golden hoe to mark your claim borders. Explore far from spawn before settling — the best spots are worth the walk.</p>
+      </div>
+      <div class="tip-card reveal">
+        <div class="tip-card-title">Voice Chat Etiquette</div>
+        <p class="tip-card-body">Push-to-talk is recommended when others are nearby. Proximity voice fades with distance, so speak up if you're far from someone.</p>
+      </div>
+      <div class="tip-card reveal">
+        <div class="tip-card-title">Create Mod</div>
+        <p class="tip-card-body">Start small with Create — a water wheel and a few mechanical belts can automate your entire farm before you even touch brass.</p>
+      </div>
     </div>
 
-    <div class="links">
-      <a href="/" class="link link-primary">Back to Server Status</a>
-      <a href="https://www.curseforge.com/minecraft/modpacks/homestead-cozy" class="link link-secondary">CurseForge Page</a>
-      <a href="/changelog.html" class="link link-secondary">Changelog</a>
+    <div class="tip reveal">
+      <div class="tip-label">Having trouble?</div>
+      <p>Community support coming soon. In the meantime, reach out to the server admin directly.</p>
+    </div>
+
+    <div class="btn-group reveal" style="margin-top:var(--space-xl);">
+      <a href="/" class="btn btn--primary">Back to Server Status</a>
+      <a href="https://www.curseforge.com/minecraft/modpacks/homestead-cozy" class="btn btn--secondary">CurseForge Page</a>
+      <a href="/changelog.html" class="btn btn--secondary">Changelog</a>
     </div>
   </div>
-
-  <script>
-    function switchTab(tab) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      document.getElementById('tab-' + tab).classList.add('active');
-      event.target.classList.add('active');
-    }
-  </script>
 </body>
 </html>

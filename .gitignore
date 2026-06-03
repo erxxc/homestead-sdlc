@@ -32,3 +32,13 @@ reports/nmap-udp.txt
 
 # Local post-PR planning
 POST_PR_AUDIT_LAUNDRY_LIST.md
+
+# Agent skills and lock files
+.agents/
+skills-lock.json
+
+# Impeccable skill live-session artifacts
+.impeccable/
+
+# direnv local env overrides
+.envrc
