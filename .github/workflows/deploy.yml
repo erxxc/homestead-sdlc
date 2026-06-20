@@ -29,7 +29,7 @@ jobs:
       LOGROTATE_DEST: /etc/logrotate.d/minecraft
       BLUEMAP_WORLD_DEST: /opt/minecraft/homestead/config/bluemap/maps/world.conf
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Configure SSH
         run: |
