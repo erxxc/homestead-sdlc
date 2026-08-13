@@ -1,0 +1,9 @@
+[Unit]
+Description=Minecraft world backup
+Requires=minecraft.service
+After=minecraft.service
+
+[Service]
+Type=oneshot
+User=minecraft
+ExecStart=/bin/bash -c 'tar -czf /opt/minecraft/backups/world-$(date +%%Y%%m%%d-%%H%%M%%S).tar.gz -C /opt/minecraft/homestead world'

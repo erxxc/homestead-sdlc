@@ -26,6 +26,7 @@ jobs:
       MC_RESTART_DEST: /usr/local/bin/mc-restart
       VERIFY_BACKUP_DEST: /usr/local/bin/verify-backup
       ONLINE_PLAYERS_DEST: /usr/local/bin/minecraft-online-players
+      PRUNE_DEST: /usr/local/bin/prune-backups
       LOGROTATE_DEST: /etc/logrotate.d/minecraft
       BLUEMAP_WORLD_DEST: /opt/minecraft/homestead/config/bluemap/maps/world.conf
     steps:
@@ -50,9 +51,16 @@ jobs:
             infrastructure/minecraft-logrotate.conf \
             infrastructure/systemd/minecraft-audit.service \
             infrastructure/systemd/minecraft-mod-watcher.service \
+            infrastructure/systemd/minecraft-backup.service \
+            infrastructure/systemd/minecraft-backup.timer \
+            infrastructure/systemd/minecraft-backup-verify.service \
+            infrastructure/systemd/minecraft-backup-verify.timer \
+            infrastructure/systemd/minecraft-backup-prune.service \
+            infrastructure/systemd/minecraft-backup-prune.timer \
             security/audit-logger/minecraft-online-players.sh \
             security/audit-logger/security-monitor.py \
             security/mod-watcher.sh \
+            security/prune-backups.sh \
             security/verify-backup.sh
           ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
             "rm -rf '$DEPLOY_STAGING_DIR' '$DEPLOY_ARCHIVE' && mkdir -p '$DEPLOY_STAGING_DIR'"
@@ -66,7 +74,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ env.SSH_PORT }}
-          envs: DEPLOY_STAGING_DIR,DEPLOY_ARCHIVE,STATUS_API_SERVICE,STATUS_API_DEST,AUDIT_SERVICE,MOD_WATCHER_SERVICE,SECURITY_MONITOR_DEST,MOD_WATCHER_DEST,MC_RESTART_DEST,VERIFY_BACKUP_DEST,ONLINE_PLAYERS_DEST,LOGROTATE_DEST,BLUEMAP_WORLD_DEST,GITHUB_SHA
+          envs: DEPLOY_STAGING_DIR,DEPLOY_ARCHIVE,STATUS_API_SERVICE,STATUS_API_DEST,AUDIT_SERVICE,MOD_WATCHER_SERVICE,SECURITY_MONITOR_DEST,MOD_WATCHER_DEST,MC_RESTART_DEST,VERIFY_BACKUP_DEST,ONLINE_PLAYERS_DEST,PRUNE_DEST,LOGROTATE_DEST,BLUEMAP_WORLD_DEST,GITHUB_SHA
           script: |
             set -euo pipefail
 
@@ -97,6 +105,10 @@ jobs:
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/bluemap-world.conf" "$BLUEMAP_WORLD_DEST"
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/minecraft-audit.service" "/etc/systemd/system/${AUDIT_SERVICE}.service"
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/minecraft-mod-watcher.service" "/etc/systemd/system/${MOD_WATCHER_SERVICE}.service"
+            sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/security/prune-backups.sh" "$PRUNE_DEST"
+            for unit in minecraft-backup.service minecraft-backup.timer minecraft-backup-verify.service minecraft-backup-verify.timer minecraft-backup-prune.service minecraft-backup-prune.timer; do
+              sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/$unit" "/etc/systemd/system/$unit"
+            done
 
             sudo systemctl daemon-reload
             sudo systemctl restart "$STATUS_API_SERVICE"
@@ -107,6 +119,7 @@ jobs:
             bash -n "$MC_RESTART_DEST"
             bash -n "$VERIFY_BACKUP_DEST"
             bash -n "$ONLINE_PLAYERS_DEST"
+            bash -n "$PRUNE_DEST"
             sudo logrotate -d "$LOGROTATE_DEST" >/tmp/minecraft-logrotate-check.log
 
             sudo "$ONLINE_PLAYERS_DEST"

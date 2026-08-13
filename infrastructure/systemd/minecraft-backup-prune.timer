@@ -1,0 +1,9 @@
+[Unit]
+Description=Daily size-cap pruning of Minecraft backups
+
+[Timer]
+OnCalendar=*-*-* 01:15:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
