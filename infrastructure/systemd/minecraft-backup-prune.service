@@ -6,4 +6,5 @@ After=minecraft-backup-verify.service
 Type=oneshot
 Environment=CAP_GIB=50
 Environment=MIN_KEEP=2
+Environment=MIN_SIZE_MIB=1024
 ExecStart=/usr/local/bin/prune-backups

@@ -1,7 +1,17 @@
 # Changelog
 
 ## [Unreleased]
+### Security
+- Closed pentest finding F-001 / risk R-001: minecraft-exporter v0.24.0 reads
+  the RCON credential from the restricted EnvironmentFile; no credential in
+  the process list (threat model v1.3).
+- Post-incident report for the 2026-08-13 backup integrity failure and RCON
+  consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
+
 ### Added
+- World-consistent backup script: RCON save-off → save-all flush → tar to
+  `.part` → atomic rename → save-on, with a ≥20 GiB free-disk preflight;
+  prune now removes undersized truncation stubs when a healthy archive exists.
 - Repo-managed backup lifecycle: codified daily backup units, new scheduled
   verification (00:45 UTC), and size-capped pruning (50 GiB cap, min 2 kept)
   replacing the on-VPS cron age-based cleanup; deployed via GitHub Actions
