@@ -36,6 +36,7 @@
 - Any checksum failure stops the server and logs to /var/log/minecraft-integrity.log
 - Checksum baseline regenerated after any approved mod addition or update
 - Modpack version: Homestead 1.3.6 (1.3.1 → 1.3.4 on 2026-05-02; 1.3.5 and 1.3.6 minor bumps since, no breaking changes)
+- Live server version re-verified 2026-08-13 via status API — still Homestead 1.3.6; per-mod inventory snapshot dates from 2026-04-12 and is regenerated on modpack upgrades
 
 ## Infrastructure Dependencies
 

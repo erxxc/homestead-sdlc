@@ -116,7 +116,8 @@ jobs:
             sudo systemctl is-active --quiet "$AUDIT_SERVICE"
             sudo systemctl is-active --quiet "$MOD_WATCHER_SERVICE"
 
-            curl -fsS http://127.0.0.1:5000/status | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["map"] == "https://map.geigercapital.us"; assert isinstance(data["players"]["current"], int)'
+            # Flask needs a moment to bind after systemctl restart returns
+            curl -fsS --retry 10 --retry-connrefused --retry-delay 2 http://127.0.0.1:5000/status | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["map"] == "https://map.geigercapital.us"; assert isinstance(data["players"]["current"], int)'
             sudo test -s /var/lib/node_exporter/textfile_collector/minecraft_players.prom
 
             echo "$GITHUB_SHA" | sudo tee /opt/minecraft/.homestead-sdlc-deployed-commit >/dev/null
