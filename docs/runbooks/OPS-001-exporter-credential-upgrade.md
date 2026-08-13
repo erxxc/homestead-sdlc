@@ -37,14 +37,26 @@ save the SBOM alongside `docs/sbom.md` evidence if desired.
 
 ### 2. Add the env var the exporter expects
 
-Append to `/etc/minecraft/secrets/rcon` (keep the existing `RCON_PASSWORD`
-line — the status API and restart scripts still read it):
+Rewrite `/etc/minecraft/secrets/rcon` to exactly two lines — `RCON_PASSWORD`
+(read by the status API, audit scripts, and restart script) and
+`MC_RCON_PASSWORD` (read by the exporter), both holding the same value. This
+is idempotent: running it twice never duplicates lines, unlike an append.
 
 ```bash
-sudo sh -c 'printf "MC_RCON_PASSWORD=%s\n" "$(grep ^RCON_PASSWORD= /etc/minecraft/secrets/rcon | cut -d= -f2-)" >> /etc/minecraft/secrets/rcon'
+sudo sh -c '
+  set -euo pipefail
+  pw=$(grep -m1 "^RCON_PASSWORD=" /etc/minecraft/secrets/rcon | cut -d= -f2-)
+  [ -n "$pw" ] || { echo "no RCON_PASSWORD found; aborting" >&2; exit 1; }
+  printf "RCON_PASSWORD=%s\nMC_RCON_PASSWORD=%s\n" "$pw" "$pw" > /etc/minecraft/secrets/rcon
+'
 sudo chmod 640 /etc/minecraft/secrets/rcon
 sudo chown root:minecraft /etc/minecraft/secrets/rcon
 ```
+
+**Prerequisite:** the line-based secrets parsers in `status-api.py` and
+`minecraft-online-players.sh` (deployed via the normal pipeline) must be live
+before adding the second line — older builds read the whole file as the
+password and RCON auth breaks for the API and player metrics.
 
 ### 3. Install binary and updated unit
 
@@ -75,8 +87,18 @@ systemctl status minecraft_exporter --no-pager
 ps -o args= -C minecraft-exporter
 ps -o args= -C minecraft-exporter | grep -i rcon-password || echo "PASS: no credential in cmdline"
 
-# Metrics served locally
-curl -fsS http://127.0.0.1:9225/metrics | head
+# Exporter actually listening on 9225 — v0.24.0 ignores the old config-file
+# listen-address; the unit must pass --web.listen-address=127.0.0.1:9225
+ss -tln | grep 9225
+curl -fsS http://127.0.0.1:9225/metrics | grep -c '^minecraft'
+
+# RCON consumers still healthy after the secrets-file change
+curl -fsS http://127.0.0.1:5000/status | grep '"online": *true'
+sudo /usr/local/bin/minecraft-online-players
+
+# RCON socket binds all interfaces at the Minecraft level; confirm the
+# firewall still blocks it externally (no ALLOW rule for 25575, default deny)
+sudo ufw status verbose | grep -E "Default:|25575"
 
 # Prometheus target up (from the VPS)
 curl -fsS http://127.0.0.1:9090/api/v1/targets 2>/dev/null | grep -o '"health":"up"' | head -1

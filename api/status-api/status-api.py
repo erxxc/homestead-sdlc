@@ -17,12 +17,17 @@ CORS(app, origins=["https://play.geigercapital.us", "https://geigercapital.us"])
 
 
 def get_rcon_password():
+    # The secrets file is a systemd EnvironmentFile and may hold multiple
+    # KEY=VALUE lines (RCON_PASSWORD, MC_RCON_PASSWORD, ...) — parse by line.
     try:
         with open("/etc/minecraft/secrets/rcon") as f:
-            content = f.read().strip()
-            return content.replace("RCON_PASSWORD=", "")
+            for line in f:
+                line = line.strip()
+                if line.startswith("RCON_PASSWORD="):
+                    return line.split("=", 1)[1]
     except OSError:
         return None
+    return None
 
 
 def query_rcon(command):
