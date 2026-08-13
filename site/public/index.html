@@ -97,7 +97,7 @@
       <span class="ticker-sep">·</span>
       <span class="ticker-item">Homestead 1.3.6</span>
       <span class="ticker-sep">·</span>
-      <span class="ticker-item">143 Mods Loaded</span>
+      <span class="ticker-item">428 Mods Verified</span>
       <span class="ticker-sep">·</span>
       <span class="ticker-item ticker-item--accent">Create</span>
       <span class="ticker-sep">·</span>
@@ -121,7 +121,7 @@
       <span class="ticker-sep">·</span>
       <span class="ticker-item">Homestead 1.3.6</span>
       <span class="ticker-sep">·</span>
-      <span class="ticker-item">143 Mods Loaded</span>
+      <span class="ticker-item">428 Mods Verified</span>
       <span class="ticker-sep">·</span>
       <span class="ticker-item ticker-item--accent">Create</span>
       <span class="ticker-sep">·</span>
@@ -160,16 +160,16 @@
   <section class="stats">
     <div class="stats-grid">
       <div class="stat reveal">
-        <div class="stat-number stat-number--green" data-count="2500+">2500+</div>
+        <div class="stat-number stat-number--green" id="stat-days" data-count="125">125</div>
         <div class="stat-label">Days Online</div>
       </div>
       <div class="stat reveal">
-        <div class="stat-number" data-count="5">5</div>
+        <div class="stat-number" data-count="6">6</div>
         <div class="stat-label">Total Players</div>
       </div>
       <div class="stat reveal">
-        <div class="stat-number stat-number--green" data-count="300+">300+</div>
-        <div class="stat-label">Mods Loaded</div>
+        <div class="stat-number stat-number--green" data-count="428">428</div>
+        <div class="stat-label">Mods Verified</div>
       </div>
       <div class="stat reveal">
         <div class="stat-number" data-count="100+">100+</div>
@@ -236,9 +236,9 @@
         <p class="roster-bio">He is literally a beaver. Runs the community farm and dam. Supplies half the server with Farmer's Delight meals.</p>
       </div>
       <div class="roster-card reveal tilt-card">
-        <div class="roster-role">Good Boy</div>
-        <div class="roster-name"><span class="roster-status roster-status--online"></span>Bartholomew</div>
-        <p class="roster-bio">Woof.</p>
+        <div class="roster-role">Angler</div>
+        <div class="roster-name"><span class="roster-status roster-status--online"></span>RipCord</div>
+        <p class="roster-bio">Server fishing guru. Every lake on the map is "his spot." Keeps the kitchens stocked and will not disclose where the tropical fish keep coming from.</p>
       </div>
     </div>
   </section>
@@ -248,6 +248,12 @@
   </footer>
 
   <script>
+    (function () {
+      const days = Math.floor((Date.now() - Date.parse('2026-04-10T00:00:00Z')) / 86400000);
+      const el = document.getElementById('stat-days');
+      if (el && days > 0) { el.setAttribute('data-count', String(days)); el.textContent = String(days); }
+    })();
+
     async function fetchStatus() {
       const dot = document.getElementById('dot');
       const statusText = document.getElementById('status-text');
