@@ -1,0 +1,7 @@
+[Unit]
+Description=Verify latest Minecraft backup
+After=minecraft-backup.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/verify-backup

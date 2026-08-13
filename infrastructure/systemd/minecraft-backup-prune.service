@@ -1,0 +1,9 @@
+[Unit]
+Description=Prune Minecraft backups to size cap
+After=minecraft-backup-verify.service
+
+[Service]
+Type=oneshot
+Environment=CAP_GIB=50
+Environment=MIN_KEEP=2
+ExecStart=/usr/local/bin/prune-backups

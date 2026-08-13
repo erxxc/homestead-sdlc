@@ -29,7 +29,7 @@ ISO 27001 Annex A, and NIST Cybersecurity Framework (CSF).
 | C-018 | Application metrics monitoring | Minecraft Exporter + Grafana | CC7.2 | A.12.1.3 | DE.CM-1 |
 | C-019 | Availability monitoring | Uptime Kuma — 3 monitors | A1.1, A1.2 | A.17.1.1 | DE.CM-1 |
 | C-020 | Security audit logging | JSON structured event log | CC7.2 | A.12.4.1 | DE.AE-3 |
-| C-021 | Daily world backups | systemd timer, 7-day retention | A1.2, A1.3 | A.12.3.1 | RC.RP-1 |
+| C-021 | Daily world backups | systemd timers: backup 00:00, verify 00:45, size-capped prune 01:15 (50 GiB cap, min 2 kept) | A1.2, A1.3 | A.12.3.1 | RC.RP-1 |
 | C-022 | Automated deployment | GitHub Actions SSH deploy | CC8.1 | A.14.2.2 | PR.IP-1 |
 | C-023 | Conventional commits | Enforced commit message format | CC8.1 | A.14.2.2 | PR.IP-1 |
 | C-024 | Change management via PR | All changes via pull request | CC8.1 | A.14.2.2 | PR.IP-1 |

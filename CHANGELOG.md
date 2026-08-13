@@ -1,6 +1,12 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Repo-managed backup lifecycle: codified daily backup units, new scheduled
+  verification (00:45 UTC), and size-capped pruning (50 GiB cap, min 2 kept)
+  replacing the on-VPS cron age-based cleanup; deployed via GitHub Actions
+  with logrotate coverage for verify/prune logs. See runbook OPS-002.
+
 ### Fixed
 - RCON secrets-file parsing in status API, player-count metric script, and
   restart script now reads the `RCON_PASSWORD=` line instead of the whole
