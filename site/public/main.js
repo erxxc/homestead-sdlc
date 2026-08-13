@@ -170,9 +170,12 @@ function initStatCounters() {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
       const el = entry.target;
-      const target = parseInt(el.getAttribute('data-count'), 10);
+      const raw = el.getAttribute('data-count');
+      const target = parseFloat(raw);
+      const suffix = raw.replace(/^[\d.]+/, '');
+      const decimals = (raw.match(/\.(\d+)/) || [,''])[1].length;
       observer.unobserve(el);
-      animateCount(el, target);
+      animateCount(el, target, suffix, decimals);
     });
   }, { threshold: 0.5 });
 
@@ -182,14 +185,16 @@ function initStatCounters() {
   });
 }
 
-function animateCount(el, target) {
+function animateCount(el, target, suffix, decimals) {
   const duration = 2000;
   const start = performance.now();
+  suffix = suffix || '';
+  decimals = decimals || 0;
 
   function step(now) {
     const t = Math.min((now - start) / duration, 1);
     const eased = 1 - Math.pow(1 - t, 3);
-    el.textContent = Math.round(eased * target);
+    el.textContent = (eased * target).toFixed(decimals) + suffix;
     if (t < 1) requestAnimationFrame(step);
   }
 
