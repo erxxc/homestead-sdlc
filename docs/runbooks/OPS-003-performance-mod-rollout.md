@@ -52,13 +52,15 @@ https://cdn.modrinth.com/data/gvQqBUqZ/versions/iEcXOkz4/lithium-fabric-mc1.20.1
    sha512sum -c --ignore-missing SHA512SUMS
    ```
 
-2. Install through the integrity gate (this is the standard mod-addition
-   procedure — repeat it for every jar in later phases):
+2. Install through the integrity gate using the repo installer
+   (`security/install-mods.sh`) — one invocation per phase. It re-verifies
+   hashes, checks each jar's declared `fabricloader`/`breaks` constraints
+   against the live server, installs, rebaselines checksums, does an
+   announced restart, validates boot, and rolls the phase back automatically
+   if the server does not return:
 
    ```bash
-   sudo install -o minecraft -g minecraft -m 0644 spark-1.10.53-fabric.jar /opt/minecraft/homestead/mods/
-   sudo bash /path/to/regenerate-checksums.sh     # rebaselines mod_checksums.sha256
-   sudo /usr/local/bin/mc-restart                 # announced restart; verify gate checks all jars on boot
+   sudo bash install-mods.sh /tmp/modroll spark-1.10.53-fabric.jar
    ```
 
 3. Confirm the integrity gate passed: `sudo tail -2 /var/log/minecraft-integrity.log`
@@ -75,12 +77,23 @@ Order (safest first): **FerriteCore → ModernFix → Krypton → Lithium**.
 Lithium goes last — it patches the widest surface and is the only one with
 meaningful mixin-conflict risk in a 427-mod pack.
 
-For each mod: download + `sha512sum -c` → install → regenerate checksums →
-`mc-restart` → watch the log for mixin errors for a few minutes → play-test
-briefly. If the server fails to boot or logs mixin conflicts: remove the
-jar, regenerate checksums, restart — that is the whole rollback.
+For each mod (or a deliberately chosen batch), one installer invocation:
 
-Do not batch them: one mod per restart keeps attribution trivial.
+```bash
+sudo bash install-mods.sh /tmp/modroll ferritecore-6.0.1-fabric.jar
+```
+
+The installer handles verify → install → rebaseline → announced restart →
+boot validation, and rolls the batch back automatically on a failed boot.
+One mod per restart keeps attribution trivial; batching the low-risk trio
+with Lithium isolated in its own invocation is the accepted compressed
+variant.
+
+Compatibility verified 2026-08-13 against the live pack: Fabric Loader
+0.18.6 satisfies every jar's constraint (strictest: ModernFix ≥0.16.10),
+Fabric API 0.92.7 present for spark, and no installed mod matches any
+declared `breaks` (hydrogen / optifabric / dashloader absent). The
+preflight re-checks all of this on the box at install time.
 
 ## Phase 2 — world border + pre-generation (capacity control)
 
