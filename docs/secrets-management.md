@@ -23,7 +23,7 @@ All credentials, API keys, and sensitive configuration values used in the Homest
 
 ## Known Limitations
 
-- **RCON password visible in process list (F-001, Partial)** — `minecraft_exporter v0.6.1` passes `--mc.rcon-password=<value>` as a CLI argument, so the password is observable to any local user via `ps aux` or `/proc/<pid>/cmdline`. Repo-maintained RCON scripts now use direct socket clients to avoid CLI argument exposure. The secrets file itself is correctly restricted (`640 root:minecraft`); the remaining leak is in the exporter's process arguments. Full remediation requires replacing the exporter with a config-file-based alternative or a mod-based exporter. Tracked in `docs/pentest-report.md` F-001 and listed in v1.1 PoC recommendations.
+- **RCON password visible in process list (F-001, Partial)** — `minecraft_exporter v0.6.1` passes `--mc.rcon-password=<value>` as a CLI argument, so the password is observable to any local user via `ps aux` or `/proc/<pid>/cmdline`. Repo-maintained RCON scripts now use direct socket clients to avoid CLI argument exposure. The secrets file itself is correctly restricted (`640 root:minecraft`); the remaining leak is in the exporter's process arguments. Remediation path approved 2026-08-13: upgrade to minecraft-exporter v0.24.0 and supply the credential via the `MC_RCON_PASSWORD` environment variable — see `docs/runbooks/OPS-001-exporter-credential-upgrade.md`. Tracked in `docs/pentest-report.md` F-001 and listed in v1.1 PoC recommendations.
 
 ## Rotation Procedure — RCON
 
