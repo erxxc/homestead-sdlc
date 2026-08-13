@@ -11,7 +11,7 @@ jobs:
       security-events: write
       contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: bridgecrewio/checkov-action@4048c972aae68d0b983a48bb3479aab2d877b898
         with:
           directory: infrastructure/
