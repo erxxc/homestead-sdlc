@@ -58,3 +58,8 @@ ms/tick total it is optional.
 - The dominant "cost" overall is the diffuse block-entity/map-lookup load
   characteristic of a 428-mod kitchen pack — no single villain, nothing
   actionable beyond what is already installed.
+- World pre-generation (OPS-003 Phase 2) turns out to be already done — a
+  historical Chunky run at 10k radius, with exploration staying inside it
+  (hence the stable ~19 GiB world and the absent chunk-gen load in this
+  profile). Chunky 1.3.146 remains resident at zero idle cost. Remaining
+  Phase 2 work is just verifying/setting the vanilla world border.

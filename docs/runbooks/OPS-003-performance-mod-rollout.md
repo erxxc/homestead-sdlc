@@ -100,14 +100,23 @@ preflight re-checks all of this on the box at install time.
 Bounding the world caps chunk-gen spikes *and* freezes the backup-size
 math that caused the 2026-08-13 incident.
 
-1. Pick a radius (e.g. 5000 blocks): `/worldborder center 0 0`,
-   `/worldborder set 10000` (diameter).
-2. Install Chunky (resolve current 1.20.1 fabric version + SHA-512 from
-   Modrinth the same way), pre-generate: `/chunky radius 5000`,
-   `/chunky start`. Expect hours; run overnight, it survives restarts.
-3. When complete: remove the Chunky jar, regenerate checksums, restart.
-   Chunky is a tool, not a resident — smaller attack/maintenance surface.
-4. Record the new steady-state world size; revisit `CAP_GIB` if it shifts.
+**Status 2026-08-13: pre-generation already complete** — a Chunky run at
+10,000-block radius was performed historically and exploration has stayed
+inside it (world steady at ~19 GiB). Chunky 1.3.146 remains resident in
+the pack (zero idle cost — absent from the spark profile).
+
+Remaining steps:
+
+1. Verify/set the vanilla border so staying inside the pregen area is
+   guaranteed rather than habitual: `/worldborder get`; if unset,
+   `/worldborder center <pregen center>` then `/worldborder set 20000`
+   (diameter for the 10k radius). One command, no restart, reversible.
+2. Chunky residency: if it shipped with the CurseForge pack, leave it
+   (pack parity beats minimal surface here — removal would be re-added on
+   every pack update). If it was manually added for the pregen run, remove
+   it via the standard gate (rm jar → regenerate checksums → restart).
+3. `CAP_GIB=50` already fits the bordered world (~15.3 GiB per backup,
+   3 retained); revisit only if the border or pack changes.
 
 ## Phase 3 — evidence and bookkeeping
 
