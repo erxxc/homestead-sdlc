@@ -4,9 +4,11 @@ After=network.target minecraft.service
 
 [Service]
 User=minecraft
+# MC_RCON_PASSWORD is read from the secrets file by the exporter itself
+# (requires minecraft-exporter >= v0.24.0); never pass it as a CLI argument —
+# /proc/<pid>/cmdline is world-readable (F-001). See runbook OPS-001.
 EnvironmentFile=/etc/minecraft/secrets/rcon
 ExecStart=/usr/local/bin/minecraft-exporter \
-  --mc.rcon-password=${RCON_PASSWORD} \
   --mc.rcon-address=localhost:25575 \
   --mc.config-path=/opt/minecraft/exporter-config.yml \
   --mc.world=/opt/minecraft/homestead/world
