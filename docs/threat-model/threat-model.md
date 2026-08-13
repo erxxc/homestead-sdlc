@@ -2,6 +2,7 @@
 
 ## Version
 
+v1.3 — R-001/F-001 closed via exporter env-var credential; backup retention redesigned after 2026-08-13 incident
 v1.2 — Quarterly review; no new threats identified (2026-08-13)
 v1.1 — Status sweep post-PoC weekend (2026-05-23)
 
@@ -82,7 +83,7 @@ STRIDE per component analysis across all identified attack surface elements.
 | Credential theft | Spoofing | Medium | Critical | High | Localhost only binding | Implemented |
 | Command injection via RCON | Tampering | Low | Critical | Medium | Localhost only, trusted users | Implemented |
 | No RCON command audit log | Repudiation | High | High | High | Audit logger captures RCON_COMMAND events | Implemented |
-| Password in plaintext | Information Disclosure | High | Critical | Critical | Secrets file 640 root:minecraft; exporter CLI exposure remains (F-001) | Partial |
+| Password in plaintext | Information Disclosure | High | Critical | Critical | Secrets file 640 root:minecraft; exporter reads env var, no CLI exposure (F-001 closed) | Implemented |
 | RCON service crash | Denial of Service | Low | Medium | Low | Server restart recovers RCON | Accepted |
 | Full server control via RCON | Elevation of Privilege | Low | Critical | Medium | Localhost binding, strong password | Implemented |
 
@@ -134,7 +135,7 @@ STRIDE per component analysis across all identified attack surface elements.
 
 | Risk ID | Component | Threat | Risk Level | Status |
 |---|---|---|---|---|
-| R-001 | RCON | Password in plaintext | Critical | Partial — secrets file migrated; F-001 exporter exposure remains |
+| R-001 | RCON | Password in plaintext | Critical | Implemented — secrets file 640 + exporter env-var credential; F-001 closed 2026-08-13 |
 | R-002 | Minecraft | Packet flood / DDoS | High | Planned |
 | R-003 | Mod Supply Chain | Arbitrary code execution | High | Implemented — checksums + mod-watcher |
 | R-004 | Minecraft | No chat audit log | High | Partial — session events captured; chat lines not classified |
@@ -156,6 +157,7 @@ STRIDE per component analysis across all identified attack surface elements.
 ## Next Review
 
 Reviewed 2026-08-13 (quarterly). No new threats identified; attack surface unchanged
-since v1.1. Risk register statuses carried forward — R-001 remains Partial pending the
-metrics exporter credential fix (F-001), R-002 remains Planned, R-004 remains Partial.
-Dependency pins refreshed via Dependabot during this review window. Next review 2026-11-13.
+since v1.1. Same-day updates (v1.3): R-001 closed via exporter env-var credential
+(F-001 evidence captured); backup retention redesigned after the disk-full incident
+(see reports/2026-08-13-backup-incident-and-rcon-remediation.md). R-002 remains
+Planned, R-004 remains Partial. Next review 2026-11-13.
