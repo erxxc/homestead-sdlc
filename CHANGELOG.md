@@ -9,6 +9,10 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- Installed the OPS-003 performance stack 2026-08-13 (spark, FerriteCore,
+  ModernFix, Krypton, Lithium) via `security/install-mods.sh` — every jar
+  SHA-512-verified, compatibility preflighted against the live loader, and
+  admitted through the R-003 checksum gate (428 mods baselined).
 - OPS-003 runbook: spark-first performance mod rollout (FerriteCore,
   ModernFix, Krypton, Lithium pinned with SHA-512 from Modrinth) through the
   existing mod supply-chain gate, plus world-border/Chunky pre-generation
