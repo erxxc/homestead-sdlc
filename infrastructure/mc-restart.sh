@@ -10,8 +10,13 @@ import sys
 
 
 def read_secret():
+    # EnvironmentFile may hold multiple KEY=VALUE lines — parse by line.
     with open("/etc/minecraft/secrets/rcon", encoding="utf-8") as f:
-        return f.read().strip().replace("RCON_PASSWORD=", "")
+        for line in f:
+            line = line.strip()
+            if line.startswith("RCON_PASSWORD="):
+                return line.split("=", 1)[1]
+    raise RuntimeError("RCON_PASSWORD not found in secrets file")
 
 
 def request(conn, request_id, request_type, body):

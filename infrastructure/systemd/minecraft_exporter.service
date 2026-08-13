@@ -9,6 +9,7 @@ User=minecraft
 # /proc/<pid>/cmdline is world-readable (F-001). See runbook OPS-001.
 EnvironmentFile=/etc/minecraft/secrets/rcon
 ExecStart=/usr/local/bin/minecraft-exporter \
+  --web.listen-address=127.0.0.1:9225 \
   --mc.rcon-address=localhost:25575 \
   --mc.config-path=/opt/minecraft/exporter-config.yml \
   --mc.world=/opt/minecraft/homestead/world

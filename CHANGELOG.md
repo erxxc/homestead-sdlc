@@ -1,6 +1,15 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- RCON secrets-file parsing in status API, player-count metric script, and
+  restart script now reads the `RCON_PASSWORD=` line instead of the whole
+  file, tolerating the multi-line EnvironmentFile format OPS-001 introduces.
+- Exporter unit passes `--web.listen-address=127.0.0.1:9225` — minecraft-exporter
+  v0.24.0 ignores the legacy config-file listen address.
+- OPS-001 secrets step is now an idempotent file rewrite with expanded
+  post-change validation (exporter port, status API online flag, UFW check).
+
 ### Changed
 - August 2026 dependency refresh via Dependabot: actions/checkout v7,
   markdownlint-cli2-action v24, flask-cors 6.0.5 merged; checkov-action,
