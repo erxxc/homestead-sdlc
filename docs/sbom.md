@@ -15,7 +15,18 @@
 | CurseForge client pack (1.3.6) | 427 | SHA-256 checksum |
 | Client-only mods removed | 45 | Excluded from server deployment |
 | FTB mods (manual transfer) | 6 | SHA-256 checksum |
+| Performance mods (Modrinth, gated install) | 5 | SHA-512 at download + SHA-256 baseline |
 | Manual compilation | 0 | N/A |
+
+## Performance Mods (server-side, installed 2026-08-13 via OPS-003)
+
+| Mod | Version | Source |
+|---|---|---|
+| spark | 1.10.53-fabric | Modrinth |
+| FerriteCore | 6.0.1 | Modrinth |
+| ModernFix | 5.25.2+mc1.20.1 | Modrinth |
+| Krypton | 0.2.3 | Modrinth |
+| Lithium | mc1.20.1-0.11.4 | Modrinth |
 
 ## FTB Mods (CurseForge — manual transfer)
 
