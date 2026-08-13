@@ -54,11 +54,35 @@
       <li><a href="/" class="nav-link">Status</a></li>
       <li><a href="/guide.html" class="nav-link">Guide</a></li>
       <li><a href="/changelog.html" class="nav-link" aria-current="page">Changelog</a></li>
+      <li><a href="/ops.html" class="nav-link">Ops</a></li>
     </ul>
   </nav>
   <div class="container">
     <h1 class="reveal">Changelog</h1>
     <p class="subtitle reveal reveal-stagger-1">Server and modpack updates for Homestead SMP.</p>
+
+    <div class="version-block reveal">
+      <span class="version-watermark" aria-hidden="true">OPS</span>
+      <div class="version-header">
+        <span class="version-tag">SDLC</span>
+        <span class="version-date">August 13, 2026</span>
+      </div>
+      <div class="version-title">Infrastructure &amp; Security Overhaul</div>
+      <div class="section-label">Fixed</div>
+      <ul class="change-list">
+        <li class="fixed">Backup system rebuilt after a disk-full incident silently corrupted several nightly archives — backups are now world-consistent, verified nightly, and pruned to a disk budget automatically. Full write-up in the public repo.</li>
+        <li class="fixed">Closed the last high-severity finding from the April pentest (a credential visible in the server process list) and rotated the affected credential.</li>
+      </ul>
+      <div class="section-label">Added</div>
+      <ul class="change-list">
+        <li class="added">Server-side performance mods (Lithium, FerriteCore, ModernFix, Krypton) installed through the mod-integrity gate — profiled at 19.97 TPS under load afterward.</li>
+        <li class="added">A new <a href="/ops.html">Ops &amp; Security</a> page documenting how this server is run.</li>
+      </ul>
+      <div class="section-label">Updated</div>
+      <ul class="change-list">
+        <li>CI/CD dependency refresh: pinned GitHub Actions and API dependencies brought current; quarterly threat-model review completed with no new threats.</li>
+      </ul>
+    </div>
 
     <div class="version-block reveal">
       <span class="version-watermark" aria-hidden="true">1.3.6</span>

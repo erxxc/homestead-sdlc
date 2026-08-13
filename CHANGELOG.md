@@ -9,6 +9,11 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- Public site: new Ops & Security page documenting the pipeline, backup
+  lifecycle, supply-chain gate, pentest/threat-model process (including the
+  F-001 arc and the 2026-08-13 incident), and measured performance —
+  linked from every page nav, the command palette, and a new SDLC
+  changelog entry.
 - Installed the OPS-003 performance stack 2026-08-13 (spark, FerriteCore,
   ModernFix, Krypton, Lithium) via `security/install-mods.sh` — every jar
   SHA-512-verified, compatibility preflighted against the live loader, and
