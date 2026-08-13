@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ops &amp; Security — Homestead SMP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#166534">
+  <meta property="og:title" content="Ops &amp; Security — Homestead SMP">
+  <meta property="og:description" content="A hobby Minecraft server, run like a regulated workload. Controls, evidence, incidents, and all of it public.">
+  <meta property="og:url" content="https://play.geigercapital.us/ops.html">
+  <meta name="twitter:card" content="summary">
+  <script src="/main.js" defer></script>
+</head>
+<body>
+  <div class="scroll-progress"></div>
+  <div class="mouse-glow" aria-hidden="true"></div>
+  <div class="konami-toast" aria-hidden="true"></div>
+
+  <div class="palette-overlay">
+    <div class="palette">
+      <div class="palette-input-wrap">
+        <span class="palette-icon">⌘</span>
+        <input class="palette-input" type="text" placeholder="Search or jump to..." autocomplete="off">
+      </div>
+      <div class="palette-results"></div>
+      <div class="palette-footer">
+        <span><span class="palette-kbd">↑↓</span> navigate</span>
+        <span><span class="palette-kbd">↵</span> select</span>
+        <span><span class="palette-kbd">esc</span> close</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="particles" aria-hidden="true">
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <nav class="nav">
+    <a href="/" class="nav-logo">🌿 Homestead SMP</a>
+    <ul class="nav-links">
+      <li><a href="/" class="nav-link">Status</a></li>
+      <li><a href="/guide.html" class="nav-link">Guide</a></li>
+      <li><a href="/changelog.html" class="nav-link">Changelog</a></li>
+      <li><a href="/ops.html" class="nav-link" aria-current="page">Ops</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h1 class="reveal">Ops &amp; Security</h1>
+    <p class="subtitle reveal reveal-stagger-1">
+      This is a five-player cozy modded server. It is also a working proof-of-concept:
+      a hobby workload run with the controls, evidence, and discipline of a regulated one —
+      SOC&nbsp;2, ISO&nbsp;27001, and NIST&nbsp;CSF mappings included. Everything on this page is
+      backed by version-controlled artifacts in the
+      <a href="https://github.com/erxxc/homestead-sdlc">public repository</a>:
+      the threat model, the pentest report, the runbooks, and the incidents. Especially the incidents.
+    </p>
+
+    <section class="stats">
+      <div class="stats-grid">
+        <div class="stat reveal">
+          <div class="stat-number stat-number--green" data-count="30">30</div>
+          <div class="stat-label">Mapped Controls</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-number" data-count="18">18</div>
+          <div class="stat-label">Pentest Findings Tracked</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-number stat-number--green" data-count="428">428</div>
+          <div class="stat-label">Mods Checksum-Verified</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-number" data-count="19.97">19.97</div>
+          <div class="stat-label">Measured TPS</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider reveal"><span class="divider-label">· 01 · pipeline ·</span></div>
+
+    <div class="version-block reveal">
+      <span class="version-watermark" aria-hidden="true">CI/CD</span>
+      <div class="version-header">
+        <span class="version-tag">Pipeline</span>
+        <span class="version-date">Every push</span>
+      </div>
+      <div class="version-title">Nothing lands by hand</div>
+      <ul class="change-list">
+        <li>Every change to server infrastructure goes through a pull request on a protected branch — even though there is exactly one admin. Self-review is a documented, accepted risk, not an accident.</li>
+        <li>Merging to main triggers an automated deploy: runtime files are packaged, installed on the server, services restarted, and health-validated (local API checks, metrics presence, config dry-runs) before the deploy counts as done.</li>
+        <li>CodeQL and OWASP ZAP scan on a weekly schedule; Checkov lints the infrastructure config; Dependabot keeps dependencies current; gitleaks blocks secrets at commit time. Third-party CI actions are pinned to exact commit hashes.</li>
+        <li>The deploy account on the server is a dedicated user with sudo scoped to the exact commands the pipeline needs — not an admin login.</li>
+      </ul>
+    </div>
+
+    <div class="divider reveal"><span class="divider-label">· 02 · backups ·</span></div>
+
+    <div class="version-block reveal">
+      <span class="version-watermark" aria-hidden="true">00:45</span>
+      <div class="version-header">
+        <span class="version-tag">Backups</span>
+        <span class="version-date">Nightly, verified</span>
+      </div>
+      <div class="version-title">Backups that are proven, not assumed</div>
+      <ul class="change-list">
+        <li>Every night: a world-consistent snapshot (saving is paused and flushed first), written atomically so a half-finished archive can never masquerade as a backup, with a free-disk preflight so exhaustion fails loudly.</li>
+        <li>45 minutes later, an automated job extracts and checks the newest archive and logs a PASS or FAIL — because a backup that has never been restored from is a hope, not a backup.</li>
+        <li>30 minutes after that, retention pruning keeps the archive set under a fixed disk budget — always preserving the newest verified copies, and refusing to run at all if nothing healthy would remain.</li>
+      </ul>
+      <div class="section-label">Why it looks like this</div>
+      <ul class="change-list">
+        <li class="fixed">On August 13, 2026 we discovered the hard way: the disk had silently filled, three nights of backups were truncated garbage, and manual cleanup had preserved the corrupt newest files while deleting the older good ones. For a window of days, zero valid backups existed. The full post-incident report is public in the repository — every safeguard above exists because that day demanded it.</li>
+      </ul>
+    </div>
+
+    <div class="divider reveal"><span class="divider-label">· 03 · supply chain ·</span></div>
+
+    <div class="version-block reveal">
+      <span class="version-watermark" aria-hidden="true">SHA</span>
+      <div class="version-header">
+        <span class="version-tag">Supply Chain</span>
+        <span class="version-date">Every jar, every boot</span>
+      </div>
+      <div class="version-title">428 mods, none of them on trust</div>
+      <ul class="change-list">
+        <li>Every mod jar on the server is SHA-256 baselined. The server refuses to start if any jar fails verification — the integrity check is a boot gate, not a report.</li>
+        <li>A file watcher monitors the mods directory in real time and flags any change for manual review.</li>
+        <li>New mods enter through a gated installer: the artifact is pinned to an exact upstream release, SHA-512 verified before it touches the server, checked against the running loader's declared compatibility constraints, and installed with an automatic rollback if the server doesn't boot cleanly.</li>
+        <li>A software bill of materials tracks what runs and where it came from.</li>
+      </ul>
+    </div>
+
+    <div class="divider reveal"><span class="divider-label">· 04 · security ·</span></div>
+
+    <div class="version-block reveal">
+      <span class="version-watermark" aria-hidden="true">F-001</span>
+      <div class="version-header">
+        <span class="version-tag">Security</span>
+        <span class="version-date">Threat-modeled quarterly</span>
+      </div>
+      <div class="version-title">Findings get numbers, and numbers get closed</div>
+      <ul class="change-list">
+        <li>A STRIDE threat model covers every component — game protocol, remote console, map server, CI/CD, mod supply chain — with a risk register reviewed quarterly.</li>
+        <li>An April 2026 penetration test produced 18 tracked findings. Each carries a status, evidence, and control references; remediations are documented, not just done.</li>
+        <li class="fixed">Case study — finding F-001: the metrics exporter exposed a credential in the server's process list. It took a compensating-control phase, an exporter upgrade, and an environment-based credential handoff to close it — four months from finding to verified fix, with the credential rotated afterward because it had been exposed. The whole arc is in the public pentest report.</li>
+        <li>Day to day: key-only SSH with session auditing, fail2ban, host firewall default-deny, TLS with strict security headers on every web surface, admin console bound to localhost only, and a structured audit log classifying joins, leaves, op grants, and console commands.</li>
+      </ul>
+    </div>
+
+    <div class="divider reveal"><span class="divider-label">· 05 · performance ·</span></div>
+
+    <div class="version-block reveal">
+      <span class="version-watermark" aria-hidden="true">3.4%</span>
+      <div class="version-header">
+        <span class="version-tag">Performance</span>
+        <span class="version-date">Measured, then decided</span>
+      </div>
+      <div class="version-title">Optimized by profiler, not by folklore</div>
+      <ul class="change-list">
+        <li>August 2026: a spark profile under real player load measured 19.97 TPS with comfortable headroom per tick — after a server-side performance stack (Lithium, FerriteCore, ModernFix, Krypton) was installed one gated phase at a time.</li>
+        <li>The profile attributed just 3.4% of tick time to Create, the pack's flagship mod — so two further "Create optimizer" mods that folklore recommends were <em>declined</em>, with the reasoning recorded. Restraint is also an optimization decision.</li>
+        <li>The world was pre-generated to a 10,000-block radius, which is why chunk generation contributes nothing to tick time — and why the world (and its backups) stay a predictable size.</li>
+      </ul>
+    </div>
+
+    <div class="divider reveal"><span class="divider-label">· 06 · timeline ·</span></div>
+
+    <div class="version-block reveal">
+      <span class="version-watermark" aria-hidden="true">2026</span>
+      <div class="version-header">
+        <span class="version-tag">Timeline</span>
+        <span class="version-date">April — August 2026</span>
+      </div>
+      <div class="version-title">The paper trail so far</div>
+      <div class="section-label">April 2026</div>
+      <ul class="change-list">
+        <li>Server launch, then the SDLC proof-of-concept: repository, CI/CD scaffolding, 30-control framework, STRIDE threat model, baseline penetration test (18 findings), hardening audit.</li>
+      </ul>
+      <div class="section-label">May 2026</div>
+      <ul class="change-list">
+        <li>Public-readiness review and v1.1 summary; post-audit follow-up hardened the deploy pipeline, backup verification, and web security headers. Automated deploys with health validation went live.</li>
+      </ul>
+      <div class="section-label">August 2026</div>
+      <ul class="change-list">
+        <li>Quarterly threat-model review (no new threats). Dependency refresh across the pipeline.</li>
+        <li class="fixed">Backup integrity incident: found, fixed, and published the same day — and the entire backup lifecycle was rebuilt as code with scheduled verification and disk-budget retention.</li>
+        <li class="fixed">F-001 closed with evidence after four months; the exposed credential rotated.</li>
+        <li class="added">Performance stack installed through the supply-chain gate; profiled under load; optimizer decisions documented, including the ones declined.</li>
+      </ul>
+    </div>
+
+    <div class="btn-group reveal" style="justify-content:center; margin-top: 48px;">
+      <a href="https://github.com/erxxc/homestead-sdlc" class="btn btn--primary">Read the repository</a>
+      <a href="/" class="btn btn--secondary">Back to Status</a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-text">Homestead SMP · run like it matters · est. April 2026</div>
+  </footer>
+</body>
+</html>

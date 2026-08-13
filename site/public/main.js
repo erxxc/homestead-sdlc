@@ -285,6 +285,7 @@ function initCommandPalette() {
     { icon: '🟢', label: 'Server Status', hint: 'Home', href: '/' },
     { icon: '📖', label: 'Getting Started', hint: 'Guide', href: '/guide.html' },
     { icon: '📋', label: 'Changelog', hint: 'Updates', href: '/changelog.html' },
+    { icon: '🛡️', label: 'Ops & Security', hint: 'SDLC', href: '/ops.html' },
     { icon: '🗺️', label: 'Live Map', hint: 'External', href: 'https://map.geigercapital.us' },
     { icon: '📦', label: 'Modpack', hint: 'CurseForge', href: 'https://www.curseforge.com/minecraft/modpacks/homestead-cozy' },
     { icon: '💬', label: 'Community', hint: 'Coming Soon', href: '#' },
