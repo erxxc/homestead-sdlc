@@ -48,9 +48,19 @@ sudo chown root:minecraft /etc/minecraft/secrets/rcon
 
 ### 3. Install binary and updated unit
 
+The updated unit file is not part of the Actions deploy tar and the repo is not
+cloned on the VPS, so copy it over first. From your workstation, in the repo
+root:
+
+```bash
+scp -P 2222 infrastructure/systemd/minecraft_exporter.service <admin-user>@mc.geigercapital.us:/tmp/
+```
+
+Then on the VPS:
+
 ```bash
 sudo install -o root -g root -m 0755 /tmp/minecraft-exporter /usr/local/bin/minecraft-exporter
-sudo install -o root -g root -m 0644 <repo>/infrastructure/systemd/minecraft_exporter.service /etc/systemd/system/minecraft_exporter.service
+sudo install -o root -g root -m 0644 /tmp/minecraft_exporter.service /etc/systemd/system/minecraft_exporter.service
 sudo systemctl daemon-reload
 sudo systemctl restart minecraft_exporter
 ```
@@ -78,7 +88,7 @@ Grafana panels that reference exporter metric names still resolve.
 ### 5. Clean up
 
 ```bash
-rm -f /tmp/minecraft-exporter_0.24.0.linux-amd64.tar.gz /tmp/checksums.txt /tmp/minecraft-exporter
+rm -f /tmp/minecraft-exporter_0.24.0.linux-amd64.tar.gz /tmp/checksums.txt /tmp/minecraft-exporter /tmp/minecraft_exporter.service
 ```
 
 ## Rollback
