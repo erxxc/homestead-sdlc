@@ -29,4 +29,6 @@ SOC 2 TSC · ISO 27001 Annex A · CIS Ubuntu 24.04 · NIST CSF · GDPR (data min
 See `docs/control-framework.md` for the full 30-control inventory with regulatory mappings.
 
 ## Status
-v1.0 readiness assessment complete (April 2026). Post-PoC work continues — see `CHANGELOG.md` and `docs/threat-model/threat-model.md` for current control status.
+PoC summary v1.1 published 2026-05-23 (see `reports/`). Threat model on a quarterly
+review cadence — last reviewed 2026-08-13. Post-PoC work continues — see `CHANGELOG.md`
+and `docs/threat-model/threat-model.md` for current control status.

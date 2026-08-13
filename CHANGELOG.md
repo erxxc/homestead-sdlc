@@ -1,6 +1,19 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- August 2026 dependency refresh via Dependabot: actions/checkout v7,
+  markdownlint-cli2-action v24, flask-cors 6.0.5 merged; checkov-action,
+  setup-python v7, and codeql-action 4.37.3 bumps in review.
+- Quarterly threat-model review completed 2026-08-13 (v1.2) — no new threats,
+  next review 2026-11-13.
+
+### Fixed
+- Deploy validation now retries the local status API check until the service
+  accepts connections, fixing a restart race that failed otherwise healthy
+  deploys.
+
+## SDLC hardening — 2026-05-24
 ### Added
 - Manual GitHub Actions launch triggers for ZAP, CodeQL, and Checkov evidence scans.
 - Post-PR audit follow-up report covering VPS deploy, backup verification, Nginx tuning, and scan evidence updates.

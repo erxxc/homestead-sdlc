@@ -2,6 +2,7 @@
 
 ## Version
 
+v1.2 — Quarterly review; no new threats identified (2026-08-13)
 v1.1 — Status sweep post-PoC weekend (2026-05-23)
 
 ## Methodology
@@ -154,4 +155,7 @@ STRIDE per component analysis across all identified attack surface elements.
 
 ## Next Review
 
-Reviewed 2026-05-23. Quarterly cadence going forward — next review 2026-08-23.
+Reviewed 2026-08-13 (quarterly). No new threats identified; attack surface unchanged
+since v1.1. Risk register statuses carried forward — R-001 remains Partial pending the
+metrics exporter credential fix (F-001), R-002 remains Planned, R-004 remains Partial.
+Dependency pins refreshed via Dependabot during this review window. Next review 2026-11-13.
