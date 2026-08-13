@@ -6,4 +6,7 @@ After=minecraft.service
 [Service]
 Type=oneshot
 User=minecraft
+# Keep the midnight tar/gzip from stealing tick time on the game thread
+Nice=19
+IOSchedulingClass=idle
 ExecStart=/usr/local/bin/backup-world
