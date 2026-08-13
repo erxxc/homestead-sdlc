@@ -9,6 +9,12 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- OPS-003 runbook: spark-first performance mod rollout (FerriteCore,
+  ModernFix, Krypton, Lithium pinned with SHA-512 from Modrinth) through the
+  existing mod supply-chain gate, plus world-border/Chunky pre-generation
+  phase.
+- Backup service now runs at Nice=19 with idle I/O scheduling so the
+  midnight archive never competes with the game tick.
 - World-consistent backup script: RCON save-off → save-all flush → tar to
   `.part` → atomic rename → save-on, with a ≥20 GiB free-disk preflight;
   prune now removes undersized truncation stubs when a healthy archive exists.
