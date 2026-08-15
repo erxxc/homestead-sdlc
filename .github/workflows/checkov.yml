@@ -12,7 +12,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7
-      - uses: bridgecrewio/checkov-action@9b70310bcd306d11740313070b940167d6b23085
+      - uses: bridgecrewio/checkov-action@358405ddafaa109ad35d3d607bbc7cf933c742d9
         with:
           directory: infrastructure/
           soft_fail: true
