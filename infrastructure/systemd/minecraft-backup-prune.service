@@ -4,7 +4,10 @@ After=minecraft-backup-verify.service
 
 [Service]
 Type=oneshot
-Environment=CAP_GIB=50
+# 2026-08-18 rightsizing: base disk usage grew to ~75GB; 3 retained archives
+# (49GiB) left <20GiB free and the backup preflight correctly refused to run.
+# 35GiB = 2 archives steady-state + headroom for writing the third.
+Environment=CAP_GIB=35
 Environment=MIN_KEEP=2
 Environment=MIN_SIZE_MIB=1024
 ExecStart=/usr/local/bin/prune-backups

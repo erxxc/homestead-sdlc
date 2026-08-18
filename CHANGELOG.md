@@ -33,6 +33,11 @@
   with logrotate coverage for verify/prune logs. See runbook OPS-002.
 
 ### Fixed
+- Backup retention cap rightsized 50 → 35 GiB (2026-08-18): base disk usage
+  growth left less than the backup preflight's 20 GiB floor free with three
+  archives retained, so the 00:00 backup correctly refused to run. Two
+  archives steady-state restores writing headroom; sizing rule documented
+  in OPS-002.
 - RCON secrets-file parsing in status API, player-count metric script, and
   restart script now reads the `RCON_PASSWORD=` line instead of the whole
   file, tolerating the multi-line EnvironmentFile format OPS-001 introduces.
