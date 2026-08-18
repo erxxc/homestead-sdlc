@@ -10,10 +10,13 @@ cannot hold) with repo-managed systemd timers:
 |---|---|---|
 | minecraft-backup.timer | 00:00 | tar world to /opt/minecraft/backups (existing, now codified) |
 | minecraft-backup-verify.timer | 00:45 | verify newest archive, PASS/FAIL to log (closes the gap that left verification dark 2026-05-24 → 2026-08-13) |
-| minecraft-backup-prune.timer | 01:15 | delete oldest until total ≤ 50 GiB, always keeping the 2 newest |
+| minecraft-backup-prune.timer | 01:15 | delete oldest until total ≤ 35 GiB, always keeping the 2 newest |
 
 Control C-021. Cap and floor are set in `minecraft-backup-prune.service`
-(`CAP_GIB=50`, `MIN_KEEP=2`) — change via PR, not on the box.
+(`CAP_GIB=35`, `MIN_KEEP=2`) — change via PR, not on the box. Sizing rule:
+`CAP_GIB` + one archive + the backup preflight's 20 GiB slack must fit inside
+disk minus base usage (rightsized from 50 on 2026-08-18 when base usage
+growth pushed free space under the preflight floor).
 
 ## Step 0 — sudoers preflight (BEFORE merging the PR)
 

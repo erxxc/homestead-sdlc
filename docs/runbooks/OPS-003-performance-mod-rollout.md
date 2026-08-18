@@ -115,8 +115,8 @@ Remaining steps:
    (pack parity beats minimal surface here — removal would be re-added on
    every pack update). If it was manually added for the pregen run, remove
    it via the standard gate (rm jar → regenerate checksums → restart).
-3. `CAP_GIB=50` already fits the bordered world (~15.3 GiB per backup,
-   3 retained); revisit only if the border or pack changes.
+3. `CAP_GIB=35` fits the bordered world (~16.4 GiB per backup, 2 retained
+   steady-state); rightsized 2026-08-18 — see OPS-002 for the sizing rule.
 
 ## Phase 3 — evidence and bookkeeping
 
