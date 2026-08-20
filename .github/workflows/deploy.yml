@@ -125,6 +125,9 @@ jobs:
             bash -n "$PRUNE_DEST"
             bash -n "$BACKUP_WORLD_DEST"
             sudo logrotate -d "$LOGROTATE_DEST" >/tmp/minecraft-logrotate-check.log
+            # minecraft-logrotate.conf is the sole owner of the nginx logs; the
+            # stock package config duplicates them and makes logrotate exit 1
+            test ! -e /etc/logrotate.d/nginx
 
             sudo "$ONLINE_PLAYERS_DEST"
             sudo test -x "$VERIFY_BACKUP_DEST"

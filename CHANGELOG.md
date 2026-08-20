@@ -33,6 +33,13 @@
   with logrotate coverage for verify/prune logs. See runbook OPS-002.
 
 ### Fixed
+- Nightly logrotate run no longer exits 1 (failing silently since 2026-04-26):
+  `minecraft-logrotate.conf` and the stock nginx package config both claimed
+  the nginx logs, so logrotate flagged a duplicate and marked the unit failed
+  every night — rotation itself kept working via our stanza. Resolution keeps
+  the repo-managed 30-day stanza as sole owner, deletes the stock
+  `/etc/logrotate.d/nginx`, and adds a deploy validation that fails if the
+  stock file reappears.
 - Backup retention cap rightsized 50 → 35 GiB (2026-08-18): base disk usage
   growth left less than the backup preflight's 20 GiB floor free with three
   archives retained, so the 00:00 backup correctly refused to run. Two
