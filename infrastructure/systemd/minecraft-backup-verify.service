@@ -1,6 +1,7 @@
 [Unit]
 Description=Verify latest Minecraft backup
 After=minecraft-backup.service
+OnFailure=minecraft-alert@%p.service
 
 [Service]
 Type=oneshot

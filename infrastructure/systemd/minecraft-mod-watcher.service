@@ -2,6 +2,11 @@
 [Unit]
 Description=Minecraft Mod Directory Watcher
 After=network.target
+OnFailure=minecraft-alert@%p.service
+# See minecraft-audit.service — without a widened start-limit window a
+# crash-loop never reaches failed state and OnFailure never fires.
+StartLimitIntervalSec=10min
+StartLimitBurst=5
 
 [Service]
 User=minecraft
