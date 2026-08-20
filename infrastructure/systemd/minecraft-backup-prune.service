@@ -1,6 +1,7 @@
 [Unit]
 Description=Prune Minecraft backups to size cap
 After=minecraft-backup-verify.service
+OnFailure=minecraft-alert@%p.service
 
 [Service]
 Type=oneshot

@@ -1,0 +1,16 @@
+# Failure-alert dispatch: any unit can declare
+#   OnFailure=minecraft-alert@%p.service
+# and a push notification (ntfy) fires when it enters failed state.
+# Deployed from security/notify-failure.sh. See docs/runbooks/OPS-004.
+[Unit]
+Description=Failure alert for %i.service
+# Deliberately no OnFailure= here — the alert unit must never alert on itself.
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/notify-failure %i
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true

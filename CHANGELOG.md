@@ -9,6 +9,14 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- Failure alerting (runbook OPS-004): a templated `minecraft-alert@.service`
+  pushes an ntfy notification whenever a monitored unit enters failed state —
+  native `OnFailure=` on the backup/verify/prune/audit/mod-watcher units,
+  drop-in coverage for logrotate, minecraft, status-api, and the exporter.
+  Closes the silent-failure gap behind the 2026-08-18 unnoticed backup
+  refusal and the 4-month logrotate failure. The audit and mod-watcher
+  crash-loops now trip a start limit (5 failures / 10 min) so they page
+  instead of restarting forever.
 - Public site: new Ops & Security page documenting the pipeline, backup
   lifecycle, supply-chain gate, pentest/threat-model process (including the
   F-001 arc and the 2026-08-13 incident), and measured performance —

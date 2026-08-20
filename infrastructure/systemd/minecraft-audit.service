@@ -3,6 +3,13 @@
 Description=Homestead Minecraft Security Audit Logger
 After=minecraft.service
 Requires=minecraft.service
+OnFailure=minecraft-alert@%p.service
+# With Restart=always/RestartSec=10 and systemd's default 10s start-limit
+# window, a crash-loop would restart forever and never enter failed state —
+# OnFailure would never fire. 5 failures inside 10 minutes now stops the
+# loop and pages instead.
+StartLimitIntervalSec=10min
+StartLimitBurst=5
 
 [Service]
 User=minecraft

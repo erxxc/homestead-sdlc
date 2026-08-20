@@ -29,6 +29,7 @@ jobs:
       PRUNE_DEST: /usr/local/bin/prune-backups
       BACKUP_WORLD_DEST: /usr/local/bin/backup-world
       LOGROTATE_DEST: /etc/logrotate.d/minecraft
+      NOTIFY_FAILURE_DEST: /usr/local/bin/notify-failure
       BLUEMAP_WORLD_DEST: /opt/minecraft/homestead/config/bluemap/maps/world.conf
     steps:
       - uses: actions/checkout@v7
@@ -50,6 +51,9 @@ jobs:
             infrastructure/bluemap-world.conf \
             infrastructure/mc-restart.sh \
             infrastructure/minecraft-logrotate.conf \
+            "infrastructure/systemd/minecraft-alert@.service" \
+            infrastructure/systemd/onfailure-alert.conf \
+            security/notify-failure.sh \
             infrastructure/systemd/minecraft-audit.service \
             infrastructure/systemd/minecraft-mod-watcher.service \
             infrastructure/systemd/minecraft-backup.service \
@@ -76,7 +80,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ env.SSH_PORT }}
-          envs: DEPLOY_STAGING_DIR,DEPLOY_ARCHIVE,STATUS_API_SERVICE,STATUS_API_DEST,AUDIT_SERVICE,MOD_WATCHER_SERVICE,SECURITY_MONITOR_DEST,MOD_WATCHER_DEST,MC_RESTART_DEST,VERIFY_BACKUP_DEST,ONLINE_PLAYERS_DEST,PRUNE_DEST,BACKUP_WORLD_DEST,LOGROTATE_DEST,BLUEMAP_WORLD_DEST,GITHUB_SHA
+          envs: DEPLOY_STAGING_DIR,DEPLOY_ARCHIVE,STATUS_API_SERVICE,STATUS_API_DEST,AUDIT_SERVICE,MOD_WATCHER_SERVICE,SECURITY_MONITOR_DEST,MOD_WATCHER_DEST,MC_RESTART_DEST,VERIFY_BACKUP_DEST,ONLINE_PLAYERS_DEST,PRUNE_DEST,BACKUP_WORLD_DEST,LOGROTATE_DEST,NOTIFY_FAILURE_DEST,BLUEMAP_WORLD_DEST,GITHUB_SHA
           script: |
             set -euo pipefail
 
@@ -109,6 +113,13 @@ jobs:
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/minecraft-mod-watcher.service" "/etc/systemd/system/${MOD_WATCHER_SERVICE}.service"
             sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/security/prune-backups.sh" "$PRUNE_DEST"
             sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/security/backup-world.sh" "$BACKUP_WORLD_DEST"
+            sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/security/notify-failure.sh" "$NOTIFY_FAILURE_DEST"
+            sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/minecraft-alert@.service" "/etc/systemd/system/minecraft-alert@.service"
+            # Failure-alert drop-ins for units the repo does not own
+            for unit in logrotate minecraft minecraft-status-api minecraft_exporter; do
+              sudo install -d -o root -g root -m 0755 "/etc/systemd/system/$unit.service.d"
+              sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/onfailure-alert.conf" "/etc/systemd/system/$unit.service.d/onfailure-alert.conf"
+            done
             for unit in minecraft-backup.service minecraft-backup.timer minecraft-backup-verify.service minecraft-backup-verify.timer minecraft-backup-prune.service minecraft-backup-prune.timer; do
               sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/$unit" "/etc/systemd/system/$unit"
             done
@@ -124,6 +135,9 @@ jobs:
             bash -n "$ONLINE_PLAYERS_DEST"
             bash -n "$PRUNE_DEST"
             bash -n "$BACKUP_WORLD_DEST"
+            bash -n "$NOTIFY_FAILURE_DEST"
+            systemctl cat "minecraft-alert@.service" >/dev/null
+            test -f /etc/systemd/system/logrotate.service.d/onfailure-alert.conf
             sudo logrotate -d "$LOGROTATE_DEST" >/tmp/minecraft-logrotate-check.log
             # minecraft-logrotate.conf is the sole owner of the nginx logs; the
             # stock package config duplicates them and makes logrotate exit 1
