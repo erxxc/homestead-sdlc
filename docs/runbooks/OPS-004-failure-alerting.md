@@ -53,7 +53,8 @@ Drop-in coverage (units the repo does not own — deploy installs
 
 ## One-time channel setup
 
-Run `sudo bash /tmp/setup-alerts.sh` **in your own terminal, not through a
+Run `security/setup-alerts.sh` (copy it to the VPS, e.g. `/tmp/setup-alerts.sh`,
+then `sudo bash /tmp/setup-alerts.sh`) **in your own terminal, not through a
 Claude session** — the script prints the topic once, and the topic is the
 credential. It generates a random `homestead-<20 chars>` topic, writes
 `/etc/minecraft/secrets/alerts`, and sends a test push. Subscribe to the
