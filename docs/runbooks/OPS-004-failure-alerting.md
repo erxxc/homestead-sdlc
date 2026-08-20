@@ -10,7 +10,7 @@ seconds, carrying the unit's result, exit status, and last journal lines.
 
 ## Architecture
 
-```
+```text
 <unit>.service  --OnFailure=minecraft-alert@%p.service-->  minecraft-alert@<unit>.service
                                                               └── /usr/local/bin/notify-failure <unit>
                                                                     ├── reads ALERT_URL from /etc/minecraft/secrets/alerts
