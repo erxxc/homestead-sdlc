@@ -42,7 +42,7 @@ Native `OnFailure=` lines (repo-owned units, deployed from
   `StartLimitBurst=5`: five failures inside ten minutes stops the loop,
   marks the unit failed, and pages. A one-off crash still just restarts.
 - `uptime-kuma.service` (since OPS-005, 2026-08-24) — same `Restart=on-failure`
-  + start-limit pattern. Installed by the OPS-005 script rather than the
+  and start-limit pattern. Installed by the OPS-005 script rather than the
   deploy workflow.
 
 Drop-in coverage (units the repo does not own — deploy installs
