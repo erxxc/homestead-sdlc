@@ -86,9 +86,11 @@ that nothing was listening on `:3001`.
       `uptime-kuma`, `OnFailure=minecraft-alert@uptime-kuma.service`,
       Node v22.23.2, pm2 removed.
 - [ ] Delete or replace the "Voice Chat" TCP monitor in the Kuma UI.
-- [ ] Reboot for the six pending kernel updates (uptime > 100 days); doubles
-      as cold-boot validation for `uptime-kuma.service` and the backup
-      timers.
+- [x] Reboot for the six pending kernel updates — done 2026-08-24 16:41
+      (6.8.0-138, uptime reset from 102 days). Cold-boot validation passed:
+      all services active with 0 restarts, `uptime-kuma.service` listening
+      within the first boot minute, mod-integrity gate PASS, backup/verify/
+      prune timers armed, no failed units.
 - [ ] Add Kuma's `:3001` (or its status page) to an external check so a
       future outage is seen from outside the host.
 - [ ] Note the C-019 evidence gap (2026-05-14 → 2026-08-24) in the next
