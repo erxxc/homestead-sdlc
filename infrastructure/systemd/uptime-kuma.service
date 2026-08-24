@@ -1,0 +1,53 @@
+# Uptime Kuma (C-019 availability monitoring) as a native systemd service.
+# Replaces the pm2-supervised instance that crash-looped invisibly from the
+# 2026-05-14 reboot until 2026-08-24 — pm2 reported it "online" the whole
+# time, so OnFailure alerting (OPS-004) never saw it. See runbook OPS-005 and
+# reports/2026-08-24-uptime-kuma-outage.md.
+# Installed by monitoring/uptime-kuma/migrate-to-systemd.sh (not by the
+# deploy workflow — see the sudoers note in OPS-005).
+[Unit]
+Description=Uptime Kuma availability monitor
+Documentation=https://github.com/louislam/uptime-kuma
+After=network-online.target
+Wants=network-online.target
+OnFailure=minecraft-alert@%p.service
+# Restart=on-failure with a 10s backoff: five crashes inside ten minutes
+# stops the loop, marks the unit failed, and pages — same start-limit math
+# as minecraft-audit.service. A one-off crash still just restarts.
+StartLimitIntervalSec=10min
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=uptime-kuma
+Group=uptime-kuma
+WorkingDirectory=/opt/uptime-kuma
+Environment=NODE_ENV=production
+Environment=DATA_DIR=/opt/uptime-kuma/data/
+Environment=UPTIME_KUMA_PORT=3001
+# Kuma binds all interfaces by default; 3001 is blocked at UFW + the Hetzner
+# firewall (C-005). To restrict it to an SSH tunnel instead, uncomment:
+#Environment=UPTIME_KUMA_HOST=127.0.0.1
+ExecStart=/usr/bin/node server/server.js
+Restart=on-failure
+RestartSec=10
+KillSignal=SIGTERM
+TimeoutStopSec=30
+# stdout/stderr go to journald (size-capped) — no more unbounded pm2 logs.
+StandardOutput=journal
+StandardError=journal
+
+# Hardening — the process only needs to read its code and write its data dir.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/uptime-kuma/data
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

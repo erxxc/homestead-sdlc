@@ -41,6 +41,9 @@ Native `OnFailure=` lines (repo-owned units, deployed from
   `OnFailure=` would never fire. Both now set `StartLimitIntervalSec=10min` /
   `StartLimitBurst=5`: five failures inside ten minutes stops the loop,
   marks the unit failed, and pages. A one-off crash still just restarts.
+- `uptime-kuma.service` (since OPS-005, 2026-08-24) — same `Restart=on-failure`
+  + start-limit pattern. Installed by the OPS-005 script rather than the
+  deploy workflow.
 
 Drop-in coverage (units the repo does not own — deploy installs
 `infrastructure/systemd/onfailure-alert.conf` as
@@ -95,6 +98,13 @@ terminal transcript, screenshot, or shell history.
   timer that never fires (e.g. wall-clock issues) — the inverse-heartbeat
   model (Uptime Kuma push monitor on backup success) remains a possible
   complement, tracked in the backlog.
+- `OnFailure=` only sees units systemd supervises. A process manager that
+  sits outside systemd (pm2, forever, a `screen` session) restarts its child
+  itself and reports it "online", so a crash loop never becomes a `failed`
+  unit — this is exactly how Uptime Kuma stayed dark for 102 days
+  (`reports/2026-08-24-uptime-kuma-outage.md`). Run everything as a native
+  unit; if a supervisor is unavoidable, the supervisor itself needs a
+  health check that fails.
 - Alert delivery depends on outbound HTTPS from the VPS; `curl` retries 3×
   with backoff, and a failed send lands in `minecraft-alert@*.service`
   journal (visible in `systemctl --failed` on the next checkup).
