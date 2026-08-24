@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 ### Security
+- Uptime Kuma (C-019) moved from a per-user `pm2` daemon to a hardened native
+  systemd unit: dedicated `uptime-kuma` system user, `ProtectSystem=strict`
+  with the data dir as the only writable path, database no longer
+  world-readable (it holds the Discord webhook), journald instead of
+  unbounded log files, `OnFailure=` alerting with a 5-in-10-min start limit.
+  Node upgraded 18.19.1 → 22.x from NodeSource via a manually verified
+  keyring and pinned apt source (runbook OPS-005).
 - Closed pentest finding F-001 / risk R-001: minecraft-exporter v0.24.0 reads
   the RCON credential from the restricted EnvironmentFile; no credential in
   the process list (threat model v1.3).
@@ -41,6 +48,22 @@
   with logrotate coverage for verify/prune logs. See runbook OPS-002.
 
 ### Fixed
+- Uptime Kuma had been crash-looping since the 2026-05-14 reboot — 102 days
+  with no availability monitoring or Discord alerts (C-019 dark, including
+  through the 2026-05-23 PoC summary). Root cause: the SQLite data dir was
+  root-owned while pm2 ran the process as the admin user, so every start
+  died on its first write and pm2 relaunched it every ~3 s (382k restarts,
+  9.1 GB of pm2 logs — a large share of the "base disk growth" that forced
+  the 2026-08-18 backup-cap rightsizing). Ownership fixed and logs flushed
+  2026-08-24; supervision moved under systemd so it can never be silent
+  again. Post-incident report:
+  `reports/2026-08-24-uptime-kuma-outage.md`.
+- Docs: `infrastructure/README.md` claimed `mc-restart` runs from a systemd
+  timer — it runs from root's crontab (Sundays 03:00 UTC).
+  `monitoring/uptime-kuma/README.md` pointed at a non-existent
+  `/var/lib/uptime-kuma/kuma.db`; the data lives in `/opt/uptime-kuma/data`.
+  Kuma's "Voice Chat" monitor is documented as misconfigured (TCP probe of
+  a UDP port).
 - Nightly logrotate run no longer exits 1 (failing silently since 2026-04-26):
   `minecraft-logrotate.conf` and the stock nginx package config both claimed
   the nginx logs, so logrotate flagged a duplicate and marked the unit failed
