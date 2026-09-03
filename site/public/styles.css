@@ -1725,3 +1725,51 @@ body.time-night .particles .particle { background: rgba(74, 222, 128, 0.3); }
     content: none;
   }
 }
+
+/* ── Parent signature (Geiger Capital) ── */
+/* Sits after .nav-links, which carries margin-left:auto, so it lands hard right.
+   currentColor means the glyph inherits the host theme's ink rather than
+   shipping a palette of its own. */
+.nav-parent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: var(--space-lg);
+  padding-left: var(--space-lg);
+  border-left: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  opacity: 0.38;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.nav-parent:hover,
+.nav-parent:focus-visible {
+  opacity: 0.92;
+}
+
+.nav-parent-glyph {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.nav-parent-text {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-light);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* The nav already carries a logo and four links; on a phone the wordmark is the
+   first thing that has to go, but the glyph still marks the parent. */
+@media (max-width: 760px) {
+  .nav-parent-text { display: none; }
+  .nav-parent { margin-left: var(--space-md); padding-left: var(--space-md); }
+}
+
+@media print {
+  .nav-parent { display: none !important; }
+}
