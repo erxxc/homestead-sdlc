@@ -18,8 +18,9 @@
   /* The mark's green, shared with the studio index. A logo is a graphical
      object (3:1), not text (4.5:1): 5.02:1 on white, 3.95:1 on this ground. */
   --color-green-mark:     #16803c;
-  --color-blue-deep:      #1a56db;
-  --color-blue-bright:    #60a5fa;
+  /* The blues are gone: the page is green-and-near-black throughout, and a
+     lone blue address block or version tag read as a leftover rather than an
+     accent. Removed rather than left declared-but-unused. */
   --color-red:            #ef4444;
   --color-red-soft:       #f87171;
 
@@ -275,7 +276,7 @@ p {
 .address {
   font-family: var(--font-mono);
   font-size: var(--text-lg);
-  color: var(--color-blue-bright);
+  color: var(--color-green-bright);
   margin: var(--space-md) 0;
   letter-spacing: var(--tracking-wide);
 }
@@ -306,7 +307,7 @@ p {
   border: 1px solid var(--color-border);
   padding: var(--space-md);
   border-radius: var(--radius-md);
-  color: var(--color-blue-bright);
+  color: var(--color-green-bright);
   font-size: var(--text-base);
   margin: var(--space-md) 0;
   text-align: center;
@@ -502,7 +503,7 @@ p {
 
 .version-tag--initial {
   background: #1a3a5c;
-  color: var(--color-blue-bright);
+  color: var(--color-green-bright);
 }
 
 .version-date {
@@ -542,7 +543,7 @@ p {
 
 .change-list li.fixed::before {
   content: '\2713';
-  color: var(--color-blue-bright);
+  color: var(--color-green-bright);
 }
 
 .change-list li.removed::before {
