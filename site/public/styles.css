@@ -810,12 +810,20 @@ body::after {
 }
 
 .gallery-item {
-  background: var(--color-green-deep);
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   display: block;
   width: 100%;
   object-fit: cover;
+  /* height:auto is load-bearing. The width/height attributes on the <img> are
+     there to reserve the box and stop layout shifting as each image lands, but
+     HTML maps them to the width and height CSS properties as presentational
+     hints. CSS overrides the width one (width:100%) and, without this, nothing
+     overrides the height — so the element takes its full intrinsic height and
+     aspect-ratio never applies, because aspect-ratio only governs when height
+     is auto. */
+  height: auto;
   color: var(--color-text-tertiary);
   font-size: var(--text-sm);
   font-weight: var(--weight-light);
@@ -1122,11 +1130,19 @@ body::after {
 }
 
 .spotlight-image {
-  background: var(--color-green-deep);
+  background: var(--color-surface-raised);
   aspect-ratio: 16 / 10;
   display: block;
   width: 100%;
   object-fit: cover;
+  /* height:auto is load-bearing. The width/height attributes on the <img> are
+     there to reserve the box and stop layout shifting as each image lands, but
+     HTML maps them to the width and height CSS properties as presentational
+     hints. CSS overrides the width one (width:100%) and, without this, nothing
+     overrides the height — so the element takes its full intrinsic height and
+     aspect-ratio never applies, because aspect-ratio only governs when height
+     is auto. */
+  height: auto;
   transition: transform var(--duration-normal) var(--ease-out);
 }
 
