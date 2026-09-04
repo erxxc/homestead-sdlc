@@ -1773,3 +1773,25 @@ body.time-night .particles .particle { background: rgba(74, 222, 128, 0.3); }
 @media print {
   .nav-parent { display: none !important; }
 }
+
+/* ── Nav logo mark ── */
+/* Was a leaf emoji, which drew differently on every platform and could not be
+   coloured. The glyph inherits currentColor from .nav-logo, so it follows the
+   site's own token instead of carrying a hardcoded green. */
+.nav-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.nav-logo-glyph {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+  display: block;
+  color: var(--color-green-bright);
+}
+
+@media (max-width: 640px) {
+  .nav-logo-glyph { width: 17px; height: 17px; }
+}
