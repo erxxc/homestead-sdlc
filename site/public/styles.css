@@ -216,7 +216,12 @@ p {
 }
 
 .btn--primary {
-  background: var(--color-blue-deep);
+  /* Was --color-blue-deep, the only blue object left on a green-and-near-black
+     page — and the .btn:hover glow was already green, so the blue was the
+     outlier rather than the system. This is the mark's own green, so the primary
+     action and the logo are the same colour. White on it is 5.02:1, comfortably
+     past the 4.5:1 that button text needs. */
+  background: var(--color-green-mark);
   color: white;
 }
 
@@ -681,7 +686,7 @@ body::after {
 }
 
 .btn--primary:hover {
-  box-shadow: 0 0 16px -2px rgba(26, 86, 219, 0.3);
+  box-shadow: 0 0 16px -2px rgba(22, 128, 60, 0.45);
 }
 
 .nav-link {
