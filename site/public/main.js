@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  initGate();
   initScrollProgress();
   initReveals();
   initTabs();
@@ -14,19 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initDynamicFavicon();
   initTimeOfDay();
 });
-
-function initGate() {
-  const gate = document.querySelector('.gate');
-  if (!gate) return;
-  const btn = gate.querySelector('.gate-enter');
-  if (!btn) return;
-
-  document.body.style.overflow = 'hidden';
-  btn.addEventListener('click', () => {
-    gate.classList.add('is-open');
-    document.body.style.overflow = '';
-  });
-}
 
 function initScrollProgress() {
   const bar = document.querySelector('.scroll-progress');
@@ -46,10 +32,11 @@ function initReveals() {
   const els = document.querySelectorAll('.reveal');
   if (!els.length) return;
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    els.forEach(el => el.classList.add('is-visible'));
-    return;
-  }
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!('IntersectionObserver' in window)) return;
+
+  // Opt into the hidden start state only now that we know we can undo it.
+  document.documentElement.classList.add('js-reveal');
 
   const observer = new IntersectionObserver(
     (entries) => {
