@@ -13,6 +13,8 @@ StartLimitBurst=5
 
 [Service]
 User=minecraft
+StateDirectory=minecraft-audit
+Environment=MINECRAFT_AUDIT_STATE=/var/lib/minecraft-audit/position.json
 ExecStart=/usr/bin/python3 /opt/minecraft/security-monitor.py
 Restart=always
 RestartSec=10

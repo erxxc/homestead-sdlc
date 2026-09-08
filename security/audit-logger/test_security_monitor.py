@@ -21,6 +21,7 @@ class AuditLogRotationTests(unittest.TestCase):
         monitor.LOG_FILE = str(self.server_log)
         monitor.AUDIT_LOG = str(self.audit_log)
         monitor.STATE_FILE = str(self.state_file)
+        monitor.LEGACY_STATE_FILE = str(root / "legacy-state")
 
     def tearDown(self):
         self.temporary.cleanup()
@@ -67,7 +68,7 @@ class AuditLogRotationTests(unittest.TestCase):
         self.assertEqual(self.events()[-1]["event_type"], "PLAYER_LEAVE")
 
     def test_migrates_integer_state_and_recovers_from_shorter_log(self):
-        self.state_file.write_text("3039940")
+        Path(monitor.LEGACY_STATE_FILE).write_text("3039940")
         self.server_log.write_text("Done (1.23s)! For help, type help\n")
 
         state = monitor.read_available(monitor.get_state())

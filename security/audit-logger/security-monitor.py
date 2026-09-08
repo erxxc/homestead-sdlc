@@ -15,7 +15,10 @@ LOG_FILE = os.environ.get(
     "MINECRAFT_LOG_FILE", "/opt/minecraft/homestead/logs/latest.log"
 )
 AUDIT_LOG = os.environ.get("MINECRAFT_AUDIT_LOG", "/var/log/minecraft-audit.json")
-STATE_FILE = os.environ.get("MINECRAFT_AUDIT_STATE", "/var/lib/minecraft-audit.pos")
+STATE_FILE = os.environ.get(
+    "MINECRAFT_AUDIT_STATE", "/var/lib/minecraft-audit/position.json"
+)
+LEGACY_STATE_FILE = "/var/lib/minecraft-audit.pos"
 
 SECURITY_EVENTS = [
     (r"(\w+) joined the game", "PLAYER_JOIN"),
@@ -36,9 +39,9 @@ SECURITY_EVENTS = [
 ]
 
 
-def get_state():
+def read_state(path):
     try:
-        with open(STATE_FILE) as f:
+        with open(path) as f:
             value = f.read().strip()
         try:
             state = json.loads(value)
@@ -51,7 +54,15 @@ def get_state():
             "inode": int(state["inode"]),
         }
     except (KeyError, OSError, TypeError, ValueError):
-        return {"position": 0, "device": None, "inode": None}
+        return None
+
+
+def get_state():
+    for path in dict.fromkeys((STATE_FILE, LEGACY_STATE_FILE)):
+        state = read_state(path)
+        if state is not None:
+            return state
+    return {"position": 0, "device": None, "inode": None}
 
 
 def save_state(state):
