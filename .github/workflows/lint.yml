@@ -16,6 +16,10 @@ jobs:
         run: pip install black
       - name: Check Python formatting
         run: black --check api/ security/ --diff
+      - name: Test audit logger
+        run: python -m unittest discover -s security/audit-logger -p 'test_*.py' -v
+      - name: Check shell syntax
+        run: bash -n security/*.sh security/audit-logger/*.sh infrastructure/*.sh monitoring/uptime-kuma/*.sh
       - name: Markdown lint
         uses: DavidAnson/markdownlint-cli2-action@v24
         with:

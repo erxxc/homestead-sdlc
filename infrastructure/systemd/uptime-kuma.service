@@ -25,9 +25,9 @@ WorkingDirectory=/opt/uptime-kuma
 Environment=NODE_ENV=production
 Environment=DATA_DIR=/opt/uptime-kuma/data/
 Environment=UPTIME_KUMA_PORT=3001
-# Kuma binds all interfaces by default; 3001 is blocked at UFW + the Hetzner
-# firewall (C-005). To restrict it to an SSH tunnel instead, uncomment:
-#Environment=UPTIME_KUMA_HOST=127.0.0.1
+# The UI is administered through an SSH tunnel; do not expose the backend
+# listener even if a firewall rule is accidentally widened.
+Environment=UPTIME_KUMA_HOST=127.0.0.1
 ExecStart=/usr/bin/node server/server.js
 Restart=on-failure
 RestartSec=10

@@ -87,6 +87,27 @@
     <p class="subtitle reveal reveal-stagger-1">Server and modpack updates for Homestead SMP.</p>
 
     <div class="version-block reveal">
+      <span class="version-watermark" aria-hidden="true">HARDEN</span>
+      <div class="version-header">
+        <span class="version-tag">Operations</span>
+        <span class="version-date">September 8, 2026</span>
+      </div>
+      <div class="version-title">Small Surface-Area Hardening Pass</div>
+      <div class="section-label">Verified</div>
+      <ul class="change-list">
+        <li class="fixed">Grafana and BlueMap now listen on localhost only; their public-facing paths and Minecraft remained healthy after restart.</li>
+        <li class="fixed">RCON and all monitoring backends were rechecked from outside the VPS and remain blocked by the host and provider firewalls.</li>
+        <li class="fixed">Nightly backup, archive verification, retention pruning, status API, exporters, availability monitoring, and game services all passed live health checks.</li>
+      </ul>
+      <div class="section-label">Hardened</div>
+      <ul class="change-list">
+        <li class="added">Audit logging now follows Minecraft log replacement and truncation safely, closing a stale-offset gap after restart or rotation.</li>
+        <li class="added">The public site now sends an explicit content security policy, HSTS, clickjacking protection, permissions restrictions, and MIME-sniffing protection.</li>
+        <li class="added">Uptime Kuma is configured for a localhost-only listener, with administrative access retained through SSH tunneling.</li>
+      </ul>
+    </div>
+
+    <div class="version-block reveal">
       <span class="version-watermark" aria-hidden="true">OPS</span>
       <div class="version-header">
         <span class="version-tag">SDLC</span>

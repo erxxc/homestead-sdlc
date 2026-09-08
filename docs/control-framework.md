@@ -14,7 +14,7 @@ ISO 27001 Annex A, and NIST Cybersecurity Framework (CSF).
 | C-003 | Root login disabled | PermitRootLogin no | CC6.1 | A.9.2.3 | PR.AC-1 |
 | C-004 | fail2ban brute force protection | /etc/fail2ban/jail.local | CC6.1, CC7.2 | A.9.4.2 | DE.CM-1 |
 | C-005 | Dual firewall layer | UFW + Hetzner firewall | CC6.6 | A.13.1.1 | PR.AC-5 |
-| C-006 | RCON localhost binding | enable-rcon=true, localhost only | CC6.1 | A.9.4.2 | PR.AC-5 |
+| C-006 | RCON network isolation | No UFW or Hetzner allow rule for TCP 25575; external reachability check | CC6.1 | A.9.4.2 | PR.AC-5 |
 | C-007 | Secrets file restricted permissions | chmod 640, root:minecraft | CC6.1 | A.9.4.3 | PR.AC-1 |
 | C-008 | No secrets in version control | gitleaks pre-commit hook | CC6.1 | A.9.4.3 | PR.DS-5 |
 | C-009 | Branch protection on main | GitHub branch protection rules | CC8.1 | A.14.2.2 | PR.IP-1 |

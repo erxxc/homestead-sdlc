@@ -131,7 +131,7 @@
       <ul class="change-list">
         <li>Every change to server infrastructure goes through a pull request on a protected branch — even though there is exactly one admin. Self-review is a documented, accepted risk, not an accident.</li>
         <li>Merging to main triggers an automated deploy: runtime files are packaged, installed on the server, services restarted, and health-validated (local API checks, metrics presence, config dry-runs) before the deploy counts as done.</li>
-        <li>CodeQL and OWASP ZAP scan on a weekly schedule; Checkov lints the infrastructure config; Dependabot keeps dependencies current; gitleaks blocks secrets at commit time. Third-party CI actions are pinned to exact commit hashes.</li>
+        <li>CodeQL and OWASP ZAP scan on a weekly schedule; Checkov lints the infrastructure config; Dependabot keeps dependencies current; gitleaks blocks secrets at commit time. Security-sensitive third-party CI actions are pinned to exact commit hashes.</li>
         <li>The deploy account on the server is a dedicated user with sudo scoped to the exact commands the pipeline needs — not an admin login.</li>
       </ul>
     </div>
@@ -186,7 +186,8 @@
         <li>A STRIDE threat model covers every component — game protocol, remote console, map server, CI/CD, mod supply chain — with a risk register reviewed quarterly.</li>
         <li>An April 2026 penetration test produced 18 tracked findings. Each carries a status, evidence, and control references; remediations are documented, not just done.</li>
         <li class="fixed">Case study — finding F-001: the metrics exporter exposed a credential in the server's process list. It took a compensating-control phase, an exporter upgrade, and an environment-based credential handoff to close it — four months from finding to verified fix, with the credential rotated afterward because it had been exposed. The whole arc is in the public pentest report.</li>
-        <li>Day to day: key-only SSH with session auditing, fail2ban, host firewall default-deny, TLS with strict security headers on every web surface, admin console bound to localhost only, and a structured audit log classifying joins, leaves, op grants, and console commands.</li>
+        <li>Day to day: key-only SSH with session auditing, fail2ban, host and provider firewalls default-deny, TLS with strict security headers on every web surface, administrative and reverse-proxied backends bound to localhost, and a structured audit log classifying joins, leaves, op grants, and console commands.</li>
+        <li class="fixed">September hardening check: Grafana and BlueMap were moved to localhost-only listeners and verified healthy; RCON and monitoring ports were confirmed unreachable externally; backups, timers, exporters, availability monitoring, API, and game services all passed live checks.</li>
       </ul>
     </div>
 
@@ -212,7 +213,7 @@
       <span class="version-watermark" aria-hidden="true">2026</span>
       <div class="version-header">
         <span class="version-tag">Timeline</span>
-        <span class="version-date">April — August 2026</span>
+        <span class="version-date">April — September 2026</span>
       </div>
       <div class="version-title">The paper trail so far</div>
       <div class="section-label">April 2026</div>
@@ -229,6 +230,11 @@
         <li class="fixed">Backup integrity incident: found, fixed, and published the same day — and the entire backup lifecycle was rebuilt as code with scheduled verification and disk-budget retention.</li>
         <li class="fixed">F-001 closed with evidence after four months; the exposed credential rotated.</li>
         <li class="added">Performance stack installed through the supply-chain gate; profiled under load; optimizer decisions documented, including the ones declined.</li>
+      </ul>
+      <div class="section-label">September 2026</div>
+      <ul class="change-list">
+        <li class="fixed">Small attack-surface pass completed: administrative backends moved to localhost where supported, external firewall isolation re-verified, and the audit logger repaired to follow Minecraft log rotation safely.</li>
+        <li class="added">Public site security headers made explicit and automated regression coverage added for audit logging and shell syntax.</li>
       </ul>
     </div>
 

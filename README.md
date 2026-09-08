@@ -14,10 +14,10 @@ Public site: [play.geigercapital.us](https://play.geigercapital.us) · Game: `mc
 - `reports/` — Lynis, nmap, nikto, ZAP outputs; PoC summary PDF
 
 ## Implemented controls (highlights)
-- Mod supply chain — SHA-256 checksums + systemd `ExecStartPre` verification + inotify auto-regen on jar changes
+- Mod supply chain — SHA-256 checksums + systemd `ExecStartPre` verification + inotify alerts requiring checksum review on jar changes
 - Security audit log — Python daemon classifies player join/leave, OP grants, kicks/bans, RCON commands into structured JSON
 - Scheduled restart — RCON-driven announcements + audit-logged `save-all flush` before systemd restart
-- Backup verification — weekly integrity check script
+- Backup verification — daily integrity check script
 - Log rotation — 30-day retention on audit and Nginx logs
 - BlueMap POI markers — server spawn pinned on the live map
 - CI/CD — CodeQL, Checkov, OWASP ZAP, Dependabot, gitleaks pre-commit, auto-deploy on push to main

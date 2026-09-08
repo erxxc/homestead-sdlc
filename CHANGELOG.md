@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 ### Security
+- Administrative listeners are reduced to loopback where the service supports
+  it, beginning with Uptime Kuma; OPS-006 documents equivalent Grafana and
+  BlueMap changes plus the dual-firewall isolation required for Minecraft's
+  wildcard RCON listener.
+- Cloudflare Pages now sends CSP, HSTS, Permissions-Policy, clickjacking,
+  MIME-sniffing, and referrer protections on every public site response.
 - Uptime Kuma (C-019) moved from a per-user `pm2` daemon to a hardened native
   systemd unit: dedicated `uptime-kuma` system user, `ProtectSystem=strict`
   with the data dir as the only writable path, database no longer
@@ -48,6 +54,10 @@
   with logrotate coverage for verify/prune logs. See runbook OPS-002.
 
 ### Fixed
+- Security audit logging now detects Minecraft `latest.log` truncation and
+  replacement instead of retaining a stale byte offset after restart or
+  rotation. The state migrates automatically and records file identity;
+  regression tests cover append, truncate, replace, and legacy-state paths.
 - Uptime Kuma had been crash-looping since the 2026-05-14 reboot — 102 days
   with no availability monitoring or Discord alerts (C-019 dark, including
   through the 2026-05-23 PoC summary). Root cause: the SQLite data dir was

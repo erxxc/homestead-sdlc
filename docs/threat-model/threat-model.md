@@ -46,7 +46,7 @@ STRIDE per component analysis across all identified attack surface elements.
 | 25565 | TCP | Minecraft | Public |
 | 8100 | TCP | BlueMap | Localhost only (Nginx proxies) |
 | 24454 | UDP | Voice Chat | Public |
-| 25575 | TCP | RCON | Localhost only |
+| 25575 | TCP | RCON | Wildcard listener; blocked at UFW and Hetzner firewalls |
 | 80 | TCP | Nginx | Public |
 | 3000 | TCP | Grafana | Restricted |
 | 9090 | TCP | Prometheus | Restricted |
@@ -81,11 +81,11 @@ STRIDE per component analysis across all identified attack surface elements.
 | Threat | Category | Likelihood | Impact | Risk | Control | Status |
 |---|---|---|---|---|---|---|
 | Credential theft | Spoofing | Medium | Critical | High | Localhost only binding | Implemented |
-| Command injection via RCON | Tampering | Low | Critical | Medium | Localhost only, trusted users | Implemented |
+| Command injection via RCON | Tampering | Low | Critical | Medium | Dual-firewall deny, strong credential, trusted local consumers | Implemented |
 | No RCON command audit log | Repudiation | High | High | High | Audit logger captures RCON_COMMAND events | Implemented |
 | Password in plaintext | Information Disclosure | High | Critical | Critical | Secrets file 640 root:minecraft; exporter reads env var, no CLI exposure (F-001 closed) | Implemented |
 | RCON service crash | Denial of Service | Low | Medium | Low | Server restart recovers RCON | Accepted |
-| Full server control via RCON | Elevation of Privilege | Low | Critical | Medium | Localhost binding, strong password | Implemented |
+| Full server control via RCON | Elevation of Privilege | Low | Critical | Medium | Dual-firewall deny, strong password | Implemented |
 
 ### Component: BlueMap Web (Port 8100 / Nginx Port 80)
 

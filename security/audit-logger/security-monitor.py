@@ -5,15 +5,17 @@ Watches Minecraft server logs and extracts security-relevant events
 to a structured JSON audit trail.
 """
 
-import re
 import json
-import time
 import os
+import re
+import time
 from datetime import datetime, timezone
 
-LOG_FILE = "/opt/minecraft/homestead/logs/latest.log"
-AUDIT_LOG = "/var/log/minecraft-audit.json"
-STATE_FILE = "/var/lib/minecraft-audit.pos"
+LOG_FILE = os.environ.get(
+    "MINECRAFT_LOG_FILE", "/opt/minecraft/homestead/logs/latest.log"
+)
+AUDIT_LOG = os.environ.get("MINECRAFT_AUDIT_LOG", "/var/log/minecraft-audit.json")
+STATE_FILE = os.environ.get("MINECRAFT_AUDIT_STATE", "/var/lib/minecraft-audit.pos")
 
 SECURITY_EVENTS = [
     (r"(\w+) joined the game", "PLAYER_JOIN"),
@@ -34,17 +36,30 @@ SECURITY_EVENTS = [
 ]
 
 
-def get_position():
+def get_state():
     try:
         with open(STATE_FILE) as f:
-            return int(f.read().strip())
-    except (OSError, ValueError):
-        return 0
+            value = f.read().strip()
+        try:
+            state = json.loads(value)
+        except json.JSONDecodeError:
+            # Backward compatibility with the original integer-only state.
+            return {"position": int(value), "device": None, "inode": None}
+        return {
+            "position": int(state["position"]),
+            "device": int(state["device"]),
+            "inode": int(state["inode"]),
+        }
+    except (KeyError, OSError, TypeError, ValueError):
+        return {"position": 0, "device": None, "inode": None}
 
 
-def save_position(pos):
-    with open(STATE_FILE, "w") as f:
-        f.write(str(pos))
+def save_state(state):
+    temporary = f"{STATE_FILE}.tmp"
+    with open(temporary, "w") as f:
+        json.dump(state, f, separators=(",", ":"))
+        f.write("\n")
+    os.replace(temporary, STATE_FILE)
 
 
 def write_event(event_type, detail, raw):
@@ -66,19 +81,35 @@ def process_line(line):
             return
 
 
+def read_available(state):
+    try:
+        with open(LOG_FILE) as f:
+            stat = os.fstat(f.fileno())
+            replaced = state["device"] is not None and (
+                state["device"],
+                state["inode"],
+            ) != (stat.st_dev, stat.st_ino)
+            truncated = stat.st_size < state["position"]
+            position = 0 if replaced or truncated else state["position"]
+
+            f.seek(position)
+            for line in f:
+                process_line(line)
+
+            return {
+                "position": f.tell(),
+                "device": stat.st_dev,
+                "inode": stat.st_ino,
+            }
+    except FileNotFoundError:
+        return {"position": 0, "device": None, "inode": None}
+
+
 def tail_log():
-    pos = get_position()
+    state = get_state()
     while True:
-        try:
-            with open(LOG_FILE) as f:
-                f.seek(pos)
-                for line in f:
-                    process_line(line)
-                pos = f.tell()
-                save_position(pos)
-        except FileNotFoundError:
-            pos = 0
-            save_position(0)
+        state = read_available(state)
+        save_state(state)
         time.sleep(5)
 
 
