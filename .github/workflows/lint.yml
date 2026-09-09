@@ -18,6 +18,9 @@ jobs:
         run: black --check api/ security/ --diff
       - name: Test audit logger
         run: python -m unittest discover -s security/audit-logger -p 'test_*.py' -v
+      - name: Check for CSP-blocked inline content
+        run: python3 security/check-csp-inline.py site/public
+
       - name: Check shell syntax
         run: bash -n security/*.sh security/audit-logger/*.sh infrastructure/*.sh monitoring/uptime-kuma/*.sh
       - name: Markdown lint
