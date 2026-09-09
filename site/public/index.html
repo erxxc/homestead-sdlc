@@ -267,42 +267,5 @@
     <div class="footer-text">Homestead SMP · Fabric 1.20.1 · est. April 2026</div>
   </footer>
 
-  <script>
-    (function () {
-      const days = Math.floor((Date.now() - Date.parse('2026-04-10T00:00:00Z')) / 86400000);
-      const el = document.getElementById('stat-days');
-      if (el && days > 0) { el.setAttribute('data-count', String(days)); el.textContent = String(days); }
-    })();
-
-    async function fetchStatus() {
-      const dot = document.getElementById('dot');
-      const statusText = document.getElementById('status-text');
-      const players = document.getElementById('players');
-      const versionEl = document.getElementById('version');
-      const updated = document.getElementById('updated');
-      try {
-        const res = await fetch('https://api.geigercapital.us/status');
-        const data = await res.json();
-        if (data.online) {
-          dot.className = 'status-dot status-dot--online';
-          statusText.textContent = 'Server Online';
-          players.textContent = data.players.current + ' / ' + data.players.max + ' players online';
-          versionEl.textContent = data.server.version + ' · Minecraft ' + data.server.minecraft;
-        } else {
-          dot.className = 'status-dot status-dot--offline';
-          statusText.textContent = 'Server Offline';
-          players.textContent = '';
-          versionEl.textContent = '';
-        }
-        updated.textContent = 'Last updated: ' + new Date(data.timestamp).toUTCString();
-        window.dispatchEvent(new CustomEvent('server-status', { detail: { online: data.online } }));
-      } catch {
-        statusText.textContent = 'Status unavailable';
-        dot.className = 'status-dot status-dot--offline';
-      }
-    }
-    fetchStatus();
-    setInterval(fetchStatus, 60000);
-  </script>
 </body>
 </html>

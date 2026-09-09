@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+  initDaysOnline();      // must precede initStatCounters — it seeds a data-count
+  initServerStatus();
   initScrollProgress();
   initReveals();
   initTabs();
@@ -408,4 +410,81 @@ function initTimeOfDay() {
 
   apply();
   setInterval(apply, 60000);
+}
+
+
+/* ── Days online ──
+   Was an inline <script> at the foot of index.html, which the site's own CSP
+   (script-src 'self', no 'unsafe-inline') blocked outright — so this never ran.
+   Runs before initStatCounters because that reads data-count at init time. */
+function initDaysOnline() {
+  const el = document.getElementById('stat-days');
+  if (!el) return;
+  const days = Math.floor((Date.now() - Date.parse('2026-04-10T00:00:00Z')) / 86400000);
+  if (days > 0) {
+    el.setAttribute('data-count', String(days));
+    el.textContent = String(days);
+  }
+}
+
+/* ── Live server status ──
+   Also blocked by the CSP as an inline script, which is why the indicator sat on
+   "Checking..." forever. The policy already allowed the call —
+   connect-src includes api.geigercapital.us — so only the script needed moving,
+   not the policy loosening.
+
+   A timeout matters here: without one a hung request leaves the indicator in its
+   loading state indefinitely, which looks identical to the bug being fixed. */
+function initServerStatus() {
+  const dot = document.getElementById('dot');
+  const statusText = document.getElementById('status-text');
+  if (!dot || !statusText) return;
+
+  const players = document.getElementById('players');
+  const versionEl = document.getElementById('version');
+  const updated = document.getElementById('updated');
+
+  const offline = (label) => {
+    dot.className = 'status-dot status-dot--offline';
+    statusText.textContent = label;
+    if (players) players.textContent = '';
+    if (versionEl) versionEl.textContent = '';
+  };
+
+  async function fetchStatus() {
+    const ctl = new AbortController();
+    const bail = setTimeout(() => ctl.abort(), 8000);
+    try {
+      const res = await fetch('https://api.geigercapital.us/status', {
+        signal: ctl.signal,
+        cache: 'no-store',
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      const data = await res.json();
+
+      if (data.online) {
+        dot.className = 'status-dot status-dot--online';
+        statusText.textContent = 'Server Online';
+        if (players && data.players) {
+          players.textContent = data.players.current + ' / ' + data.players.max + ' players online';
+        }
+        if (versionEl && data.server) {
+          versionEl.textContent = data.server.version + ' · Minecraft ' + data.server.minecraft;
+        }
+      } else {
+        offline('Server Offline');
+      }
+      if (updated && data.timestamp) {
+        updated.textContent = 'Last updated: ' + new Date(data.timestamp).toUTCString();
+      }
+      window.dispatchEvent(new CustomEvent('server-status', { detail: { online: !!data.online } }));
+    } catch {
+      offline('Status unavailable');
+    } finally {
+      clearTimeout(bail);
+    }
+  }
+
+  fetchStatus();
+  setInterval(fetchStatus, 60000);
 }
