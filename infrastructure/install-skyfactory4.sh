@@ -113,7 +113,7 @@ PY
 
 printf 'eula=true\n' > "$DEST/eula.txt"
 find "$DEST/mods" -maxdepth 1 -type f -name '*.jar' -print0 | sort -z | xargs -0 sha256sum > "$DEST/mod_checksums.sha256"
-printf '%s  %s\n' "$PACK_SHA256" "$(basename "$ARCHIVE")" > "$DEST/server-pack.sha256"
+printf '%s  %s\n' "$PACK_SHA256" "$ARCHIVE" > "$DEST/server-pack.sha256"
 printf 'SkyFactory 4 %s installed from CurseForge file 3565687\n' "$PACK_VERSION" > "$MARKER"
 rm -f -- "$INSTALLING_MARKER"
 
