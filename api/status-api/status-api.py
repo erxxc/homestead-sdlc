@@ -21,6 +21,7 @@ DEFAULT_PROFILE = {
     "MC_PROFILE": "homestead",
     "MC_PACK_NAME": "Homestead 1.3.6",
     "MC_MINECRAFT_VERSION": "1.20.1",
+    "MC_ADDRESS": "mc.geigercapital.us",
     "RCON_PORT": "25575",
     "MC_MAP_MODE": "online",
 }
@@ -119,7 +120,7 @@ def status():
             "online": online,
             "players": {"current": player_count, "max": max_players},
             "server": {
-                "address": "mc.geigercapital.us",
+                "address": profile["MC_ADDRESS"],
                 "profile": profile["MC_PROFILE"],
                 "version": profile["MC_PACK_NAME"],
                 "minecraft": profile["MC_MINECRAFT_VERSION"],

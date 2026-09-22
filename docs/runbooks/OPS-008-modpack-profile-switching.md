@@ -109,6 +109,18 @@ Add the same TCP 25566 inbound allowance to the Hetzner firewall, preferably
 restricted to the players' public IP addresses. Remove both allowances after
 the session; stopping the staging workflow also closes the process listener.
 
+Cloudflare DNS provides a short, port-free client address. These records must
+remain **DNS only** because the standard Cloudflare proxy does not carry the
+Minecraft protocol:
+
+| Type | Name | Target / content | Port |
+| --- | --- | --- | --- |
+| CNAME | `sb` | `mc.geigercapital.us` | — |
+| SRV | `_minecraft._tcp.sb` | `sb.geigercapital.us` | `25566` |
+
+Set SRV priority and weight to `0`. Players can then enter
+`sb.geigercapital.us`; Minecraft discovers TCP 25566 through the SRV record.
+
 ## Switch commands
 
 After every consumer passes the staging gate:
