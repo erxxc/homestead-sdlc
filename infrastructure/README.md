@@ -15,3 +15,15 @@ Configuration files and operational scripts for the Homestead SDLC PoC.
 - `systemd/minecraft-alert@.service` + `systemd/onfailure-alert.conf` — failure alerting: any unit declaring `OnFailure=minecraft-alert@%p.service` (natively or via the drop-in) pushes an ntfy notification when it enters failed state. See runbook OPS-004.
 - `minecraft-logrotate.conf` — log rotation policy for the audit log and Nginx logs (30-day retention). Sole owner of the Nginx logs: the stock `/etc/logrotate.d/nginx` is deleted on the VPS (a duplicate claim makes the nightly logrotate run exit 1), and the deploy workflow fails validation if it reappears.
 - `bluemap-world.conf` — BlueMap world-rendering config, including POI marker definitions (server spawn pin)
+
+## Planned migration
+
+The Minecraft 1.21.1 NeoForge pack uses a fresh world in a separate,
+loopback-only staging instance. See
+`docs/runbooks/OPS-007-neoforge-1.21.1-migration.md` and the feature-preservation
+matrix under `docs/migrations/`. The complete production 1.20.1 runtime remains
+untouched as the rollback instance.
+
+For temporary packs, OPS-008 defines an isolated profile model and an atomic
+switch command. SkyFactory 4 uses its own Forge 1.12.2 runtime, Java 8 binary,
+world, logs, and backups; switching back selects the untouched Homestead profile.

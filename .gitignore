@@ -33,6 +33,9 @@ reports/nmap-udp.txt
 # Local post-PR planning
 POST_PR_AUDIT_LAUNDRY_LIST.md
 
+# Local presentation/export artifacts
+Homestead_SDLC_PoC_Summary.pdf
+
 # Agent skills and lock files
 .agents/
 skills-lock.json

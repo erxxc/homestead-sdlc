@@ -22,6 +22,13 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- OPS-008 and a profile-switch scaffold for reversible, isolated modpack
+  sessions. The first alternate profile targets SkyFactory 4 4.2.4 without
+  sharing the Homestead world, Java runtime, logs, or backups.
+- OPS-007 defines a parallel, loopback-only migration lane for the planned
+  Minecraft 1.21.1 NeoForge server pack, with a fresh-world feature matrix,
+  promotion gates, and an exact rollback sequence that preserves the complete
+  Fabric 1.20.1 runtime.
 - Failure alerting (runbook OPS-004): a templated `minecraft-alert@.service`
   pushes an ntfy notification whenever a monitored unit enters failed state —
   native `OnFailure=` on the backup/verify/prune/audit/mod-watcher units,

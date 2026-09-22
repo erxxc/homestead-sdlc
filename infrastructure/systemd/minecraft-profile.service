@@ -1,0 +1,26 @@
+[Unit]
+Description=Minecraft Server (active profile)
+After=network.target
+OnFailure=minecraft-alert@%p.service
+
+[Service]
+Type=simple
+User=minecraft
+Group=minecraft
+WorkingDirectory=/opt/minecraft
+EnvironmentFile=/etc/minecraft/active-profile
+EnvironmentFile=-/etc/minecraft/secrets/rcon
+ExecStartPre=/usr/local/bin/minecraft-profile-validate
+ExecStart=/usr/local/bin/minecraft-profile-launch
+ExecStop=/bin/kill -s SIGINT $MAINPID
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=120
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/opt/minecraft /var/log
+
+[Install]
+WantedBy=multi-user.target
