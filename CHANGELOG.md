@@ -22,6 +22,9 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- Hardened Cloudflare Tunnel installer for browser-based Grafana and Uptime
+  Kuma administration: unprivileged service, file-backed token, loopback-only
+  metrics, and no new inbound firewall exposure.
 - Observability phase 1: separate Homestead and SkyFactory exporters,
   Prometheus alert rules, Alertmanager notification routing, bounded 30-day /
   2 GB metric retention, service and per-profile backup telemetry, and a

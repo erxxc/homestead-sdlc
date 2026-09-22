@@ -75,13 +75,20 @@ Kuma provides focused service checks. Set Access sessions to eight hours or
 less and retain Grafana's own login as a second authentication boundary.
 
 Create the tunnel and Access applications in Cloudflare Zero Trust, then use a
-remotely-managed tunnel token. Store the token only in root-readable systemd
-credentials or Cloudflare's packaged service command; do not commit it.
+remotely-managed tunnel token. Store the token in the protected file expected
+by the repository installer; do not commit it or put it in command arguments.
 
 ```bash
-sudo cloudflared service install YOUR_ONE_TIME_TUNNEL_TOKEN
-sudo systemctl status cloudflared --no-pager
+sudo install -d -o root -g root -m 0755 /etc/cloudflared
+sudo sh -c 'umask 077; cat > /etc/cloudflared/tunnel-token'
+# Paste the token, press Enter, then Ctrl-D.
+sudo ./infrastructure/install-cloudflared-admin.sh
 ```
+
+The custom unit runs as an unprivileged `cloudflared` user, reads the token
+from that file, and exposes its own metrics only on `127.0.0.1:2000`. The token
+does not appear in the process list or systemd unit. Package updates remain an
+explicit apt operation.
 
 The existing GitHub Actions workflow is the preferred non-SSH control plane
 for deploys and service operations. A full Minecraft panel such as Crafty can
