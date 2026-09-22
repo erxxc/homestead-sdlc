@@ -25,8 +25,8 @@ ISO 27001 Annex A, and NIST Cybersecurity Framework (CSF).
 | C-014 | Dependency scanning | Dependabot alerts and updates | CC7.1 | A.12.6.1 | DE.CM-4 |
 | C-015 | IaC security scanning | Checkov via GitHub Actions | CC7.1 | A.14.2.5 | DE.CM-4 |
 | C-016 | DAST scanning | OWASP ZAP via GitHub Actions | CC7.1 | A.14.2.8 | DE.CM-4 |
-| C-017 | System metrics monitoring | Prometheus + Node Exporter | CC7.2 | A.12.1.3 | DE.CM-1 |
-| C-018 | Application metrics monitoring | Minecraft Exporter + Grafana | CC7.2 | A.12.1.3 | DE.CM-1 |
+| C-017 | System metrics monitoring | Prometheus + Node Exporter; alert rules and bounded retention | CC7.2 | A.12.1.3 | DE.CM-1 |
+| C-018 | Application metrics monitoring | Per-world Minecraft exporters + provisioned Grafana dashboard | CC7.2 | A.12.1.3 | DE.CM-1 |
 | C-019 | Availability monitoring | Uptime Kuma — 3 monitors | A1.1, A1.2 | A.17.1.1 | DE.CM-1 |
 | C-020 | Security audit logging | JSON structured event log | CC7.2 | A.12.4.1 | DE.AE-3 |
 | C-021 | Daily world backups | systemd timers: backup 00:00, verify 00:45, size-capped prune 01:15 (35 GiB cap, min 2 kept) | A1.2, A1.3 | A.12.3.1 | RC.RP-1 |

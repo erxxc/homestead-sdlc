@@ -7,8 +7,16 @@ User=prometheus
 ExecStart=/usr/local/bin/prometheus \
   --config.file=/opt/prometheus/prometheus.yml \
   --storage.tsdb.path=/var/lib/prometheus \
+  --storage.tsdb.retention.time=30d \
+  --storage.tsdb.retention.size=2GB \
   --web.listen-address=127.0.0.1:9090
 Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/prometheus
 
 [Install]
 WantedBy=multi-user.target

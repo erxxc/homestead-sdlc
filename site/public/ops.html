@@ -134,7 +134,24 @@
       </ul>
     </div>
 
-    <div class="divider reveal"><span class="divider-label">· 01 · pipeline ·</span></div>
+    <div class="divider reveal"><span class="divider-label">· 01 · observability ·</span></div>
+
+    <div class="version-block reveal">
+      <span class="version-watermark" aria-hidden="true">30D</span>
+      <div class="version-header">
+        <span class="version-tag">Observability</span>
+        <span class="version-date">Versioned baseline</span>
+      </div>
+      <div class="version-title">Both worlds measured, failures routed</div>
+      <ul class="change-list">
+        <li>Homestead and SkyFactory have separate loopback-only metric exporters and labels, while a node collector reports service state and per-world backup freshness.</li>
+        <li>Prometheus rules cover scrape failures, disk, memory, sustained CPU pressure, stale backups, collector health, configuration failures, and write-ahead-log corruption. Alertmanager groups and routes the resulting notifications.</li>
+        <li>A version-controlled Grafana overview shows host capacity, service health, exporter health, and backup age. Metric retention is bounded by time and size to protect the game host from unbounded monitoring growth.</li>
+        <li>Browser administration is designed for Cloudflare Access over an outbound tunnel. Grafana and Uptime Kuma stay on localhost; Prometheus, Alertmanager, exporters, and RCON are not published.</li>
+      </ul>
+    </div>
+
+    <div class="divider reveal"><span class="divider-label">· 02 · pipeline ·</span></div>
 
     <div class="version-block reveal">
       <span class="version-watermark" aria-hidden="true">CI/CD</span>
@@ -151,7 +168,7 @@
       </ul>
     </div>
 
-    <div class="divider reveal"><span class="divider-label">· 02 · backups ·</span></div>
+    <div class="divider reveal"><span class="divider-label">· 03 · backups ·</span></div>
 
     <div class="version-block reveal">
       <span class="version-watermark" aria-hidden="true">00:45</span>
@@ -171,7 +188,7 @@
       </ul>
     </div>
 
-    <div class="divider reveal"><span class="divider-label">· 03 · supply chain ·</span></div>
+    <div class="divider reveal"><span class="divider-label">· 04 · supply chain ·</span></div>
 
     <div class="version-block reveal">
       <span class="version-watermark" aria-hidden="true">SHA</span>
@@ -188,7 +205,7 @@
       </ul>
     </div>
 
-    <div class="divider reveal"><span class="divider-label">· 04 · security ·</span></div>
+    <div class="divider reveal"><span class="divider-label">· 05 · security ·</span></div>
 
     <div class="version-block reveal">
       <span class="version-watermark" aria-hidden="true">F-001</span>
@@ -206,7 +223,7 @@
       </ul>
     </div>
 
-    <div class="divider reveal"><span class="divider-label">· 05 · performance ·</span></div>
+    <div class="divider reveal"><span class="divider-label">· 06 · performance ·</span></div>
 
     <div class="version-block reveal">
       <span class="version-watermark" aria-hidden="true">3.4%</span>
@@ -222,7 +239,7 @@
       </ul>
     </div>
 
-    <div class="divider reveal"><span class="divider-label">· 06 · timeline ·</span></div>
+    <div class="divider reveal"><span class="divider-label">· 07 · timeline ·</span></div>
 
     <div class="version-block reveal">
       <span class="version-watermark" aria-hidden="true">2026</span>

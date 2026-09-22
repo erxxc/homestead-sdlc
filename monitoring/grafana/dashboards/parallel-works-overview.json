@@ -1,0 +1,24 @@
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "graphTooltip": 1,
+  "panels": [
+    {"type":"stat","title":"Scrape targets up","id":1,"gridPos":{"h":5,"w":6,"x":0,"y":0},"targets":[{"expr":"sum(up)","refId":"A"}]},
+    {"type":"stat","title":"Managed services active","id":2,"gridPos":{"h":5,"w":6,"x":6,"y":0},"targets":[{"expr":"sum(parallel_works_service_active)","refId":"A"}]},
+    {"type":"gauge","title":"Root disk used","id":3,"gridPos":{"h":5,"w":6,"x":12,"y":0},"fieldConfig":{"defaults":{"unit":"percent","min":0,"max":100,"thresholds":{"mode":"absolute","steps":[{"color":"green","value":0},{"color":"orange","value":75},{"color":"red","value":90}]}}},"targets":[{"expr":"100 * (1 - node_filesystem_avail_bytes{mountpoint=\"/\",fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{mountpoint=\"/\",fstype!~\"tmpfs|overlay\"})","refId":"A"}]},
+    {"type":"gauge","title":"Memory used","id":4,"gridPos":{"h":5,"w":6,"x":18,"y":0},"fieldConfig":{"defaults":{"unit":"percent","min":0,"max":100}},"targets":[{"expr":"100 * (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)","refId":"A"}]},
+    {"type":"timeseries","title":"CPU usage","id":5,"gridPos":{"h":8,"w":12,"x":0,"y":5},"fieldConfig":{"defaults":{"unit":"percent"}},"targets":[{"expr":"100 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100","legendFormat":"host","refId":"A"}]},
+    {"type":"timeseries","title":"Backup age by world","id":6,"gridPos":{"h":8,"w":12,"x":12,"y":5},"fieldConfig":{"defaults":{"unit":"s"}},"targets":[{"expr":"time() - parallel_works_backup_latest_timestamp_seconds > 0","legendFormat":"{{world}}","refId":"A"}]},
+    {"type":"state-timeline","title":"World exporter health","id":7,"gridPos":{"h":7,"w":12,"x":0,"y":13},"targets":[{"expr":"up{job=\"minecraft\"}","legendFormat":"{{world}}","refId":"A"}]},
+    {"type":"table","title":"Managed service state","id":8,"gridPos":{"h":7,"w":12,"x":12,"y":13},"targets":[{"expr":"parallel_works_service_active","format":"table","instant":true,"refId":"A"}],"transformations":[{"id":"organize","options":{"excludeByName":{"Time":true,"__name__":true,"instance":true,"job":true}}}]}
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["parallel-works", "operations"],
+  "templating": {"list": []},
+  "time": {"from":"now-6h","to":"now"},
+  "timezone": "browser",
+  "title": "Parallel Works Overview",
+  "uid": "parallel-works-overview",
+  "version": 1
+}

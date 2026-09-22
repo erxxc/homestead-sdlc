@@ -22,6 +22,12 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- Observability phase 1: separate Homestead and SkyFactory exporters,
+  Prometheus alert rules, Alertmanager notification routing, bounded 30-day /
+  2 GB metric retention, service and per-profile backup telemetry, and a
+  provisioned Parallel Works Grafana overview. OPS-009 packages the root-owned
+  changes as a portable, idempotent installer and defines a Cloudflare
+  Access-protected browser administration path without public admin ports.
 - Profile-aware public status and landing pages: SkyFactory sessions receive a
   dedicated landing page and intentional map-offline response while API status,
   player counts, backups, audit, alerts, and metrics remain available.

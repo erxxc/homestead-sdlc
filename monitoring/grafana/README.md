@@ -1,19 +1,16 @@
 # Grafana Dashboards
 
-Live Grafana instance runs on the VPS — this directory is a structural placeholder for exported dashboard JSON.
+Live Grafana runs on the VPS. The `provisioning/` and `dashboards/` directories
+contain the version-controlled Parallel Works data source and overview.
 
 ## Production location
 - Grafana service: `http://localhost:3000` on VPS (restricted, not public)
 - Data source: Prometheus (`monitoring/prometheus/prometheus.yml`)
 
-## Active dashboards
-Homestead operational dashboard (6 panels):
-- Players online
-- Available memory
-- CPU usage
-- Player playtime
-- Disk space
-- Player deaths
+## Managed dashboard
+
+`Parallel Works Overview` covers scrape health, managed service state, CPU,
+memory, disk, per-world backup age, and both Minecraft exporters.
 
 ## Control reference
 - C-018 — Application metrics monitoring

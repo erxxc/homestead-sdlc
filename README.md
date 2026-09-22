@@ -10,7 +10,7 @@ Public site: [play.geigercapital.us](https://play.geigercapital.us) · Homestead
 
 ## Structure
 - `infrastructure/` — systemd units, nginx, ufw, scheduled-restart script
-- `monitoring/` — Prometheus + minecraft-exporter; Grafana + Uptime Kuma run on VPS (see READMEs)
+- `monitoring/` — dual-world exporters, Prometheus rules, Alertmanager, Grafana provisioning, and Uptime Kuma operations
 - `security/` — mod integrity (inotify watcher + SHA-256 checksums), audit logger, backup verification, fail2ban
 - `api/` — Flask status API serving sanitised public metrics
 - `site/` — Cloudflare Pages landing site + getting-started guide + changelog

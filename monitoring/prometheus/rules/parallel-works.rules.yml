@@ -1,0 +1,94 @@
+groups:
+  - name: parallel-works-host
+    rules:
+      - alert: PrometheusTargetDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus target {{ $labels.job }} is down"
+          description: "{{ $labels.instance }} has failed scrapes for more than two minutes."
+
+      - alert: HostDiskSpaceLow
+        expr: 100 * node_filesystem_avail_bytes{mountpoint="/",fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{mountpoint="/",fstype!~"tmpfs|overlay"} < 15
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Root filesystem has less than 15% free space
+          description: "Free space is {{ $value | printf \"%.1f\" }}%."
+
+      - alert: HostDiskSpaceCritical
+        expr: 100 * node_filesystem_avail_bytes{mountpoint="/",fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{mountpoint="/",fstype!~"tmpfs|overlay"} < 8
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Root filesystem has less than 8% free space
+
+      - alert: HostMemoryLow
+        expr: 100 * node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes < 10
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Host available memory is below 10%
+
+      - alert: HostCpuSustainedHigh
+        expr: 100 - avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100 > 90
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Host CPU usage has exceeded 90% for 15 minutes
+
+      - alert: PrometheusWalCorruption
+        expr: increase(prometheus_tsdb_wal_corruptions_total[1h]) > 0
+        labels:
+          severity: critical
+        annotations:
+          summary: Prometheus detected a WAL corruption
+
+      - alert: PrometheusConfigReloadFailed
+        expr: prometheus_config_last_reload_successful == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Prometheus configuration reload failed
+
+  - name: parallel-works-services
+    rules:
+      - alert: ManagedServiceDown
+        expr: parallel_works_service_active == 0
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service {{ $labels.service }} is not active"
+          description: "The local systemd collector reports {{ $labels.service }} inactive."
+
+      - alert: ProfileBackupMissing
+        expr: parallel_works_backup_latest_timestamp_seconds == 0
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "No backup found for {{ $labels.world }}"
+
+      - alert: ProfileBackupStale
+        expr: (parallel_works_backup_latest_timestamp_seconds > 0) and (time() - parallel_works_backup_latest_timestamp_seconds > 129600)
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latest {{ $labels.world }} backup is older than 36 hours"
+
+      - alert: OperationalCollectorStale
+        expr: time() - parallel_works_collector_timestamp_seconds > 180
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Parallel Works operational metric collector is stale
