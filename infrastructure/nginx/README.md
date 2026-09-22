@@ -13,6 +13,12 @@ Live Nginx configuration runs on the VPS — this directory is a structural plac
 | `map.geigercapital.us` | BlueMap web UI | `127.0.0.1:8100` |
 | `api.geigercapital.us` | Status API | `127.0.0.1:5000` (Flask) |
 
+The map vhost has profile-specific `bluemap-online` and `bluemap-offline`
+variants. `/usr/local/sbin/minecraft-map-mode` changes the enabled symlink
+atomically, validates Nginx, reloads it, and restores the prior vhost if the
+configuration fails. SkyFactory receives an intentional HTTP 503 offline page;
+Homestead restores the loopback BlueMap proxy.
+
 ## Security controls applied
 - TLS via Let's Encrypt — HTTPS enforced on both vhosts (pentest F-016 Remediated)
 - HSTS — `Strict-Transport-Security: max-age=31536000; includeSubDomains` (F-011)

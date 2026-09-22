@@ -443,6 +443,7 @@ function initServerStatus() {
   const players = document.getElementById('players');
   const versionEl = document.getElementById('version');
   const updated = document.getElementById('updated');
+  const mapLink = document.getElementById('map-link');
 
   const offline = (label) => {
     dot.className = 'status-dot status-dot--offline';
@@ -461,6 +462,16 @@ function initServerStatus() {
       });
       if (!res.ok) throw new Error(String(res.status));
       const data = await res.json();
+      const expectedProfile = document.body.dataset.profile;
+      const activeProfile = data.server && data.server.profile;
+      if (expectedProfile === 'homestead' && activeProfile === 'skyfactory4') {
+        window.location.replace('/skyfactory.html');
+        return;
+      }
+      if (expectedProfile === 'skyfactory4' && activeProfile && activeProfile !== 'skyfactory4') {
+        window.location.replace('/');
+        return;
+      }
 
       if (data.online) {
         dot.className = 'status-dot status-dot--online';
@@ -477,7 +488,20 @@ function initServerStatus() {
       if (updated && data.timestamp) {
         updated.textContent = 'Last updated: ' + new Date(data.timestamp).toUTCString();
       }
-      window.dispatchEvent(new CustomEvent('server-status', { detail: { online: !!data.online } }));
+      if (mapLink) {
+        if (data.map_available) {
+          mapLink.href = data.map || 'https://map.geigercapital.us';
+          mapLink.textContent = 'Live Map';
+          mapLink.removeAttribute('aria-disabled');
+        } else {
+          mapLink.removeAttribute('href');
+          mapLink.textContent = 'Map Offline';
+          mapLink.setAttribute('aria-disabled', 'true');
+        }
+      }
+      window.dispatchEvent(new CustomEvent('server-status', {
+        detail: { online: !!data.online, mapAvailable: !!data.map_available },
+      }));
     } catch {
       offline('Status unavailable');
     } finally {

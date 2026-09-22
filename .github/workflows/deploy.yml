@@ -31,6 +31,8 @@ jobs:
       LOGROTATE_DEST: /etc/logrotate.d/minecraft
       NOTIFY_FAILURE_DEST: /usr/local/bin/notify-failure
       BLUEMAP_WORLD_DEST: /opt/minecraft/homestead/config/bluemap/maps/world.conf
+      MAP_MODE_DEST: /usr/local/sbin/minecraft-map-mode
+      MAP_OFFLINE_ROOT: /var/www/minecraft-map-offline
     steps:
       - uses: actions/checkout@v7
 
@@ -49,6 +51,10 @@ jobs:
           tar -czf homestead-deploy.tar.gz \
             api/status-api/status-api.py \
             infrastructure/bluemap-world.conf \
+            infrastructure/minecraft-map-mode.sh \
+            infrastructure/nginx/bluemap-online.conf \
+            infrastructure/nginx/bluemap-offline.conf \
+            infrastructure/nginx/map-offline.html \
             infrastructure/mc-restart.sh \
             infrastructure/minecraft-logrotate.conf \
             "infrastructure/systemd/minecraft-alert@.service" \
@@ -80,7 +86,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ env.SSH_PORT }}
-          envs: DEPLOY_STAGING_DIR,DEPLOY_ARCHIVE,STATUS_API_SERVICE,STATUS_API_DEST,AUDIT_SERVICE,MOD_WATCHER_SERVICE,SECURITY_MONITOR_DEST,MOD_WATCHER_DEST,MC_RESTART_DEST,VERIFY_BACKUP_DEST,ONLINE_PLAYERS_DEST,PRUNE_DEST,BACKUP_WORLD_DEST,LOGROTATE_DEST,NOTIFY_FAILURE_DEST,BLUEMAP_WORLD_DEST,GITHUB_SHA
+          envs: DEPLOY_STAGING_DIR,DEPLOY_ARCHIVE,STATUS_API_SERVICE,STATUS_API_DEST,AUDIT_SERVICE,MOD_WATCHER_SERVICE,SECURITY_MONITOR_DEST,MOD_WATCHER_DEST,MC_RESTART_DEST,VERIFY_BACKUP_DEST,ONLINE_PLAYERS_DEST,PRUNE_DEST,BACKUP_WORLD_DEST,LOGROTATE_DEST,NOTIFY_FAILURE_DEST,BLUEMAP_WORLD_DEST,MAP_MODE_DEST,MAP_OFFLINE_ROOT,GITHUB_SHA
           script: |
             set -euo pipefail
 
@@ -96,7 +102,9 @@ jobs:
               "$VERIFY_BACKUP_DEST" \
               "$ONLINE_PLAYERS_DEST" \
               "$LOGROTATE_DEST" \
-              "$BLUEMAP_WORLD_DEST"
+              "$BLUEMAP_WORLD_DEST" \
+              "$MAP_MODE_DEST" \
+              "$MAP_OFFLINE_ROOT/index.html"
             do
               sudo mkdir -p "$(dirname "$dest")"
             done
@@ -109,6 +117,10 @@ jobs:
             sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/security/audit-logger/minecraft-online-players.sh" "$ONLINE_PLAYERS_DEST"
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/minecraft-logrotate.conf" "$LOGROTATE_DEST"
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/bluemap-world.conf" "$BLUEMAP_WORLD_DEST"
+            sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/infrastructure/minecraft-map-mode.sh" "$MAP_MODE_DEST"
+            sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/nginx/bluemap-online.conf" /etc/nginx/sites-available/bluemap-online
+            sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/nginx/bluemap-offline.conf" /etc/nginx/sites-available/bluemap-offline
+            sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/nginx/map-offline.html" "$MAP_OFFLINE_ROOT/index.html"
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/minecraft-audit.service" "/etc/systemd/system/${AUDIT_SERVICE}.service"
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/minecraft-mod-watcher.service" "/etc/systemd/system/${MOD_WATCHER_SERVICE}.service"
             sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/security/prune-backups.sh" "$PRUNE_DEST"
@@ -139,6 +151,7 @@ jobs:
             systemctl cat "minecraft-alert@.service" >/dev/null
             test -f /etc/systemd/system/logrotate.service.d/onfailure-alert.conf
             sudo logrotate -d "$LOGROTATE_DEST" >/tmp/minecraft-logrotate-check.log
+            sudo nginx -t
             # minecraft-logrotate.conf is the sole owner of the nginx logs; the
             # stock package config duplicates them and makes logrotate exit 1
             test ! -e /etc/logrotate.d/nginx

@@ -67,6 +67,19 @@ sudo ln -sfn /etc/minecraft/profiles/homestead.env /etc/minecraft/active-profile
 sudo systemctl daemon-reload
 ```
 
+The pinned preparation script can perform the Java 8 and server-pack setup
+without activating the profile:
+
+```bash
+sudo ACCEPT_MINECRAFT_EULA=TRUE /tmp/install-skyfactory4.sh
+```
+
+Setting `ACCEPT_MINECRAFT_EULA=TRUE` records the operator's acceptance of the
+Minecraft EULA. The script verifies the official 4.2.4 server archive against
+SHA-256 `72b1bae61cbd6a07ab55d71f9e1a94239a4992f35a7f9f4a149e4f1eea04a16b`,
+uses the absolute Temurin 8 executable, and leaves the pack on loopback staging
+ports. It does not stop or restart Homestead.
+
 Do not install the generic service until backup, audit, exporter, status API,
 restart, integrity, and map consumers have been updated to read the active
 profile. Until then this runbook and the profile layer are preparation only.
@@ -76,8 +89,10 @@ profile. Until then this runbook and the profile layer are preparation only.
 Before the first production switch, start SkyFactory on loopback-only alternate
 ports and verify two clean boots, the correct world type, whitelist behavior,
 RCON, backup/restore, logs, memory use, and mod integrity. BlueMap support for
-this legacy Forge pack is not assumed; disable or separately validate the map
-rather than displaying the Homestead world as though it were current.
+this legacy Forge pack is out of scope. The SkyFactory profile sets
+`MC_MAP_MODE=offline`; the API reports `map_available: false`, the landing page
+marks the map offline, and the map vhost serves the intentional offline page.
+The Homestead profile restores BlueMap automatically.
 
 ## Switch commands
 
@@ -107,3 +122,8 @@ curl -fsS http://127.0.0.1:5000/status
 Switch back to Homestead, verify its latest backup, confirm the Homestead world
 and pack version through the status API, and retain the SkyFactory runtime and
 backups. A later session can reactivate it without reinstalling or moving data.
+
+The landing page follows the API's active profile. It redirects to the
+SkyFactory session page while `MC_PROFILE=skyfactory4`, retaining live status,
+player counts, version reporting, and links to the exact client pack. Returning
+to Homestead returns visitors to the normal landing page.

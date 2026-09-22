@@ -11,9 +11,34 @@ import re
 import socket
 import struct
 from datetime import datetime, timezone
+from pathlib import Path
 
 app = Flask(__name__)
 CORS(app, origins=["https://play.geigercapital.us", "https://geigercapital.us"])
+
+ACTIVE_PROFILE = Path("/etc/minecraft/active-profile")
+DEFAULT_PROFILE = {
+    "MC_PROFILE": "homestead",
+    "MC_PACK_NAME": "Homestead 1.3.6",
+    "MC_MINECRAFT_VERSION": "1.20.1",
+    "RCON_PORT": "25575",
+    "MC_MAP_MODE": "online",
+}
+
+
+def get_active_profile():
+    profile = DEFAULT_PROFILE.copy()
+    try:
+        for raw in ACTIVE_PROFILE.read_text(encoding="utf-8").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            if key in profile:
+                profile[key] = value.strip().strip('"')
+    except OSError:
+        pass
+    return profile
 
 
 def get_rcon_password():
@@ -30,12 +55,12 @@ def get_rcon_password():
     return None
 
 
-def query_rcon(command):
+def query_rcon(command, port=25575):
     password = get_rcon_password()
     if not password:
         return None
     try:
-        with socket.create_connection(("localhost", 25575), timeout=5) as conn:
+        with socket.create_connection(("localhost", port), timeout=5) as conn:
             conn.settimeout(5)
             rcon_request(conn, 1, 3, password)
             auth_id, _, _ = rcon_response(conn)
@@ -75,8 +100,9 @@ def rcon_response(conn):
 
 @app.route("/status")
 def status():
+    profile = get_active_profile()
     # Query player count
-    list_result = query_rcon("list")
+    list_result = query_rcon("list", int(profile["RCON_PORT"]))
     player_count = 0
     max_players = 20
     online = False
@@ -94,10 +120,16 @@ def status():
             "players": {"current": player_count, "max": max_players},
             "server": {
                 "address": "mc.geigercapital.us",
-                "version": "Homestead 1.3.6",
-                "minecraft": "1.20.1",
+                "profile": profile["MC_PROFILE"],
+                "version": profile["MC_PACK_NAME"],
+                "minecraft": profile["MC_MINECRAFT_VERSION"],
             },
-            "map": "https://map.geigercapital.us",
+            "map": (
+                "https://map.geigercapital.us"
+                if profile["MC_MAP_MODE"] == "online"
+                else None
+            ),
+            "map_available": profile["MC_MAP_MODE"] == "online",
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
     )

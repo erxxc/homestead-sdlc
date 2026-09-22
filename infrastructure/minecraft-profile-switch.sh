@@ -59,6 +59,7 @@ start_stack() {
     done
     systemctl is-active --quiet minecraft
     timeout 1 bash -c "</dev/tcp/127.0.0.1/$MC_SERVER_PORT"
+    /usr/local/sbin/minecraft-map-mode "$MC_MAP_MODE"
     systemctl start minecraft-audit minecraft_exporter minecraft-status-api
     systemctl is-active --quiet minecraft-audit minecraft_exporter minecraft-status-api
 }

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyFactory 4 · Homestead Sessions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <meta name="theme-color" content="#6d28d9">
+  <meta property="og:title" content="SkyFactory 4 · Homestead Sessions">
+  <meta property="og:description" content="SkyFactory 4 4.2.4 · Minecraft 1.12.2 · mc.geigercapital.us">
+  <meta property="og:url" content="https://play.geigercapital.us/skyfactory.html">
+  <script src="/main.js" defer></script>
+</head>
+<body class="profile-skyfactory" data-profile="skyfactory4">
+  <div class="scroll-progress"></div>
+  <div class="mouse-glow" aria-hidden="true"></div>
+  <div class="konami-toast" aria-hidden="true"></div>
+
+  <div class="palette-overlay">
+    <div class="palette">
+      <div class="palette-input-wrap">
+        <span class="palette-icon">⌘</span>
+        <input class="palette-input" type="text" placeholder="Search or jump to..." autocomplete="off">
+      </div>
+      <div class="palette-results"></div>
+      <div class="palette-footer">
+        <span><span class="palette-kbd">↑↓</span> navigate</span>
+        <span><span class="palette-kbd">↵</span> select</span>
+        <span><span class="palette-kbd">esc</span> close</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <a href="/skyfactory.html" class="nav-logo">
+      <svg class="nav-logo-glyph" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <rect x="21.53" y="5.51" width="20.94" height="1.96" fill="currentColor"/>
+        <rect x="11.55" y="12.18" width="40.91" height="3.20" fill="currentColor"/>
+        <rect x="6.59" y="19.15" width="50.83" height="3.85" fill="currentColor"/>
+        <rect x="4.09" y="26.32" width="55.82" height="4.07" fill="currentColor"/>
+        <rect x="4.09" y="33.61" width="55.82" height="4.07" fill="currentColor"/>
+        <rect x="6.59" y="41.01" width="50.83" height="3.85" fill="currentColor"/>
+        <rect x="11.55" y="48.62" width="40.91" height="3.20" fill="currentColor"/>
+        <rect x="21.53" y="56.53" width="20.94" height="1.96" fill="currentColor"/>
+      </svg>
+      <span>SkyFactory Session</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/skyfactory.html" class="nav-link" aria-current="page">Status</a></li>
+      <li><a href="/guide.html" class="nav-link">Guide</a></li>
+      <li><a href="/changelog.html" class="nav-link">Changelog</a></li>
+      <li><a href="/ops.html" class="nav-link">Ops</a></li>
+    </ul>
+    <a href="https://geigercapital.us" class="nav-parent" aria-label="Geiger Capital, parent studio">
+      <span class="nav-parent-text">Geiger Capital</span>
+    </a>
+  </nav>
+
+  <main>
+    <div class="main main--hero">
+      <div class="container container--narrow hero skyfactory-hero">
+        <div class="session-badge reveal">Limited Session · Isolated Profile</div>
+        <h1 class="reveal reveal-stagger-1" data-typewriter="SkyFactory 4">SkyFactory 4</h1>
+        <p class="subtitle reveal reveal-stagger-2">Forge 1.12.2 · SkyFactory 4.2.4</p>
+        <div class="status reveal reveal-stagger-3">
+          <div id="status-indicator" role="status" aria-live="polite">
+            <span class="status-dot" id="dot"></span>
+            <span id="status-text">Checking...</span>
+          </div>
+          <div class="address">mc.geigercapital.us</div>
+          <div class="players" id="players"></div>
+          <div class="version-info" id="version"></div>
+        </div>
+        <div class="btn-group reveal reveal-stagger-4 skyfactory-actions">
+          <a href="https://www.curseforge.com/minecraft/modpacks/skyfactory-4/files/3565687" class="btn btn--primary">Install Pack 4.2.4</a>
+          <span class="btn btn--secondary" id="map-link" aria-disabled="true">Map Offline</span>
+        </div>
+        <div class="updated" id="updated"></div>
+      </div>
+    </div>
+
+    <div class="ticker" aria-label="Session details">
+      <div class="ticker-track">
+        <span class="ticker-item ticker-item--accent">SkyFactory 4.2.4</span><span class="ticker-sep">·</span>
+        <span class="ticker-item">Minecraft 1.12.2</span><span class="ticker-sep">·</span>
+        <span class="ticker-item">Forge</span><span class="ticker-sep">·</span>
+        <span class="ticker-item ticker-item--accent">Fresh World</span><span class="ticker-sep">·</span>
+        <span class="ticker-item">Backups Active</span><span class="ticker-sep">·</span>
+        <span class="ticker-item">Homestead Preserved</span><span class="ticker-sep">·</span>
+        <span class="ticker-item ticker-item--accent">SkyFactory 4.2.4</span><span class="ticker-sep">·</span>
+        <span class="ticker-item">Minecraft 1.12.2</span><span class="ticker-sep">·</span>
+        <span class="ticker-item">Forge</span><span class="ticker-sep">·</span>
+        <span class="ticker-item ticker-item--accent">Fresh World</span><span class="ticker-sep">·</span>
+        <span class="ticker-item">Backups Active</span><span class="ticker-sep">·</span>
+        <span class="ticker-item">Homestead Preserved</span>
+      </div>
+    </div>
+
+    <section class="session-grid container">
+      <article class="session-card reveal">
+        <div class="spotlight-label">Before joining</div>
+        <h2>Use the exact client pack</h2>
+        <p>Install SkyFactory 4 version 4.2.4 in the CurseForge launcher. Other Minecraft or pack versions cannot join this session.</p>
+      </article>
+      <article class="session-card reveal">
+        <div class="spotlight-label">Session world</div>
+        <h2>Start from one tree</h2>
+        <p>This is a fresh, temporary SkyFactory world. Homestead inventories, builds, claims, and dimensions remain sealed in their original runtime.</p>
+      </article>
+      <article class="session-card reveal">
+        <div class="spotlight-label">Operations</div>
+        <h2>Controls stay active</h2>
+        <p>Status, player counts, backups, audit logging, alerts, and metrics follow the active profile. The map is intentionally offline for SkyFactory.</p>
+      </article>
+    </section>
+
+    <section class="profile-preservation container container--narrow reveal">
+      <div class="spotlight-label">Reversible by design</div>
+      <h2>Homestead is waiting exactly where we left it.</h2>
+      <p>The Fabric world is never opened, converted, or copied into this Forge runtime. At session close, a verified SkyFactory backup is taken and the active profile returns to Homestead.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-text">SkyFactory 4 · One-off session · Homestead preserved</div>
+  </footer>
+</body>
+</html>

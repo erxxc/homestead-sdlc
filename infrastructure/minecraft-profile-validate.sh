@@ -8,10 +8,16 @@ set -euo pipefail
 : "${BACKUP_DIR:?BACKUP_DIR is required}"
 : "${RCON_PORT:?RCON_PORT is required}"
 : "${MC_SERVER_PORT:?MC_SERVER_PORT is required}"
+: "${MC_MAP_MODE:?MC_MAP_MODE is required}"
 
 case "$MC_PROFILE" in
     homestead|skyfactory4) ;;
     *) echo "unsupported profile: $MC_PROFILE" >&2; exit 1 ;;
+esac
+
+case "$MC_MAP_MODE" in
+    online|offline) ;;
+    *) echo "unsupported map mode: $MC_MAP_MODE" >&2; exit 1 ;;
 esac
 
 test -d "$MC_ROOT"

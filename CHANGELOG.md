@@ -22,6 +22,9 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- Profile-aware public status and landing pages: SkyFactory sessions receive a
+  dedicated landing page and intentional map-offline response while API status,
+  player counts, backups, audit, alerts, and metrics remain available.
 - OPS-008 and a profile-switch scaffold for reversible, isolated modpack
   sessions. The first alternate profile targets SkyFactory 4 4.2.4 without
   sharing the Homestead world, Java runtime, logs, or backups.
