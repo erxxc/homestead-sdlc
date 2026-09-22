@@ -6,7 +6,10 @@ Wants=network-online.target
 [Service]
 User=prometheus
 Group=prometheus
-ExecStart=/usr/local/bin/alertmanager --config.file=/etc/parallel-works/alertmanager.yml --storage.path=/var/lib/alertmanager --web.listen-address=127.0.0.1:9093
+# This is a single-node deployment. Disable the HA gossip listener instead of
+# opening port 9094 or trying to infer an advertise address inside the
+# hardened service namespace.
+ExecStart=/usr/local/bin/alertmanager --config.file=/etc/parallel-works/alertmanager.yml --storage.path=/var/lib/alertmanager --cluster.listen-address= --web.listen-address=127.0.0.1:9093
 Restart=always
 RestartSec=5
 NoNewPrivileges=true

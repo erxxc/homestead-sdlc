@@ -26,7 +26,9 @@ sudo /tmp/parallel-works-observability/infrastructure/install-observability-phas
 The installer downloads Alertmanager 0.28.1 from the official Prometheus
 release, verifies the release checksum, replaces the single-world exporter
 unit with isolated Homestead and SkyFactory units, and provisions the Grafana
-dashboard. Re-running it is safe.
+dashboard. Alertmanager's HA gossip listener is disabled for this single-node
+deployment, leaving only the loopback HTTP listener. Re-running the installer
+is safe.
 
 ## Validate
 
