@@ -100,7 +100,7 @@ required = {
     "rcon.port": "25576",
     "rcon.password": os.environ["RCON_PASSWORD"],
     "online-mode": "true",
-    "white-list": "true",
+    "white-list": "false",
     "enable-query": "false",
 }
 values.update(required)

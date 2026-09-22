@@ -29,7 +29,7 @@ grep -Eq '^server-port=25566$' "$DEST/server.properties"
 grep -Eq '^enable-rcon=true$' "$DEST/server.properties"
 grep -Eq '^rcon.port=25576$' "$DEST/server.properties"
 grep -Eq '^online-mode=true$' "$DEST/server.properties"
-grep -Eq '^white-list=true$' "$DEST/server.properties"
+grep -Eq '^white-list=false$' "$DEST/server.properties"
 grep -Fq 'Topography-Preset' "$DEST/server.properties"
 grep -Eq '^eula=true$' "$DEST/eula.txt"
 

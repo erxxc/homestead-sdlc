@@ -97,9 +97,9 @@ The Homestead profile restores BlueMap automatically.
 Use the manual `SkyFactory Staging Control` workflow to start, stop, restart,
 or inspect the staging service. It asserts that Homestead remains the
 active production service and waits for port 25566 before declaring startup
-successful. The game listener binds to TCP 25566 for direct client tests;
-whitelisting and online authentication remain enabled. RCON 25576 must remain
-blocked at both firewall layers.
+successful. The game listener binds to TCP 25566 for direct client tests.
+Staging uses online authentication without a whitelist to match Homestead;
+RCON 25576 must remain blocked at both firewall layers.
 
 ```bash
 sudo ufw allow 25566/tcp comment 'Temporary SkyFactory staging'
