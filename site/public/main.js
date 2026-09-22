@@ -279,7 +279,7 @@ function initCommandPalette() {
   const items = [
     { icon: '◫', label: 'World Directory', hint: 'Parallel Works', href: '/' },
     { icon: '🟢', label: 'Homestead', hint: 'Persistent', href: '/homestead.html' },
-    { icon: '🟣', label: 'SkyFactory 4', hint: 'Limited Session', href: '/skyfactory.html' },
+    { icon: '🟣', label: 'SkyFactory', hint: 'Limited Session', href: '/skyfactory.html' },
     { icon: '📖', label: 'Getting Started', hint: 'Guide', href: '/guide.html' },
     { icon: '📋', label: 'Changelog', hint: 'Updates', href: '/changelog.html' },
     { icon: '🛡️', label: 'Ops & Security', hint: 'SDLC', href: '/ops.html' },
