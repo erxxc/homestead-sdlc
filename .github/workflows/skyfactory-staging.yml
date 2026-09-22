@@ -1,0 +1,77 @@
+name: SkyFactory Staging Control
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Staging service action
+        required: true
+        type: choice
+        options:
+          - status
+          - start
+          - stop
+          - restart
+
+permissions:
+  contents: read
+
+concurrency:
+  group: skyfactory-staging-control
+  cancel-in-progress: false
+
+jobs:
+  control:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PORT: 2222
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$SSH_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts
+
+      - name: Control loopback staging service
+        env:
+          ACTION: ${{ inputs.action }}
+          SSH_PORT: 2222
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$VPS_USER@$VPS_HOST" "ACTION='$ACTION' bash -s" <<'REMOTE'
+          set -euo pipefail
+          unit=minecraft-skyfactory4-staging.service
+          case "$ACTION" in
+            start) sudo systemctl start "$unit" ;;
+            stop) sudo systemctl stop "$unit" ;;
+            restart) sudo systemctl restart "$unit" ;;
+            status) ;;
+            *) exit 2 ;;
+          esac
+
+          if [ "$ACTION" = start ] || [ "$ACTION" = restart ]; then
+            for _ in $(seq 1 120); do
+              if ! systemctl is-active --quiet "$unit"; then
+                systemctl status "$unit" --no-pager -l || true
+                exit 1
+              fi
+              if timeout 1 bash -c '</dev/tcp/127.0.0.1/25566' 2>/dev/null; then
+                break
+              fi
+              sleep 5
+            done
+            timeout 1 bash -c '</dev/tcp/127.0.0.1/25566'
+          fi
+
+          systemctl status "$unit" --no-pager -l || true
+          ss -lnt | grep -E ':(25565|25566|25575|25576)\b' || true
+          test "$(systemctl is-active minecraft)" = active
+          test "$(systemctl show minecraft -p WorkingDirectory --value)" = /opt/minecraft/homestead
+          REMOTE

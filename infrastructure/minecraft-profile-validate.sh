@@ -21,7 +21,9 @@ case "$MC_MAP_MODE" in
 esac
 
 test -d "$MC_ROOT"
-test -d "$MC_WORLD_PARENT/world"
+if [ "${MC_ALLOW_NEW_WORLD:-false}" != "true" ]; then
+    test -d "$MC_WORLD_PARENT/world"
+fi
 test -d "$BACKUP_DIR"
 test -f "$MC_ROOT/server.properties"
 test "$(stat -c %U "$MC_ROOT")" = minecraft

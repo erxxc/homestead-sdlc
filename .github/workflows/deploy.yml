@@ -52,6 +52,10 @@ jobs:
             api/status-api/status-api.py \
             infrastructure/bluemap-world.conf \
             infrastructure/minecraft-map-mode.sh \
+            infrastructure/minecraft-profile-launch.sh \
+            infrastructure/minecraft-profile-validate.sh \
+            infrastructure/profiles/skyfactory4-staging.env \
+            infrastructure/systemd/minecraft-skyfactory4-staging.service \
             infrastructure/nginx/bluemap-online.conf \
             infrastructure/nginx/bluemap-offline.conf \
             infrastructure/nginx/map-offline.html \
@@ -118,6 +122,11 @@ jobs:
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/minecraft-logrotate.conf" "$LOGROTATE_DEST"
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/bluemap-world.conf" "$BLUEMAP_WORLD_DEST"
             sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/infrastructure/minecraft-map-mode.sh" "$MAP_MODE_DEST"
+            sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/infrastructure/minecraft-profile-launch.sh" /usr/local/bin/minecraft-profile-launch
+            sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/infrastructure/minecraft-profile-validate.sh" /usr/local/bin/minecraft-profile-validate
+            sudo install -d -o root -g root -m 0755 /etc/minecraft/profiles
+            sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/profiles/skyfactory4-staging.env" /etc/minecraft/profiles/skyfactory4-staging.env
+            sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/minecraft-skyfactory4-staging.service" /etc/systemd/system/minecraft-skyfactory4-staging.service
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/nginx/bluemap-online.conf" /etc/nginx/sites-available/bluemap-online
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/nginx/bluemap-offline.conf" /etc/nginx/sites-available/bluemap-offline
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/nginx/map-offline.html" "$MAP_OFFLINE_ROOT/index.html"

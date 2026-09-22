@@ -94,6 +94,15 @@ this legacy Forge pack is out of scope. The SkyFactory profile sets
 marks the map offline, and the map vhost serves the intentional offline page.
 The Homestead profile restores BlueMap automatically.
 
+Use the manual `SkyFactory Staging Control` workflow to start, stop, restart,
+or inspect the loopback staging service. It asserts that Homestead remains the
+active production service and waits for port 25566 before declaring startup
+successful. Connect a test client through an SSH tunnel:
+
+```bash
+ssh -p 2222 -L 25566:127.0.0.1:25566 eric@mc.geigercapital.us
+```
+
 ## Switch commands
 
 After every consumer passes the staging gate:

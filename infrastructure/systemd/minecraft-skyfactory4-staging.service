@@ -1,0 +1,25 @@
+[Unit]
+Description=SkyFactory 4 Staging Server (loopback only)
+After=network.target
+OnFailure=minecraft-alert@%p.service
+
+[Service]
+Type=simple
+User=minecraft
+Group=minecraft
+WorkingDirectory=/opt/minecraft
+EnvironmentFile=/etc/minecraft/profiles/skyfactory4-staging.env
+EnvironmentFile=-/etc/minecraft/secrets/rcon
+ExecStartPre=/usr/local/bin/minecraft-profile-validate
+ExecStart=/usr/local/bin/minecraft-profile-launch
+ExecStop=/bin/kill -s SIGINT $MAINPID
+Restart=no
+TimeoutStartSec=15min
+TimeoutStopSec=120
+MemoryMax=6G
+OOMPolicy=stop
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/opt/minecraft/skyfactory4-4.2.4 /opt/minecraft/backups/skyfactory4 /var/log
