@@ -34,6 +34,15 @@ so its JSON webhook becomes a readable firing or resolved notification.
 ## Validate
 
 ```bash
+./monitoring/verify-observability.sh
+./monitoring/verify-observability.sh --send-test-alert
+```
+
+The second command sends a controlled alert, waits through Alertmanager's
+grouping delay, and resolves it. Expect readable firing and resolved messages
+in ntfy. For lower-level investigation:
+
+```bash
 sudo systemctl --failed
 sudo systemctl status prometheus alertmanager node_exporter \
   minecraft-exporter-homestead minecraft-exporter-skyfactory \
