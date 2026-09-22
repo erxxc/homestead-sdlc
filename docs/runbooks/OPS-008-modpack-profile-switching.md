@@ -2,10 +2,11 @@
 
 ## Purpose
 
-Run short-lived modpacks on the production Minecraft address without replacing
-or upgrading the Homestead runtime. Every pack has an isolated runtime, world,
-backup set, Java executable, logs, and integrity baseline. Only one profile may
-own the production game and RCON ports at a time.
+Run short-lived modpacks without replacing or upgrading the Homestead runtime.
+SkyFactory currently runs concurrently on its own game and RCON ports. Every
+pack has an isolated runtime, world, Java executable, logs, and integrity
+baseline. The atomic profile-switch design below remains the future path for a
+pack that must take over the primary production address.
 
 The first alternate profile is SkyFactory 4 version 4.2.4: Minecraft 1.12.2 on
 Forge. It is a legacy pack and must use a separately pinned Java 8 runtime. It
@@ -24,20 +25,19 @@ must never open the Fabric 1.20.1 Homestead world.
 /etc/minecraft/secrets/rcon                # existing secret; never in profiles
 ```
 
-The active profile is configuration, not a copy operation. Switching changes
-one symlink while both runtime trees remain in place.
+The current staging unit does not use the active-profile symlink: Homestead
+runs as `minecraft.service` on TCP 25565 and SkyFactory runs as
+`minecraft-skyfactory4-staging.service` on TCP 25566. A future exclusive switch
+changes one symlink while both runtime trees remain in place.
 
-## Safety properties
+## Current concurrent safety properties
 
-- The switch refuses unknown profile names and concurrent switches.
 - Profile files must be root-owned and not group/world writable.
-- A world-consistent backup and verification run before the active server stops.
-- Audit, exporter, and status readers stop before the game process.
+- The concurrent services use separate ports, runtime directories, and worlds.
 - The target profile is validated before launch.
-- Failed startup or health checks restore the previous profile automatically.
 - Homestead and SkyFactory never share a world or backup directory.
-- The production firewall remains unchanged; only the active profile binds
-  ports 25565 and 25575.
+- Homestead binds TCP 25565 and RCON 25575; SkyFactory binds TCP 25566 and RCON
+  25576. Both RCON ports remain denied at the host and provider firewalls.
 
 ## One-time preparation
 
@@ -47,11 +47,11 @@ one symlink while both runtime trees remain in place.
    Record the source URL and SHA-256 before extracting as `minecraft`.
 3. Run the pack's server installation process in the isolated directory. Review
    its scripts before execution and do not run downloaded installers as root.
-4. Preserve the pack's intended SkyFactory world-generation configuration.
-   Boot on loopback staging ports first and confirm it creates a skyblock world,
-   not a normal overworld.
-5. Set `online-mode=true`, `white-list=true`, RCON on loopback-protected port
-   25575, and copy only reviewed UUID access lists. Do not copy player data.
+4. Preserve the pack's intended SkyFactory world-generation configuration and
+   confirm it creates a skyblock world, not a normal overworld.
+5. Set `online-mode=true`. The current private group mirrors Homestead with
+   `white-list=false`; enable and populate a UUID whitelist before widening the
+   audience. Never copy player data between worlds.
 6. Generate a dedicated mod checksum baseline for the SkyFactory directory.
 7. Install the scripts, unit, and reviewed profile files:
 
@@ -86,13 +86,11 @@ profile. Until then this runbook and the profile layer are preparation only.
 
 ## Staging gate
 
-Before the first production switch, start SkyFactory on an alternate
-ports and verify two clean boots, the correct world type, whitelist behavior,
-RCON, backup/restore, logs, memory use, and mod integrity. BlueMap support for
-this legacy Forge pack is out of scope. The SkyFactory profile sets
-`MC_MAP_MODE=offline`; the API reports `map_available: false`, the landing page
-marks the map offline, and the map vhost serves the intentional offline page.
-The Homestead profile restores BlueMap automatically.
+SkyFactory passed two clean boots, protocol and version checks, public DNS and
+TCP reachability checks, memory checks, and isolation checks against the live
+Homestead service. BlueMap support for this legacy Forge pack is out of scope.
+The SkyFactory status endpoint reports `map_available: false`; the Homestead
+map remains online because both servers are currently running concurrently.
 
 Use the manual `SkyFactory Staging Control` workflow to start, stop, restart,
 or inspect the staging service. It asserts that Homestead remains the
@@ -105,9 +103,10 @@ RCON 25576 must remain blocked at both firewall layers.
 sudo ufw allow 25566/tcp comment 'Temporary SkyFactory staging'
 ```
 
-Add the same TCP 25566 inbound allowance to the Hetzner firewall, preferably
-restricted to the players' public IP addresses. Remove both allowances after
-the session; stopping the staging workflow also closes the process listener.
+The same TCP 25566 inbound allowance is required in the Hetzner firewall,
+preferably restricted to the players' public IP addresses. Remove both
+allowances after the session; stopping the staging workflow also closes the
+process listener.
 
 Cloudflare DNS provides a short, port-free client address. These records must
 remain **DNS only** because the standard Cloudflare proxy does not carry the
@@ -121,9 +120,18 @@ Minecraft protocol:
 Set SRV priority and weight to `0`. Players can then enter
 `sb.geigercapital.us`; Minecraft discovers TCP 25566 through the SRV record.
 
-## Switch commands
+## Concurrent control commands
 
-After every consumer passes the staging gate:
+Use the GitHub Actions `SkyFactory Staging Control` workflow with `start`,
+`stop`, `restart`, or `status`. Homestead remains active during each action.
+Players use `mc.geigercapital.us` for Homestead and `sb.geigercapital.us` for
+SkyFactory.
+
+## Future exclusive switch commands
+
+The future switch refuses unknown profile names and concurrent switches, takes
+a verified backup before stopping the active service, and rolls back after a
+failed target health check. After every consumer passes that staging gate:
 
 ```bash
 sudo /usr/local/sbin/minecraft-profile-switch skyfactory4
@@ -146,11 +154,10 @@ curl -fsS http://127.0.0.1:5000/status
 
 ## Session closeout
 
-Switch back to Homestead, verify its latest backup, confirm the Homestead world
-and pack version through the status API, and retain the SkyFactory runtime and
-backups. A later session can reactivate it without reinstalling or moving data.
+Stop the SkyFactory staging service, take and verify a SkyFactory world backup,
+remove the TCP 25566 allowances from UFW and Hetzner, and retain the isolated
+runtime for a later session. Homestead continues running throughout.
 
-The landing page follows the API's active profile. It redirects to the
-SkyFactory session page while `MC_PROFILE=skyfactory4`, retaining live status,
-player counts, version reporting, and links to the exact client pack. Returning
-to Homestead returns visitors to the normal landing page.
+The Homestead landing page reads `/status`; the SkyFactory page reads
+`/status/skyfactory4`. Each page therefore reports its own concurrent service,
+player count, version, address, and map availability.

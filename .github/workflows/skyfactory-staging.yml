@@ -37,7 +37,7 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p "$SSH_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts
 
-      - name: Control loopback staging service
+      - name: Control staging service
         env:
           ACTION: ${{ inputs.action }}
           SSH_PORT: 2222

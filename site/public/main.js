@@ -444,6 +444,7 @@ function initServerStatus() {
   const versionEl = document.getElementById('version');
   const updated = document.getElementById('updated');
   const mapLink = document.getElementById('map-link');
+  const address = document.getElementById('server-address');
 
   const offline = (label) => {
     dot.className = 'status-dot status-dot--offline';
@@ -456,23 +457,14 @@ function initServerStatus() {
     const ctl = new AbortController();
     const bail = setTimeout(() => ctl.abort(), 8000);
     try {
-      const res = await fetch('https://api.geigercapital.us/status', {
+      const expectedProfile = document.body.dataset.profile;
+      const statusPath = expectedProfile === 'skyfactory4' ? '/status/skyfactory4' : '/status';
+      const res = await fetch('https://api.geigercapital.us' + statusPath, {
         signal: ctl.signal,
         cache: 'no-store',
       });
       if (!res.ok) throw new Error(String(res.status));
       const data = await res.json();
-      const expectedProfile = document.body.dataset.profile;
-      const activeProfile = data.server && data.server.profile;
-      if (expectedProfile === 'homestead' && activeProfile === 'skyfactory4') {
-        window.location.replace('/skyfactory.html');
-        return;
-      }
-      if (expectedProfile === 'skyfactory4' && activeProfile && activeProfile !== 'skyfactory4') {
-        window.location.replace('/');
-        return;
-      }
-
       if (data.online) {
         dot.className = 'status-dot status-dot--online';
         statusText.textContent = 'Server Online';
@@ -484,6 +476,9 @@ function initServerStatus() {
         }
       } else {
         offline('Server Offline');
+      }
+      if (address && data.server && data.server.address) {
+        address.textContent = data.server.address;
       }
       if (updated && data.timestamp) {
         updated.textContent = 'Last updated: ' + new Date(data.timestamp).toUTCString();

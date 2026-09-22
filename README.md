@@ -2,7 +2,7 @@
 
 Secure software development lifecycle proof-of-concept built around the Homestead SMP — a Fabric 1.20.1 / Homestead 1.3.6 Minecraft server hosted on a Hetzner CX43 VPS. 30 controls mapped to SOC 2 TSC, ISO 27001 Annex A, and NIST CSF.
 
-Public site: [play.geigercapital.us](https://play.geigercapital.us) · Game: `mc.geigercapital.us` · Map: [map.geigercapital.us](https://map.geigercapital.us)
+Public site: [play.geigercapital.us](https://play.geigercapital.us) · Homestead: `mc.geigercapital.us` · SkyFactory: `sb.geigercapital.us` · Map: [map.geigercapital.us](https://map.geigercapital.us)
 
 ## Structure
 - `infrastructure/` — systemd units, nginx, ufw, scheduled-restart script

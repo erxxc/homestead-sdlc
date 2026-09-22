@@ -70,7 +70,7 @@
             <span class="status-dot" id="dot"></span>
             <span id="status-text">Checking...</span>
           </div>
-          <div class="address">sb.geigercapital.us</div>
+          <div class="address" id="server-address">sb.geigercapital.us</div>
           <div class="players" id="players"></div>
           <div class="version-info" id="version"></div>
         </div>
@@ -88,14 +88,14 @@
         <span class="ticker-item">Minecraft 1.12.2</span><span class="ticker-sep">·</span>
         <span class="ticker-item">Forge</span><span class="ticker-sep">·</span>
         <span class="ticker-item ticker-item--accent">Fresh World</span><span class="ticker-sep">·</span>
-        <span class="ticker-item">Backups Active</span><span class="ticker-sep">·</span>
-        <span class="ticker-item">Homestead Preserved</span><span class="ticker-sep">·</span>
+        <span class="ticker-item">Isolated World</span><span class="ticker-sep">·</span>
+        <span class="ticker-item">Homestead Online</span><span class="ticker-sep">·</span>
         <span class="ticker-item ticker-item--accent">SkyFactory 4.2.4</span><span class="ticker-sep">·</span>
         <span class="ticker-item">Minecraft 1.12.2</span><span class="ticker-sep">·</span>
         <span class="ticker-item">Forge</span><span class="ticker-sep">·</span>
         <span class="ticker-item ticker-item--accent">Fresh World</span><span class="ticker-sep">·</span>
-        <span class="ticker-item">Backups Active</span><span class="ticker-sep">·</span>
-        <span class="ticker-item">Homestead Preserved</span>
+        <span class="ticker-item">Isolated World</span><span class="ticker-sep">·</span>
+        <span class="ticker-item">Homestead Online</span>
       </div>
     </div>
 
@@ -113,19 +113,19 @@
       <article class="session-card reveal">
         <div class="spotlight-label">Operations</div>
         <h2>Controls stay active</h2>
-        <p>Status, player counts, backups, audit logging, alerts, and metrics follow the active profile. The map is intentionally offline for SkyFactory.</p>
+        <p>This page checks SkyFactory independently while Homestead remains online. RCON stays blocked publicly, and the map is intentionally unavailable for this pack.</p>
       </article>
     </section>
 
     <section class="profile-preservation container container--narrow reveal">
       <div class="spotlight-label">Reversible by design</div>
-      <h2>Homestead is waiting exactly where we left it.</h2>
-      <p>The Fabric world is never opened, converted, or copied into this Forge runtime. At session close, a verified SkyFactory backup is taken and the active profile returns to Homestead.</p>
+      <h2>Homestead keeps running on its original world.</h2>
+      <p>The Fabric world is never opened, converted, or copied into this Forge runtime. At session close, SkyFactory is stopped and its isolated world is retained while Homestead continues on its original service.</p>
     </section>
   </main>
 
   <footer class="footer">
-    <div class="footer-text">SkyFactory 4 · One-off session · Homestead preserved</div>
+    <div class="footer-text">SkyFactory 4 · One-off session · Running beside Homestead</div>
   </footer>
 </body>
 </html>

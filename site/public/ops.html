@@ -110,7 +110,7 @@
         </div>
         <div class="stat reveal">
           <div class="stat-number stat-number--green" data-count="428">428</div>
-          <div class="stat-label">Mods Checksum-Verified</div>
+          <div class="stat-label">Homestead Mods Verified</div>
         </div>
         <div class="stat reveal">
           <div class="stat-number" data-count="19.97">19.97</div>
@@ -118,6 +118,21 @@
         </div>
       </div>
     </section>
+
+    <div class="version-block reveal">
+      <span class="version-watermark" aria-hidden="true">DUAL</span>
+      <div class="version-header">
+        <span class="version-tag">Runtime isolation</span>
+        <span class="version-date">September 22, 2026</span>
+      </div>
+      <div class="version-title">Two packs, two services, separate worlds</div>
+      <ul class="change-list">
+        <li>Homestead remains on Fabric 1.20.1 at <strong>mc.geigercapital.us</strong> while SkyFactory 4.2.4 runs on Forge 1.12.2 at <strong>sb.geigercapital.us</strong>.</li>
+        <li>Each service has its own runtime directory, world, Java version, game port, and RCON port. Neither process opens the other server's world.</li>
+        <li>The Minecraft TCP listeners on 25565 and 25566 are reachable publicly. RCON 25575 and 25576 remain denied by both firewall layers.</li>
+        <li>SkyFactory is controlled independently through a manual GitHub Actions workflow and can be stopped without interrupting Homestead.</li>
+      </ul>
+    </div>
 
     <div class="divider reveal"><span class="divider-label">· 01 · pipeline ·</span></div>
 
@@ -129,7 +144,7 @@
       </div>
       <div class="version-title">Nothing lands by hand</div>
       <ul class="change-list">
-        <li>Every change to server infrastructure goes through a pull request on a protected branch — even though there is exactly one admin. Self-review is a documented, accepted risk, not an accident.</li>
+        <li>Main is protected for normal changes. Authorized administrator updates may use the audited bypass path when an operational change must deploy directly.</li>
         <li>Merging to main triggers an automated deploy: runtime files are packaged, installed on the server, services restarted, and health-validated (local API checks, metrics presence, config dry-runs) before the deploy counts as done.</li>
         <li>CodeQL and OWASP ZAP scan on a weekly schedule; Checkov lints the infrastructure config; Dependabot keeps dependencies current; gitleaks blocks secrets at commit time. Security-sensitive third-party CI actions are pinned to exact commit hashes.</li>
         <li>The deploy account on the server is a dedicated user with sudo scoped to the exact commands the pipeline needs — not an admin login.</li>
@@ -144,9 +159,9 @@
         <span class="version-tag">Backups</span>
         <span class="version-date">Nightly, verified</span>
       </div>
-      <div class="version-title">Backups that are proven, not assumed</div>
+      <div class="version-title">Homestead backups that are proven, not assumed</div>
       <ul class="change-list">
-        <li>Every night: a world-consistent snapshot (saving is paused and flushed first), written atomically so a half-finished archive can never masquerade as a backup, with a free-disk preflight so exhaustion fails loudly.</li>
+        <li>Every night, Homestead receives a world-consistent snapshot: saving is paused and flushed first, the archive is written atomically, and a free-disk preflight makes exhaustion fail loudly.</li>
         <li>45 minutes later, an automated job extracts and checks the newest archive and logs a PASS or FAIL — because a backup that has never been restored from is a hope, not a backup.</li>
         <li>30 minutes after that, retention pruning keeps the archive set under a fixed disk budget — always preserving the newest verified copies, and refusing to run at all if nothing healthy would remain.</li>
       </ul>
@@ -164,7 +179,7 @@
         <span class="version-tag">Supply Chain</span>
         <span class="version-date">Every jar, every boot</span>
       </div>
-      <div class="version-title">428 mods, none of them on trust</div>
+      <div class="version-title">428 Homestead mods, none of them on trust</div>
       <ul class="change-list">
         <li>Every mod jar on the server is SHA-256 baselined. The server refuses to start if any jar fails verification — the integrity check is a boot gate, not a report.</li>
         <li>A file watcher monitors the mods directory in real time and flags any change for manual review.</li>

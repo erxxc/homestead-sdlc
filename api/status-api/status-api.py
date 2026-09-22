@@ -5,7 +5,7 @@ Exposes safe public-facing server metrics via HTTP endpoint.
 Never exposes: player names, system metrics, security events.
 """
 
-from flask import Flask, jsonify
+from flask import Flask, abort, jsonify
 from flask_cors import CORS
 import re
 import socket
@@ -17,6 +17,9 @@ app = Flask(__name__)
 CORS(app, origins=["https://play.geigercapital.us", "https://geigercapital.us"])
 
 ACTIVE_PROFILE = Path("/etc/minecraft/active-profile")
+PROFILE_FILES = {
+    "skyfactory4": Path("/etc/minecraft/profiles/skyfactory4-staging.env"),
+}
 DEFAULT_PROFILE = {
     "MC_PROFILE": "homestead",
     "MC_PACK_NAME": "Homestead 1.3.6",
@@ -27,10 +30,15 @@ DEFAULT_PROFILE = {
 }
 
 
-def get_active_profile():
+def get_profile(profile_name=None):
     profile = DEFAULT_PROFILE.copy()
+    profile_path = ACTIVE_PROFILE
+    if profile_name is not None:
+        profile_path = PROFILE_FILES.get(profile_name)
+        if profile_path is None:
+            abort(404)
     try:
-        for raw in ACTIVE_PROFILE.read_text(encoding="utf-8").splitlines():
+        for raw in profile_path.read_text(encoding="utf-8").splitlines():
             line = raw.strip()
             if not line or line.startswith("#") or "=" not in line:
                 continue
@@ -100,8 +108,9 @@ def rcon_response(conn):
 
 
 @app.route("/status")
-def status():
-    profile = get_active_profile()
+@app.route("/status/<profile_name>")
+def status(profile_name=None):
+    profile = get_profile(profile_name)
     # Query player count
     list_result = query_rcon("list", int(profile["RCON_PORT"]))
     player_count = 0
