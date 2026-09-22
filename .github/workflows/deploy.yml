@@ -140,7 +140,9 @@ jobs:
             sudo systemctl restart "$STATUS_API_SERVICE"
             sudo systemctl restart "$AUDIT_SERVICE"
             sudo systemctl restart "$MOD_WATCHER_SERVICE"
-            sudo systemctl reload nginx 2>/dev/null || true
+            # nginx.service ExecReload validates configuration before reload;
+            # this command is covered by the deploy user's constrained sudo rule.
+            sudo systemctl reload nginx
 
             bash -n "$MC_RESTART_DEST"
             bash -n "$VERIFY_BACKUP_DEST"
@@ -151,7 +153,6 @@ jobs:
             systemctl cat "minecraft-alert@.service" >/dev/null
             test -f /etc/systemd/system/logrotate.service.d/onfailure-alert.conf
             sudo logrotate -d "$LOGROTATE_DEST" >/tmp/minecraft-logrotate-check.log
-            sudo nginx -t
             # minecraft-logrotate.conf is the sole owner of the nginx logs; the
             # stock package config duplicates them and makes logrotate exit 1
             test ! -e /etc/logrotate.d/nginx
