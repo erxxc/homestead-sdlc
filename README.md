@@ -1,6 +1,10 @@
-# Homestead SDLC PoC
+# Parallel Works SDLC PoC
 
-Secure software development lifecycle proof-of-concept built around the Homestead SMP — a Fabric 1.20.1 / Homestead 1.3.6 Minecraft server hosted on a Hetzner CX43 VPS. 30 controls mapped to SOC 2 TSC, ISO 27001 Annex A, and NIST CSF.
+Secure software development lifecycle proof of concept for Parallel Works, an
+operating layer for isolated multiplayer worlds. Its current products are the
+persistent Homestead world and the limited SkyFactory 4 session. The platform
+runs on a Hetzner CX43 VPS with 30 controls mapped to SOC 2 TSC, ISO 27001
+Annex A, and NIST CSF.
 
 Public site: [play.geigercapital.us](https://play.geigercapital.us) · Homestead: `mc.geigercapital.us` · SkyFactory: `sb.geigercapital.us` · Map: [map.geigercapital.us](https://map.geigercapital.us)
 

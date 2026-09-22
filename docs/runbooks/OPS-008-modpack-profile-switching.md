@@ -8,6 +8,11 @@ pack has an isolated runtime, world, Java executable, logs, and integrity
 baseline. The atomic profile-switch design below remains the future path for a
 pack that must take over the primary production address.
 
+Parallel Works is the public operating brand. Homestead and SkyFactory 4 are
+world products within it; future packs receive their own world page, status
+route, connection address, and isolated runtime rather than becoming a rename
+of the platform.
+
 The first alternate profile is SkyFactory 4 version 4.2.4: Minecraft 1.12.2 on
 Forge. It is a legacy pack and must use a separately pinned Java 8 runtime. It
 must never open the Fabric 1.20.1 Homestead world.

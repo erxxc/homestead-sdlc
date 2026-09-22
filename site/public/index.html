@@ -3,59 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Homestead SMP</title>
+  <title>Parallel Works</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/styles.css">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2">
-  <link rel="shortcut icon" href="/favicon.ico?v=2">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#166534">
-  <meta property="og:title" content="Homestead SMP">
-  <meta property="og:description" content="Fabric 1.20.1 · Homestead 1.3.6 · mc.geigercapital.us">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:title" content="Parallel Works">
+  <meta property="og:description" content="Independent worlds, shared infrastructure. Explore Homestead and SkyFactory 4.">
   <meta property="og:image" content="https://play.geigercapital.us/apple-touch-icon.png">
   <meta property="og:url" content="https://play.geigercapital.us">
   <meta name="twitter:card" content="summary">
   <script src="/main.js" defer></script>
 </head>
-<body data-profile="homestead">
-
+<body class="world-directory" data-page="worlds">
   <div class="scroll-progress"></div>
   <div class="mouse-glow" aria-hidden="true"></div>
   <div class="konami-toast" aria-hidden="true"></div>
 
-  <div class="palette-overlay">
-    <div class="palette">
-      <div class="palette-input-wrap">
-        <span class="palette-icon">⌘</span>
-        <input class="palette-input" type="text" placeholder="Search or jump to..." autocomplete="off">
-      </div>
-      <div class="palette-results"></div>
-      <div class="palette-footer">
-        <span><span class="palette-kbd">↑↓</span> navigate</span>
-        <span><span class="palette-kbd">↵</span> select</span>
-        <span><span class="palette-kbd">esc</span> close</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="particles" aria-hidden="true">
-    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-    <div class="particle"></div>
-  </div>
-
   <nav class="nav">
-    <a href="/" class="nav-logo">
+    <a href="/" class="nav-logo" aria-current="page">
       <svg class="nav-logo-glyph" viewBox="0 0 64 64" fill="none" aria-hidden="true">
         <rect x="21.53" y="5.51" width="20.94" height="1.96" fill="currentColor"/>
         <rect x="11.55" y="12.18" width="40.91" height="3.20" fill="currentColor"/>
@@ -66,206 +36,62 @@
         <rect x="11.55" y="48.62" width="40.91" height="3.20" fill="currentColor"/>
         <rect x="21.53" y="56.53" width="20.94" height="1.96" fill="currentColor"/>
       </svg>
-      <span>Homestead SMP</span>
+      <span>Parallel Works</span>
     </a>
     <ul class="nav-links">
-      <li><a href="/" class="nav-link" aria-current="page">Status</a></li>
+      <li><a href="/" class="nav-link" aria-current="page">Worlds</a></li>
       <li><a href="/guide.html" class="nav-link">Guide</a></li>
       <li><a href="/changelog.html" class="nav-link">Changelog</a></li>
       <li><a href="/ops.html" class="nav-link">Ops</a></li>
     </ul>
-    <a href="https://geigercapital.us" class="nav-parent" aria-label="Geiger Capital, parent studio">
-      <svg class="nav-parent-glyph" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-        <rect x="21.53" y="5.51" width="20.94" height="1.96" fill="currentColor"/>
-        <rect x="11.55" y="12.18" width="40.91" height="3.20" fill="currentColor"/>
-        <rect x="6.59" y="19.15" width="50.83" height="3.85" fill="currentColor"/>
-        <rect x="4.09" y="26.32" width="55.82" height="4.07" fill="currentColor"/>
-        <rect x="4.09" y="33.61" width="55.82" height="4.07" fill="currentColor"/>
-        <rect x="6.59" y="41.01" width="50.83" height="3.85" fill="currentColor"/>
-        <rect x="11.55" y="48.62" width="40.91" height="3.20" fill="currentColor"/>
-        <rect x="21.53" y="56.53" width="20.94" height="1.96" fill="currentColor"/>
-      </svg>
-      <span class="nav-parent-text">Geiger Capital</span>
-    </a>
   </nav>
 
-  <div class="main main--hero">
-    <div class="container container--narrow hero" style="text-align:center;">
-      <h1 class="reveal reveal-stagger-1" data-typewriter="Homestead SMP">Homestead SMP</h1>
-      <p class="subtitle reveal reveal-stagger-2">Fabric 1.20.1 · Homestead 1.3.6</p>
-      <div class="status reveal reveal-stagger-3">
-        <div id="status-indicator" role="status" aria-live="polite">
-          <span class="status-dot" id="dot"></span>
-          <span id="status-text">Checking...</span>
-        </div>
-        <div class="address" id="server-address">mc.geigercapital.us</div>
-        <div class="players" id="players"></div>
-        <div class="version-info" id="version"></div>
-      </div>
-      <div class="btn-group reveal reveal-stagger-4" style="justify-content:center;">
-        <a href="https://map.geigercapital.us" class="btn btn--primary" id="map-link">Live Map</a>
-        <a href="/guide.html" class="btn btn--secondary">Getting Started</a>
-        <a href="https://www.curseforge.com/minecraft/modpacks/homestead-cozy" class="btn btn--secondary">Modpack</a>
-      </div>
-      <div class="updated" id="updated"></div>
-    </div>
-  </div>
-
-  <div class="ticker">
-    <div class="ticker-track">
-      <span class="ticker-item ticker-item--accent">Fabric 1.20.1</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">Homestead 1.3.6</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">428 Mods Verified</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item ticker-item--accent">Create</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">Simple Voice Chat</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">Farmer's Delight</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item ticker-item--accent">BlueMap</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">Supplementaries</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">Open Parties &amp; Claims</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item ticker-item--accent">Comforts</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">Moonlight Lib</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">mc.geigercapital.us</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item ticker-item--accent">Fabric 1.20.1</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">Homestead 1.3.6</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">428 Mods Verified</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item ticker-item--accent">Create</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">Simple Voice Chat</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">Farmer's Delight</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item ticker-item--accent">BlueMap</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">Supplementaries</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">Open Parties &amp; Claims</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item ticker-item--accent">Comforts</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">Moonlight Lib</span>
-      <span class="ticker-sep">·</span>
-      <span class="ticker-item">mc.geigercapital.us</span>
-    </div>
-  </div>
-
-  <section class="pull-quotes">
-    <blockquote class="pull-quote reveal pull-quote--offset-left">
-      We didn't just build a town — we built a place worth coming back to every night.
-    </blockquote>
-    <blockquote class="pull-quote reveal pull-quote--offset-right pull-quote--right">
-      There's something about watching the sun rise over someone else's chimney that makes the world feel alive.
-    </blockquote>
-    <blockquote class="pull-quote reveal pull-quote--offset-left">
-      I joined looking for a server. I stayed because it felt like home.
-    </blockquote>
-  </section>
-
-  <div class="divider reveal"><span class="divider-label">· 01 ·</span></div>
-
-  <section class="stats">
-    <div class="stats-grid">
-      <div class="stat reveal">
-        <div class="stat-number stat-number--green" id="stat-days" data-count="125">125</div>
-        <div class="stat-label">Days Online</div>
-      </div>
-      <div class="stat reveal">
-        <div class="stat-number" data-count="6">6</div>
-        <div class="stat-label">Total Players</div>
-      </div>
-      <div class="stat reveal">
-        <div class="stat-number stat-number--green" data-count="428">428</div>
-        <div class="stat-label">Mods Verified</div>
-      </div>
-      <div class="stat reveal">
-        <div class="stat-number" data-count="100+">100+</div>
-        <div class="stat-label">Builds Completed</div>
-      </div>
-    </div>
-  </section>
-
-  <div class="divider reveal"><span class="divider-label">· 02 ·</span></div>
-
-  <div class="skew-break">
-    <section class="spotlight">
-      <div class="spotlight-card reveal tilt-card">
-        <img class="spotlight-image" src="/screenshots/featured.webp" alt="The Nether Portal build by zChromatic" width="1024" height="768" loading="lazy">
-        <div class="spotlight-body">
-          <div class="spotlight-label">Featured Build</div>
-          <div class="spotlight-title">The Nether Portal</div>
-          <div class="spotlight-builder">Built by zChromatic</div>
-          <p class="spotlight-desc">Nether portal that was casually rerouted to zChromatic's basement. We are all forced to use his elevators now.</p>
-        </div>
-      </div>
+  <main>
+    <section class="works-hero container">
+      <p class="works-kicker reveal">Independent worlds · shared infrastructure</p>
+      <h1 class="reveal reveal-stagger-1" data-typewriter="Parallel Works">Parallel Works</h1>
+      <p class="subtitle reveal reveal-stagger-2">Persistent places and limited sessions, operated side by side without sharing worlds, runtimes, or release schedules.</p>
     </section>
-  </div>
 
-  <div class="divider reveal"><span class="divider-label">· 03 ·</span></div>
+    <section class="world-list container" aria-label="Available worlds">
+      <article class="world-entry world-entry--homestead reveal">
+        <div class="world-entry-main">
+          <div class="world-entry-meta"><span>Persistent world</span><span>Fabric 1.20.1</span></div>
+          <h2>Homestead</h2>
+          <p>A long-running cooperative world built around Create, farming, building, and a town worth returning to.</p>
+        </div>
+        <div class="world-entry-status">
+          <div class="world-live-state" id="homestead-state" role="status" aria-live="polite"><span class="status-dot"></span><span>Checking...</span></div>
+          <div class="address">mc.geigercapital.us</div>
+          <div class="players" id="homestead-players"></div>
+          <a href="/homestead.html" class="btn btn--primary">Open Homestead</a>
+        </div>
+      </article>
 
-  <section class="gallery">
-    <div class="gallery-heading reveal">Gallery</div>
-    <div class="gallery-grid">
-      <img class="gallery-item gallery-item--large reveal" src="/screenshots/panorama.webp" alt="Panoramic view of the Homestead lake and surrounding builds" width="1432" height="781" loading="lazy">
-      <img class="gallery-item gallery-item--small reveal" src="/screenshots/beach.webp" alt="Beach hangout area with seating" width="1024" height="768" loading="lazy">
-      <img class="gallery-item gallery-item--small reveal" src="/screenshots/cave.webp" alt="Underground cave base with ambient lighting" width="1024" height="768" loading="lazy">
-    </div>
-  </section>
+      <article class="world-entry world-entry--skyfactory reveal">
+        <div class="world-entry-main">
+          <div class="world-entry-meta"><span>Limited session</span><span>Forge 1.12.2</span></div>
+          <h2>SkyFactory 4</h2>
+          <p>A fresh skyblock experiment running in an isolated world beside Homestead for a short-form group session.</p>
+        </div>
+        <div class="world-entry-status">
+          <div class="world-live-state" id="skyfactory-state" role="status" aria-live="polite"><span class="status-dot"></span><span>Checking...</span></div>
+          <div class="address">sb.geigercapital.us</div>
+          <div class="players" id="skyfactory-players"></div>
+          <a href="/skyfactory.html" class="btn btn--primary">Open SkyFactory</a>
+        </div>
+      </article>
+    </section>
 
-  <div class="divider reveal"><span class="divider-label">· 04 ·</span></div>
-
-  <section class="roster">
-    <div class="roster-heading reveal">Community</div>
-    <div class="roster-grid">
-      <div class="roster-card reveal tilt-card">
-        <div class="roster-role">Admin</div>
-        <div class="roster-name"><span class="roster-status roster-status--online"></span>sierracarrera</div>
-        <p class="roster-bio">Server founder. Builds elaborate storage mechanisms and maintains the modpack.</p>
-      </div>
-      <div class="roster-card reveal tilt-card">
-        <div class="roster-role">Builder</div>
-        <div class="roster-name"><span class="roster-status roster-status--online"></span>zChromatic</div>
-        <p class="roster-bio">Landscape architect. Responsible for the beautiful hillside house that totally doesn't steal power from windmills nearby.</p>
-      </div>
-      <div class="roster-card reveal tilt-card">
-        <div class="roster-role">Engineer</div>
-        <div class="roster-name"><span class="roster-status"></span>scottrod</div>
-        <p class="roster-bio">Create mod specialist. Built the server's automated iron and tree farming systems.</p>
-      </div>
-      <div class="roster-card reveal tilt-card">
-        <div class="roster-role">Explorer</div>
-        <div class="roster-name"><span class="roster-status"></span>HazayHD</div>
-        <p class="roster-bio">Maps uncharted territory. Also completely destroyed the bedrock layer in 2 dimensions.</p>
-      </div>
-      <div class="roster-card reveal tilt-card">
-        <div class="roster-role">Farmer</div>
-        <div class="roster-name"><span class="roster-status roster-status--online"></span>Beaver</div>
-        <p class="roster-bio">He is literally a beaver. Runs the community farm and dam. Supplies half the server with Farmer's Delight meals.</p>
-      </div>
-      <div class="roster-card reveal tilt-card">
-        <div class="roster-role">Angler</div>
-        <div class="roster-name"><span class="roster-status roster-status--online"></span>RipCord</div>
-        <p class="roster-bio">Server fishing guru. Every lake on the map is "his spot." Keeps the kitchens stocked and will not disclose where the tropical fish keep coming from.</p>
-      </div>
-    </div>
-  </section>
+    <section class="works-principle container container--narrow reveal">
+      <h2>One operating layer, separate histories.</h2>
+      <p>Each world keeps its own server process, runtime, port, data, and lifecycle. A temporary session can start or stop without opening, converting, or interrupting another world.</p>
+      <a href="/ops.html">Review operations and isolation</a>
+    </section>
+  </main>
 
   <footer class="footer">
-    <div class="footer-text">Homestead SMP · Fabric 1.20.1 · est. April 2026</div>
+    <div class="footer-text">Parallel Works · Homestead · SkyFactory 4</div>
   </footer>
-
 </body>
 </html>

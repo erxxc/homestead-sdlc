@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   initDaysOnline();      // must precede initStatCounters — it seeds a data-count
   initServerStatus();
+  initWorldDirectory();
   initScrollProgress();
   initReveals();
   initTabs();
@@ -276,12 +277,14 @@ function initCommandPalette() {
   const results = overlay.querySelector('.palette-results');
 
   const items = [
-    { icon: '🟢', label: 'Server Status', hint: 'Home', href: '/' },
+    { icon: '◫', label: 'World Directory', hint: 'Parallel Works', href: '/' },
+    { icon: '🟢', label: 'Homestead', hint: 'Persistent', href: '/homestead.html' },
+    { icon: '🟣', label: 'SkyFactory 4', hint: 'Limited Session', href: '/skyfactory.html' },
     { icon: '📖', label: 'Getting Started', hint: 'Guide', href: '/guide.html' },
     { icon: '📋', label: 'Changelog', hint: 'Updates', href: '/changelog.html' },
     { icon: '🛡️', label: 'Ops & Security', hint: 'SDLC', href: '/ops.html' },
     { icon: '🗺️', label: 'Live Map', hint: 'External', href: 'https://map.geigercapital.us' },
-    { icon: '📦', label: 'Modpack', hint: 'CurseForge', href: 'https://www.curseforge.com/minecraft/modpacks/homestead-cozy' },
+    { icon: '📦', label: 'Homestead Pack', hint: 'CurseForge', href: 'https://www.curseforge.com/minecraft/modpacks/homestead-cozy' },
     { icon: '💬', label: 'Community', hint: 'Coming Soon', href: '#' },
     { icon: '#', label: 'Stats', hint: 'Section', action: () => scrollToSelector('.stats') },
     { icon: '🏗️', label: 'Featured Build', hint: 'Section', action: () => scrollToSelector('.spotlight') },
@@ -506,4 +509,47 @@ function initServerStatus() {
 
   fetchStatus();
   setInterval(fetchStatus, 60000);
+}
+
+/* ── Parallel Works directory ── */
+function initWorldDirectory() {
+  if (document.body.dataset.page !== 'worlds') return;
+
+  const worlds = [
+    { id: 'homestead', endpoint: '/status' },
+    { id: 'skyfactory', endpoint: '/status/skyfactory4' },
+  ];
+
+  async function updateWorld(world) {
+    const state = document.getElementById(world.id + '-state');
+    const players = document.getElementById(world.id + '-players');
+    if (!state) return;
+    const dot = state.querySelector('.status-dot');
+    const label = state.querySelector('span:last-child');
+    const ctl = new AbortController();
+    const bail = setTimeout(() => ctl.abort(), 8000);
+    try {
+      const res = await fetch('https://api.geigercapital.us' + world.endpoint, {
+        signal: ctl.signal,
+        cache: 'no-store',
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      const data = await res.json();
+      dot.className = 'status-dot ' + (data.online ? 'status-dot--online' : 'status-dot--offline');
+      label.textContent = data.online ? 'Online' : 'Offline';
+      if (players && data.players) {
+        players.textContent = data.players.current + ' / ' + data.players.max + ' players';
+      }
+    } catch {
+      dot.className = 'status-dot status-dot--offline';
+      label.textContent = 'Status unavailable';
+      if (players) players.textContent = '';
+    } finally {
+      clearTimeout(bail);
+    }
+  }
+
+  const updateAll = () => worlds.forEach(updateWorld);
+  updateAll();
+  setInterval(updateAll, 60000);
 }

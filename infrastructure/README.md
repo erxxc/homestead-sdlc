@@ -1,6 +1,7 @@
 # Infrastructure
 
-Configuration files and operational scripts for the Homestead SDLC PoC.
+Configuration files and operational scripts for Parallel Works. Homestead and
+SkyFactory are isolated world products on the shared operating layer.
 
 ## Contents
 

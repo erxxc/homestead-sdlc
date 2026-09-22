@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Homestead SMP Status API
+Parallel Works public status API
 Exposes safe public-facing server metrics via HTTP endpoint.
 Never exposes: player names, system metrics, security events.
 """
@@ -126,11 +126,13 @@ def status(profile_name=None):
 
     return jsonify(
         {
+            "platform": "Parallel Works",
             "online": online,
             "players": {"current": player_count, "max": max_players},
             "server": {
                 "address": profile["MC_ADDRESS"],
                 "profile": profile["MC_PROFILE"],
+                "world": profile["MC_PROFILE"],
                 "version": profile["MC_PACK_NAME"],
                 "minecraft": profile["MC_MINECRAFT_VERSION"],
             },

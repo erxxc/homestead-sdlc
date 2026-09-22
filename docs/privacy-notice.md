@@ -1,8 +1,9 @@
-# Privacy Notice — Homestead SMP
+# Privacy Notice — Parallel Works
 
 ## Data Controller
 
-Homestead SMP — operated by the server administrator.
+Parallel Works, including the Homestead and temporary session worlds, is
+operated by the server administrator.
 
 ## Data We Collect
 

@@ -1,4 +1,4 @@
-# Threat Model — Homestead SMP SDLC PoC
+# Threat Model — Parallel Works SDLC PoC
 
 ## Version
 

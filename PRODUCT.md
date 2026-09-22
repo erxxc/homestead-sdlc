@@ -6,17 +6,17 @@ brand
 
 ## Users
 
-Players joining the private Homestead and temporary SkyFactory Minecraft
-servers, plus technical readers reviewing the public operations and security
+Players choosing between Parallel Works worlds, including persistent Homestead
+and temporary SkyFactory sessions, plus technical readers reviewing operations and security
 proof of concept. Players need current pack, address, availability, and map
 information. Reviewers need concrete, verifiable descriptions of how the
 service is operated.
 
 ## Product Purpose
 
-Provide an accurate public front door for the Minecraft community and a clear
-record of its operational controls. Success means a player can select the
-right server and client pack without assistance, while every public security
+Provide an accurate public directory for independently operated multiplayer
+worlds and a clear record of their operational controls. Success means a player
+can select the right world and client pack without assistance, while every public security
 or reliability claim matches deployed behavior and repository evidence.
 
 ## Brand Personality
@@ -34,7 +34,7 @@ live data they do not have.
 ## Design Principles
 
 - Put the correct join path and current server state first.
-- Distinguish Homestead and temporary session profiles at every decision point.
+- Distinguish Homestead, SkyFactory, and future worlds at every decision point.
 - Tie operational claims to deployed controls and public evidence.
 - Preserve the established restrained visual identity and concise voice.
 - State limitations directly, especially for maps, backups, and monitoring.
