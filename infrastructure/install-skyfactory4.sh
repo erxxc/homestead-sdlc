@@ -94,7 +94,7 @@ for raw in path.read_text(encoding="utf-8").splitlines():
     order.append(key)
 
 required = {
-    "server-ip": "127.0.0.1",
+    "server-ip": "0.0.0.0",
     "server-port": "25566",
     "enable-rcon": "true",
     "rcon.port": "25576",
@@ -122,5 +122,5 @@ chmod 0750 "$DEST" "$BACKUP_DIR"
 chmod 0600 "$DEST/server.properties" "$DEST/eula.txt"
 
 echo "SkyFactory 4 ${PACK_VERSION} prepared at $DEST"
-echo "Staging listeners: 127.0.0.1:25566 and RCON 127.0.0.1:25576"
+echo "Staging game listener: 0.0.0.0:25566; RCON remains on its separate protected port 25576"
 echo "Production Homestead was not modified or restarted."

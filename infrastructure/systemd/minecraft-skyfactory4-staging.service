@@ -1,5 +1,5 @@
 [Unit]
-Description=SkyFactory 4 Staging Server (loopback only)
+Description=SkyFactory 4 Staging Server
 After=network.target
 OnFailure=minecraft-alert@%p.service
 

@@ -24,7 +24,7 @@ test -s "$DEST/mod_checksums.sha256"
 test "$(stat -c %U:%G "$DEST")" = minecraft:minecraft
 test "$(stat -c %a "$DEST/server.properties")" = 600
 
-grep -Eq '^server-ip=127\.0\.0\.1$' "$DEST/server.properties"
+grep -Eq '^server-ip=0\.0\.0\.0$' "$DEST/server.properties"
 grep -Eq '^server-port=25566$' "$DEST/server.properties"
 grep -Eq '^enable-rcon=true$' "$DEST/server.properties"
 grep -Eq '^rcon.port=25576$' "$DEST/server.properties"

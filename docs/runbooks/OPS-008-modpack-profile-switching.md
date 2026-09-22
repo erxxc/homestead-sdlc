@@ -77,8 +77,8 @@ sudo ACCEPT_MINECRAFT_EULA=TRUE /tmp/install-skyfactory4.sh
 Setting `ACCEPT_MINECRAFT_EULA=TRUE` records the operator's acceptance of the
 Minecraft EULA. The script verifies the official 4.2.4 server archive against
 SHA-256 `72b1bae61cbd6a07ab55d71f9e1a94239a4992f35a7f9f4a149e4f1eea04a16b`,
-uses the absolute Temurin 8 executable, and leaves the pack on loopback staging
-ports. It does not stop or restart Homestead.
+uses the absolute Temurin 8 executable, and leaves the pack on its dedicated
+staging game port. It does not stop or restart Homestead.
 
 Do not install the generic service until backup, audit, exporter, status API,
 restart, integrity, and map consumers have been updated to read the active
@@ -86,7 +86,7 @@ profile. Until then this runbook and the profile layer are preparation only.
 
 ## Staging gate
 
-Before the first production switch, start SkyFactory on loopback-only alternate
+Before the first production switch, start SkyFactory on an alternate
 ports and verify two clean boots, the correct world type, whitelist behavior,
 RCON, backup/restore, logs, memory use, and mod integrity. BlueMap support for
 this legacy Forge pack is out of scope. The SkyFactory profile sets
@@ -95,13 +95,19 @@ marks the map offline, and the map vhost serves the intentional offline page.
 The Homestead profile restores BlueMap automatically.
 
 Use the manual `SkyFactory Staging Control` workflow to start, stop, restart,
-or inspect the loopback staging service. It asserts that Homestead remains the
+or inspect the staging service. It asserts that Homestead remains the
 active production service and waits for port 25566 before declaring startup
-successful. Connect a test client through an SSH tunnel:
+successful. The game listener binds to TCP 25566 for direct client tests;
+whitelisting and online authentication remain enabled. RCON 25576 must remain
+blocked at both firewall layers.
 
 ```bash
-ssh -p 2222 -L 25566:127.0.0.1:25566 eric@mc.geigercapital.us
+sudo ufw allow 25566/tcp comment 'Temporary SkyFactory staging'
 ```
+
+Add the same TCP 25566 inbound allowance to the Hetzner firewall, preferably
+restricted to the players' public IP addresses. Remove both allowances after
+the session; stopping the staging workflow also closes the process listener.
 
 ## Switch commands
 
