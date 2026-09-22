@@ -48,15 +48,26 @@ if [ ! -x /usr/local/bin/alertmanager ]; then
 fi
 
 if [ ! -s /etc/parallel-works/alertmanager-webhook-url ]; then
-    alert_url=$(sed -n 's/^ALERT_URL=//p' /etc/minecraft/secrets/alerts 2>/dev/null | head -1 || true)
-    if [ -z "$alert_url" ]; then
+    sed -n 's/^ALERT_URL=//p' /etc/minecraft/secrets/alerts 2>/dev/null | head -1 > /etc/parallel-works/alertmanager-webhook-url
+    if [ ! -s /etc/parallel-works/alertmanager-webhook-url ]; then
         echo "ALERT_URL is missing from /etc/minecraft/secrets/alerts" >&2
         exit 1
     fi
-    printf '%s\n' "$alert_url" > /etc/parallel-works/alertmanager-webhook-url
-    chown prometheus:prometheus /etc/parallel-works/alertmanager-webhook-url
-    chmod 0600 /etc/parallel-works/alertmanager-webhook-url
 fi
+# ntfy otherwise interprets Alertmanager's JSON as its native publish schema,
+# producing malformed notifications such as "Garbled time". Keep the secret
+# out of command arguments and logs while selecting ntfy's built-in template.
+python3 - <<'PY'
+from pathlib import Path
+
+path = Path("/etc/parallel-works/alertmanager-webhook-url")
+url = path.read_text(encoding="utf-8").strip()
+if "template=alertmanager" not in url:
+    url += ("&" if "?" in url else "?") + "template=alertmanager"
+path.write_text(url + "\n", encoding="utf-8")
+PY
+chown prometheus:prometheus /etc/parallel-works/alertmanager-webhook-url
+chmod 0600 /etc/parallel-works/alertmanager-webhook-url
 
 install -o prometheus -g prometheus -m 0644 "$ROOT/monitoring/prometheus/prometheus.yml" /opt/prometheus/prometheus.yml
 install -o prometheus -g prometheus -m 0644 "$ROOT/monitoring/prometheus/rules/parallel-works.rules.yml" /opt/prometheus/rules/parallel-works.rules.yml

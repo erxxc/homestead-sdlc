@@ -28,7 +28,8 @@ release, verifies the release checksum, replaces the single-world exporter
 unit with isolated Homestead and SkyFactory units, and provisions the Grafana
 dashboard. Alertmanager's HA gossip listener is disabled for this single-node
 deployment, leaving only the loopback HTTP listener. Re-running the installer
-is safe.
+is safe. The ntfy receiver URL selects ntfy's built-in `alertmanager` template
+so its JSON webhook becomes a readable firing or resolved notification.
 
 ## Validate
 
