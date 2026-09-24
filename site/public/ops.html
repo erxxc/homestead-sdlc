@@ -148,6 +148,7 @@
         <li>Prometheus rules cover scrape failures, current and forecast disk pressure, memory, sustained CPU load, stale backups, collector health, Cloudflare tunnel redundancy, Loki health, configuration failures, and write-ahead-log corruption. Alertmanager groups and routes the resulting notifications to ntfy.</li>
         <li>Version-controlled Grafana dashboards show host capacity, service and exporter health, backup age, active alerts, tunnel connections, log ingestion, errors, Minecraft events, audit records, and the backup lifecycle. Metrics and logs have bounded retention to protect the game host from unbounded monitoring growth.</li>
         <li>Loki retains 14 days of centralized logs while Alloy collects both profile logs, structured audit events, backup operations, Nginx, cloudflared, and the systemd journal. Both services and their metrics endpoints remain loopback-only.</li>
+        <li>Monthly disposable restore drills fully extract each profile's newest archive and validate its world structure. Seven-day availability, player capacity, restore results, and selected game activity are tracked in a dedicated service-level dashboard, with a weekly health digest delivered through ntfy.</li>
         <li>Browser administration is designed for Cloudflare Access over an outbound tunnel. Grafana and Uptime Kuma stay on localhost; Prometheus, Alertmanager, exporters, and RCON are not published.</li>
       </ul>
     </div>

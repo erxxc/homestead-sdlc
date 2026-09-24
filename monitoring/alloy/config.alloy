@@ -20,6 +20,7 @@ local.file_match "parallel_works" {
     { __path__ = "/var/log/minecraft-audit*.json", job = "minecraft-audit" },
     { __path__ = "/var/log/minecraft-backup-verify*.log", job = "backup-verify" },
     { __path__ = "/var/log/minecraft-backup-prune*.log", job = "backup-prune" },
+    { __path__ = "/var/log/minecraft-restore-drill*.log", job = "restore-drill" },
     { __path__ = "/var/log/nginx/access.log", job = "nginx", stream = "access" },
     { __path__ = "/var/log/nginx/error.log", job = "nginx", stream = "error" },
   ]

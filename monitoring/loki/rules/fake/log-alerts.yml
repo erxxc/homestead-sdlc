@@ -1,0 +1,35 @@
+groups:
+  - name: parallel-works-log-alerts
+    interval: 1m
+    rules:
+      - alert: MinecraftCrashSignature
+        expr: sum by (world) (count_over_time({job="minecraft"} |~ "(?i)(watchdog|crash report|unexpected exception|server crash)" [5m])) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Minecraft crash signature detected for {{ $labels.world }}"
+
+      - alert: RepeatedSshAuthenticationFailures
+        expr: sum(count_over_time({job="systemd-journal"} |~ "(?i)(failed password|invalid user|authentication failure)" [10m])) > 10
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: Repeated SSH authentication failures detected
+
+      - alert: BackupLogFailure
+        expr: sum by (job) (count_over_time({job=~"backup-.+"} |~ "(FAIL|FATAL)" [15m])) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Failure detected in {{ $labels.job }} logs"
+
+      - alert: NginxServerErrors
+        expr: sum(count_over_time({job="nginx",stream="access"} |~ "\\s5[0-9]{2}\\s" [10m])) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Repeated HTTP 5xx responses detected

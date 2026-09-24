@@ -1,23 +1,212 @@
 {
-  "annotations": {"list": []},
+  "annotations": {
+    "list": []
+  },
   "editable": true,
   "graphTooltip": 1,
   "panels": [
-    {"type":"stat","title":"Loki target","id":1,"gridPos":{"h":4,"w":6,"x":0,"y":0},"targets":[{"datasource":{"type":"prometheus","uid":"parallel-works-prometheus"},"expr":"up{job=\"loki\"}","refId":"A"}]},
-    {"type":"stat","title":"Alloy target","id":2,"gridPos":{"h":4,"w":6,"x":6,"y":0},"targets":[{"datasource":{"type":"prometheus","uid":"parallel-works-prometheus"},"expr":"up{job=\"alloy\"}","refId":"A"}]},
-    {"type":"timeseries","title":"Lines received","id":3,"gridPos":{"h":4,"w":12,"x":12,"y":0},"fieldConfig":{"defaults":{"unit":"lines/sec"}},"targets":[{"datasource":{"type":"prometheus","uid":"parallel-works-prometheus"},"expr":"sum(rate(loki_distributor_lines_received_total[5m]))","legendFormat":"lines/s","refId":"A"}]},
-    {"type":"logs","title":"Recent errors and failures","id":4,"gridPos":{"h":9,"w":24,"x":0,"y":4},"options":{"showTime":true,"showLabels":true,"wrapLogMessage":true,"sortOrder":"Descending","dedupStrategy":"none","enableLogDetails":true},"targets":[{"datasource":{"type":"loki","uid":"parallel-works-loki"},"expr":"{job=~\".+\"} |~ `(?i)(error|fail|exception|panic|fatal)`","refId":"A"}]},
-    {"type":"logs","title":"Minecraft profiles","id":5,"gridPos":{"h":9,"w":12,"x":0,"y":13},"options":{"showTime":true,"showLabels":true,"wrapLogMessage":true,"sortOrder":"Descending","dedupStrategy":"none","enableLogDetails":true},"targets":[{"datasource":{"type":"loki","uid":"parallel-works-loki"},"expr":"{job=\"minecraft\"}","refId":"A"}]},
-    {"type":"logs","title":"Structured audit","id":6,"gridPos":{"h":9,"w":12,"x":12,"y":13},"options":{"showTime":true,"showLabels":true,"wrapLogMessage":true,"sortOrder":"Descending","dedupStrategy":"none","enableLogDetails":true},"targets":[{"datasource":{"type":"loki","uid":"parallel-works-loki"},"expr":"{job=\"minecraft-audit\"}","refId":"A"}]},
-    {"type":"logs","title":"Backup lifecycle","id":7,"gridPos":{"h":8,"w":24,"x":0,"y":22},"options":{"showTime":true,"showLabels":true,"wrapLogMessage":true,"sortOrder":"Descending","dedupStrategy":"none","enableLogDetails":true},"targets":[{"datasource":{"type":"loki","uid":"parallel-works-loki"},"expr":"{job=~\"backup-.+\"}","refId":"A"}]}
+    {
+      "type": "stat",
+      "title": "Loki target",
+      "id": 1,
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parallel-works-prometheus"
+          },
+          "expr": "up{job=\"loki\"}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Alloy target",
+      "id": 2,
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parallel-works-prometheus"
+          },
+          "expr": "up{job=\"alloy\"}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Lines received",
+      "id": 3,
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "lines/sec"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parallel-works-prometheus"
+          },
+          "expr": "sum(rate(loki_distributor_lines_received_total[5m]))",
+          "legendFormat": "lines/s",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "Recent errors and failures",
+      "id": 4,
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none",
+        "enableLogDetails": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "parallel-works-loki"
+          },
+          "expr": "{job=~\".+\"} |~ `(?i)(error|fail|exception|panic|fatal)`",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "Minecraft profiles",
+      "id": 5,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none",
+        "enableLogDetails": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "parallel-works-loki"
+          },
+          "expr": "{job=\"minecraft\"}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "Structured audit",
+      "id": 6,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 13
+      },
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none",
+        "enableLogDetails": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "parallel-works-loki"
+          },
+          "expr": "{job=\"minecraft-audit\"}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "Backup and restore lifecycle",
+      "id": 7,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none",
+        "enableLogDetails": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "parallel-works-loki"
+          },
+          "expr": "{job=~\"backup-.+|restore-drill\"}",
+          "refId": "A"
+        }
+      ]
+    }
   ],
   "refresh": "30s",
   "schemaVersion": 39,
-  "tags": ["parallel-works", "logs", "operations"],
-  "templating": {"list": []},
-  "time": {"from":"now-6h","to":"now"},
+  "tags": [
+    "parallel-works",
+    "logs",
+    "operations"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
   "timezone": "browser",
   "title": "Parallel Works Logs",
   "uid": "parallel-works-logs",
-  "version": 1
+  "version": 2
 }

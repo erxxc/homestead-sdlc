@@ -1,0 +1,47 @@
+groups:
+  - name: parallel-works-slo-recording
+    interval: 1m
+    rules:
+      - record: parallel_works:profile_availability:ratio_24h
+        expr: avg_over_time(parallel_works_status_api_up[24h])
+      - record: parallel_works:profile_availability:ratio_7d
+        expr: avg_over_time(parallel_works_status_api_up[7d])
+      - record: parallel_works:profile_availability:ratio_30d
+        expr: avg_over_time(parallel_works_status_api_up[30d])
+      - record: parallel_works:target_availability:ratio_7d
+        expr: avg_over_time(up[7d])
+
+  - name: parallel-works-slo-alerts
+    rules:
+      - alert: ProfileAvailabilitySloBurn
+        expr: parallel_works:profile_availability:ratio_24h < 0.995
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.world }} availability is below 99.5% over 24 hours"
+          description: "Measured availability is {{ $value | humanizePercentage }}."
+
+      - alert: RestoreDrillMissing
+        expr: parallel_works_restore_drill_last_success_timestamp_seconds == 0
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "No successful restore drill recorded for {{ $labels.world }}"
+
+      - alert: RestoreDrillStale
+        expr: time() - parallel_works_restore_drill_last_success_timestamp_seconds > 3024000
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Restore drill for {{ $labels.world }} is older than 35 days"
+
+      - alert: RestoreDrillFailed
+        expr: parallel_works_restore_drill_last_run_success == 0 and parallel_works_restore_drill_last_success_timestamp_seconds > 0
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Latest restore drill failed for {{ $labels.world }}"

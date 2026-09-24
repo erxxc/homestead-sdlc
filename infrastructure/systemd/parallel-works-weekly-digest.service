@@ -1,0 +1,17 @@
+[Unit]
+Description=Parallel Works weekly monitoring digest
+After=network-online.target prometheus.service
+Wants=network-online.target
+OnFailure=minecraft-alert@%p.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/parallel-works-weekly-digest
+User=root
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

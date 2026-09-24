@@ -29,6 +29,29 @@ metric_backup() {
     printf 'parallel_works_backup_latest_size_bytes{world="%s"} %s\n' "$world" "$size" >> "$tmp"
 }
 
+metric_status_api() {
+    local world=$1 url=$2
+    python3 - "$world" "$url" >> "$tmp" <<'PY'
+import json
+import sys
+import urllib.request
+
+world, url = sys.argv[1:]
+up = current = maximum = 0
+try:
+    with urllib.request.urlopen(url, timeout=5) as response:
+        data = json.load(response)
+    up = int(bool(data.get("online")))
+    current = int(data.get("players", {}).get("current", 0))
+    maximum = int(data.get("players", {}).get("max", 0))
+except Exception:
+    pass
+print(f'parallel_works_status_api_up{{world="{world}"}} {up}')
+print(f'parallel_works_players_online{{world="{world}"}} {current}')
+print(f'parallel_works_players_max{{world="{world}"}} {maximum}')
+PY
+}
+
 printf '# HELP parallel_works_service_active Whether a managed systemd service is active.\n# TYPE parallel_works_service_active gauge\n' > "$tmp"
 metric_service minecraft.service homestead
 metric_service minecraft-skyfactory4-staging.service skyfactory
@@ -45,6 +68,11 @@ metric_service cloudflared.service
 printf '# HELP parallel_works_backup_latest_timestamp_seconds Modification time of the newest profile backup.\n# TYPE parallel_works_backup_latest_timestamp_seconds gauge\n' >> "$tmp"
 metric_backup homestead /opt/minecraft/backups/homestead /opt/minecraft/backups
 metric_backup skyfactory /opt/minecraft/backups/skyfactory4
+printf '# HELP parallel_works_status_api_up Whether the local profile status API reports the game online.\n# TYPE parallel_works_status_api_up gauge\n' >> "$tmp"
+printf '# HELP parallel_works_players_online Current players reported by the local status API.\n# TYPE parallel_works_players_online gauge\n' >> "$tmp"
+printf '# HELP parallel_works_players_max Player capacity reported by the local status API.\n# TYPE parallel_works_players_max gauge\n' >> "$tmp"
+metric_status_api homestead http://127.0.0.1:5000/status
+metric_status_api skyfactory http://127.0.0.1:5000/status/skyfactory4
 printf '# HELP parallel_works_collector_timestamp_seconds Last successful collector run.\n# TYPE parallel_works_collector_timestamp_seconds gauge\nparallel_works_collector_timestamp_seconds %s\n' "$(date +%s)" >> "$tmp"
 chown prometheus:prometheus "$tmp"
 chmod 0644 "$tmp"

@@ -22,6 +22,9 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- Observability phase 2: profile availability SLOs, status-API player gauges,
+  actionable Loki log alerts, monthly full-extraction restore drills, a weekly
+  ntfy health digest, and a dedicated service-level Grafana dashboard.
 - Monitoring depth pass: cloudflared metrics, predictive disk-capacity and
   monitoring-pipeline alerts, an expanded operations dashboard, and a
   provisioned Loki investigation dashboard for errors, Minecraft, audit, and

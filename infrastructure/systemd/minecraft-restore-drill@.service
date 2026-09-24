@@ -1,0 +1,18 @@
+[Unit]
+Description=Disposable full restore drill for Minecraft profile %i
+After=local-fs.target
+OnFailure=minecraft-alert@%p.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/minecraft-restore-drill %i
+Nice=19
+IOSchedulingClass=idle
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/tmp /var/log /var/lib/node_exporter/textfile_collector
+
+[Install]
+WantedBy=multi-user.target

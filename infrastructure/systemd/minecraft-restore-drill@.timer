@@ -1,0 +1,11 @@
+[Unit]
+Description=Monthly disposable restore drill for Minecraft profile %i
+
+[Timer]
+OnCalendar=monthly
+RandomizedDelaySec=6h
+Persistent=true
+Unit=minecraft-restore-drill@%i.service
+
+[Install]
+WantedBy=timers.target
