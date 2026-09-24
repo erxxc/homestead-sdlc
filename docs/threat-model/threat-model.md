@@ -115,7 +115,7 @@ STRIDE per component analysis across all identified attack surface elements.
 | Threat | Category | Likelihood | Impact | Risk | Control | Status |
 |---|---|---|---|---|---|---|
 | — | Spoofing | Low | Low | Low | Scripts are server-side only | Accepted |
-| Script injection via config file | Tampering | Low | High | Medium | Reviewed-path checksum gate and recursive watcher available; activate when a deployed pack contains managed script trees | Partial |
+| Script injection via config file | Tampering | Low | High | Medium | Boot-time checksum gate and recursive watcher cover KubeJS server/startup scripts and CraftTweaker scripts | Implemented |
 | No script change audit trail | Repudiation | High | Medium | High | Git version control | Implemented |
 | — | Information Disclosure | Low | Low | Low | No player data in scripts | Accepted |
 | Malformed script crashes server | Denial of Service | Medium | High | High | Neruina, syntax validation | Partial |
@@ -162,6 +162,6 @@ logging, log-derived alerts, SLOs, and full-extraction restore drills. R-002 has
 host/provider filtering and kernel protections but retains volumetric risk;
 generic per-IP UFW connection limiting was rejected because it can disrupt
 legitimate shared-NAT players without stopping upstream saturation. The
-reviewed-path configuration-integrity gate is available but remains inactive
-until a deployed pack's script trees are explicitly reviewed and baselined.
-R-004 remains Partial. Next review 2026-12-24.
+reviewed-path configuration-integrity gate now covers 70 KubeJS and
+CraftTweaker script files and the same paths are watched recursively. R-004
+remains Partial. Next review 2026-12-24.
