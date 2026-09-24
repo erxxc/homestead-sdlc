@@ -40,9 +40,10 @@ ntfy.
 ## Manual restore drill
 
 The drill never writes into a live profile and never launches Minecraft. It
-requires conservative scratch space of three times the compressed archive plus
-5 GiB, extracts the entire archive under `/var/tmp`, validates a non-empty
-`world/level.dat`, publishes metrics, and deletes the extraction on exit.
+first scans the complete archive to reject unsafe members and measure its exact
+expanded byte size. It requires that size plus a 2 GiB safety margin, extracts
+the archive under `/var/tmp`, validates a non-empty `world/level.dat`, publishes
+metrics, and deletes the extraction on exit.
 
 Run one profile at a time during a quiet period:
 

@@ -71,28 +71,34 @@ if [ -z "$latest" ]; then
 fi
 
 archive_size=$(stat -c%s "$latest")
-free_bytes=$(df --output=avail -B1 /var/tmp | tail -1)
-required=$((archive_size * 3 + 5 * 1024 * 1024 * 1024))
-if [ "$free_bytes" -lt "$required" ]; then
-    printf '%s FAIL insufficient scratch space for %s: need %s bytes\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$latest" "$required" | tee -a "$log"
-    write_metric 0 "$archive_size"
-    exit 1
-fi
-
-printf '%s INFO extracting %s to disposable storage\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$latest" | tee -a "$log"
-python3 - "$latest" <<'PY'
+printf '%s INFO validating archive paths and measuring expanded size for %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$latest" | tee -a "$log"
+expanded_size=$(python3 - "$latest" <<'PY'
 import pathlib
 import sys
 import tarfile
 
-with tarfile.open(sys.argv[1], "r:gz") as archive:
-    for member in archive.getmembers():
+expanded = 0
+with tarfile.open(sys.argv[1], "r|gz") as archive:
+    for member in archive:
         path = pathlib.PurePosixPath(member.name)
         if path.is_absolute() or ".." in path.parts:
             raise SystemExit(f"unsafe archive path: {member.name}")
         if not (member.isfile() or member.isdir()):
             raise SystemExit(f"unsupported archive member: {member.name}")
+        if member.isfile():
+            expanded += member.size
+print(expanded)
 PY
+)
+free_bytes=$(df --output=avail -B1 /var/tmp | tail -1)
+required=$((expanded_size + 2 * 1024 * 1024 * 1024))
+if [ "$free_bytes" -lt "$required" ]; then
+    printf '%s FAIL insufficient scratch space: expanded archive is %s bytes, need %s bytes including safety margin, have %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$expanded_size" "$required" "$free_bytes" | tee -a "$log"
+    write_metric 0 "$archive_size"
+    exit 1
+fi
+
+printf '%s INFO extracting %s bytes to disposable storage\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$expanded_size" | tee -a "$log"
 tar -xzf "$latest" -C "$work"
 level_dat=$(find "$work" -type f -path '*/world/level.dat' -print -quit)
 if [ -z "$level_dat" ] || [ ! -s "$level_dat" ]; then
