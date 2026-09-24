@@ -5,7 +5,12 @@ WATCH_PATHS=("/opt/minecraft/homestead/mods")
 if [ -r /etc/minecraft/integrity/paths ]; then
     while IFS= read -r path; do
         [ -n "$path" ] && [ -e "$path" ] && WATCH_PATHS+=("$path")
-    done < <(sed -e 's/[[:space:]]*#.*$//' -e '/^[[:space:]]*$/d' /etc/minecraft/integrity/paths)
+    done < <(sed \
+        -e 's/[[:space:]]*#.*$//' \
+        -e 's/^[[:space:]]*//' \
+        -e 's/[[:space:]]*$//' \
+        -e '/^$/d' \
+        /etc/minecraft/integrity/paths)
 fi
 
 echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) INFO mod watcher started" >> "$LOG"
