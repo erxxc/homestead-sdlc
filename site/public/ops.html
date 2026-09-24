@@ -145,8 +145,9 @@
       <div class="version-title">Both worlds measured, failures routed</div>
       <ul class="change-list">
         <li>Homestead and SkyFactory have separate loopback-only metric exporters and labels, while a node collector reports service state and per-world backup freshness.</li>
-        <li>Prometheus rules cover scrape failures, disk, memory, sustained CPU pressure, stale backups, collector health, configuration failures, and write-ahead-log corruption. Alertmanager groups and routes the resulting notifications.</li>
-        <li>A version-controlled Grafana overview shows host capacity, service health, exporter health, and backup age. Metric retention is bounded by time and size to protect the game host from unbounded monitoring growth.</li>
+        <li>Prometheus rules cover scrape failures, current and forecast disk pressure, memory, sustained CPU load, stale backups, collector health, Cloudflare tunnel redundancy, Loki health, configuration failures, and write-ahead-log corruption. Alertmanager groups and routes the resulting notifications to ntfy.</li>
+        <li>Version-controlled Grafana dashboards show host capacity, service and exporter health, backup age, active alerts, tunnel connections, log ingestion, errors, Minecraft events, audit records, and the backup lifecycle. Metrics and logs have bounded retention to protect the game host from unbounded monitoring growth.</li>
+        <li>Loki retains 14 days of centralized logs while Alloy collects both profile logs, structured audit events, backup operations, Nginx, cloudflared, and the systemd journal. Both services and their metrics endpoints remain loopback-only.</li>
         <li>Browser administration is designed for Cloudflare Access over an outbound tunnel. Grafana and Uptime Kuma stay on localhost; Prometheus, Alertmanager, exporters, and RCON are not published.</li>
       </ul>
     </div>
