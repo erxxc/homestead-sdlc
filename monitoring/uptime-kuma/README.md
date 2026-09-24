@@ -1,7 +1,7 @@
 # Uptime Kuma
 
-Live Uptime Kuma instance runs on the VPS — this directory holds the
-systemd migration script; exported monitor config can be added alongside.
+Live Uptime Kuma runs on the VPS and is available to named operators through
+Cloudflare Access at `https://status-admin.geigercapital.us`.
 
 ## Production location
 
@@ -12,8 +12,8 @@ systemd migration script; exported monitor config can be added alongside.
   runs `node server/server.js` as the `uptime-kuma` system user on Node 22
   (NodeSource, pinned via `/etc/apt/preferences.d/nodesource`)
 - Logs: `journalctl -u uptime-kuma` (journald is size-capped — no log files to rotate)
-- UI: `http://localhost:3001` on the VPS; `:3001` is blocked at UFW + Hetzner (C-005),
-  so reach it through `ssh -p 2222 -L 3001:localhost:3001 <admin-user>@mc.geigercapital.us`
+- UI origin: `http://127.0.0.1:3001`; the port remains blocked publicly and is
+  published only through the authenticated outbound Cloudflare Tunnel
 - Failure alerting: `OnFailure=minecraft-alert@%p.service` (OPS-004) with a 5-in-10-min
   start limit, so a crash loop pages instead of restarting forever
 
@@ -28,12 +28,20 @@ never reaches systemd's `failed` state is invisible to the alerting.
 
 | Monitor | Target | Check |
 |---|---|---|
-| Minecraft | `mc.geigercapital.us:25565` | TCP port |
-| BlueMap | `map.geigercapital.us` | HTTP GET (HEAD returns 400 — see pentest F-005) |
-| SSH | VPS:2222 | TCP port |
-| Voice Chat | VPS:24454 | TCP port — **misconfigured**: Simple Voice Chat is UDP, so this fails every interval; Kuma has no UDP probe. Delete or replace (OPS-005 step 4). |
+| Homestead Game | `127.0.0.1:25565` | TCP port |
+| SkyFactory Game | `127.0.0.1:25566` | TCP port |
+| Homestead Status API | `http://127.0.0.1:5000/status` | HTTP GET |
+| SkyFactory Status API | `http://127.0.0.1:5000/status/skyfactory4` | HTTP GET |
+| Public API Edge | `https://api.geigercapital.us/health` | HTTP GET every 5 minutes |
+| Homestead Page | `https://play.geigercapital.us/homestead.html` | HTTP GET |
+| SkyFactory Page | `https://play.geigercapital.us/skyfactory.html` | HTTP GET |
+| Cloudflare Tunnel | `http://127.0.0.1:2000/ready` | HTTP GET |
+| Loki | `http://127.0.0.1:3100/ready` | HTTP GET |
+| Alloy | `http://127.0.0.1:12345/-/ready` | HTTP GET |
+| Homestead Verified Backup | local secret Push URL | Push heartbeat |
+| SkyFactory Verified Backup | local secret Push URL | Push heartbeat |
 
-Alerts route to Discord via webhook.
+Alerts route only to ntfy. The topic is stored outside the repository.
 
 ## Verified-backup heartbeat
 
@@ -55,4 +63,6 @@ heartbeat is sent only after `verify-backup` successfully extracts
 
 In the Uptime Kuma UI: Settings → Backup → Export → save to `monitoring/uptime-kuma/monitors.json`.
 
-The Discord webhook URL is a secret and must not be committed — strip it from any exported notification config before adding to the repo.
+The ntfy topic and Push URLs are secrets and must not be committed. Strip all
+notification configuration and Push tokens from exports before adding one to
+the repository.

@@ -82,6 +82,10 @@
   with logrotate coverage for verify/prune logs. See runbook OPS-002.
 
 ### Fixed
+- Uptime Kuma status checks now use the local API profile endpoints to avoid
+  false flapping from sending two one-minute probes through the public
+  rate-limited proxy. A separate five-minute `/health` probe retains public
+  DNS, TLS, and reverse-proxy coverage. Notifications are ntfy-only.
 - Security audit logging now detects Minecraft `latest.log` truncation and
   replacement instead of retaining a stale byte offset after restart or
   rotation. A systemd-managed state directory permits atomic state updates;
