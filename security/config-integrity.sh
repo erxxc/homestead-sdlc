@@ -13,7 +13,12 @@ log_event() {
 
 configured_paths() {
     [ -s "$paths_file" ] || return 0
-    sed -e 's/[[:space:]]*#.*$//' -e '/^[[:space:]]*$/d' "$paths_file"
+    sed \
+        -e 's/[[:space:]]*#.*$//' \
+        -e 's/^[[:space:]]*//' \
+        -e 's/[[:space:]]*$//' \
+        -e '/^$/d' \
+        "$paths_file"
 }
 
 snapshot() {
