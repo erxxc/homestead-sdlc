@@ -7,6 +7,10 @@ paths_file=/etc/minecraft/integrity/paths
 baseline=/etc/minecraft/integrity/config.sha256
 log=/var/log/minecraft-integrity.log
 
+log_event() {
+    printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$1" >> "$log" 2>/dev/null || true
+}
+
 configured_paths() {
     [ -s "$paths_file" ] || return 0
     sed -e 's/[[:space:]]*#.*$//' -e '/^[[:space:]]*$/d' "$paths_file"
@@ -30,7 +34,8 @@ snapshot() {
 }
 
 if ! configured_paths | grep -q .; then
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) INFO config integrity has no reviewed paths; skipping" >> "$log"
+    echo "config integrity has no reviewed paths; skipping"
+    log_event "INFO config integrity has no reviewed paths; skipping"
     exit 0
 fi
 
@@ -45,7 +50,7 @@ case "$action" in
         chmod 0444 "$tmp"
         mv -f "$tmp" "$baseline"
         trap - EXIT
-        echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) PASS config integrity baseline generated" >> "$log"
+        log_event "PASS config integrity baseline generated"
         ;;
     verify)
         [ -s "$baseline" ] || { echo "configured integrity paths have no baseline" >&2; exit 1; }
@@ -53,9 +58,9 @@ case "$action" in
         trap 'rm -f "$tmp"' EXIT
         snapshot | sort > "$tmp"
         if cmp -s "$baseline" "$tmp"; then
-            echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) PASS config integrity check passed" >> "$log"
+            log_event "PASS config integrity check passed"
         else
-            echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) FAIL config integrity check failed" >> "$log"
+            log_event "FAIL config integrity check failed"
             diff -u "$baseline" "$tmp" >&2 || true
             exit 1
         fi
