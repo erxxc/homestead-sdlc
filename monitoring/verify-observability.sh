@@ -46,11 +46,14 @@ check_ready("Node Exporter", "http://127.0.0.1:9100/metrics")
 check_ready("Homestead exporter", "http://127.0.0.1:9225/metrics")
 check_ready("SkyFactory exporter", "http://127.0.0.1:9226/metrics")
 check_ready("Grafana", "http://127.0.0.1:3000/api/health")
+check_ready("Loki", "http://127.0.0.1:3100/ready")
+check_ready("Alloy", "http://127.0.0.1:12345/-/healthy")
+check_ready("Cloudflare connector", "http://127.0.0.1:2000/ready")
 
 try:
     _, raw = request("http://127.0.0.1:9090/api/v1/targets")
     data = json.loads(raw)["data"]["activeTargets"]
-    expected = {"prometheus": 1, "node": 1, "minecraft": 2}
+    expected = {"prometheus": 1, "node": 1, "minecraft": 2, "loki": 1, "alloy": 1, "cloudflared": 1}
     for job, count in expected.items():
         targets = [t for t in data if t.get("labels", {}).get("job") == job]
         healthy = [t for t in targets if t.get("health") == "up"]

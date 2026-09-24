@@ -27,6 +27,15 @@ groups:
         annotations:
           summary: Root filesystem has less than 8% free space
 
+      - alert: HostDiskWillFillIn24Hours
+        expr: predict_linear(node_filesystem_avail_bytes{mountpoint="/",fstype!~"tmpfs|overlay"}[6h], 24 * 60 * 60) < 0
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: Root filesystem is predicted to fill within 24 hours
+          description: "The six-hour free-space trend predicts root disk exhaustion within one day."
+
       - alert: HostMemoryLow
         expr: 100 * node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes < 10
         for: 10m
@@ -57,6 +66,13 @@ groups:
           severity: critical
         annotations:
           summary: Prometheus configuration reload failed
+
+      - alert: PrometheusRuleEvaluationFailures
+        expr: increase(prometheus_rule_evaluation_failures_total[15m]) > 0
+        labels:
+          severity: critical
+        annotations:
+          summary: Prometheus failed to evaluate one or more rules
 
   - name: parallel-works-services
     rules:
@@ -92,3 +108,41 @@ groups:
           severity: critical
         annotations:
           summary: Parallel Works operational metric collector is stale
+
+  - name: parallel-works-observability
+    rules:
+      - alert: CloudflareTunnelConnectionsLow
+        expr: cloudflared_tunnel_ha_connections < 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Cloudflare Tunnel has fewer than two HA connections
+          description: "Only {{ $value | printf \"%.0f\" }} connector connections are registered."
+
+      - alert: CloudflareTunnelRequestErrors
+        expr: increase(cloudflared_tunnel_request_errors[10m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Cloudflare Tunnel is returning repeated request errors
+          description: "{{ $value | printf \"%.0f\" }} tunnel request errors occurred in ten minutes."
+
+      - alert: LokiFlushQueueBacklog
+        expr: loki_ingester_flush_queue_length > 100
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Loki has a sustained flush queue backlog
+          description: "The Loki flush queue has remained above 100 for 15 minutes."
+
+      - alert: LokiRequestErrors
+        expr: sum(increase(loki_request_duration_seconds_count{status_code=~"5.."}[10m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Loki is returning repeated server errors
+          description: "{{ $value | printf \"%.0f\" }} Loki requests returned 5xx in ten minutes."

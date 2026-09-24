@@ -22,6 +22,10 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- Monitoring depth pass: cloudflared metrics, predictive disk-capacity and
+  monitoring-pipeline alerts, an expanded operations dashboard, and a
+  provisioned Loki investigation dashboard for errors, Minecraft, audit, and
+  backup streams.
 - Centralized loopback-only logging with Loki 3.7 and Alloy: both Minecraft
   profiles, audit JSON, backup lifecycle logs, Nginx, and the systemd journal,
   with TSDB v13 storage, 14-day retention, and bounded ingestion.

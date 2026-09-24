@@ -104,7 +104,7 @@ if ! getent passwd "$KUMA_USER" >/dev/null; then
 else
     echo "user ${KUMA_USER} exists"
 fi
-# kuma.db holds notification secrets (Discord webhook) — no world-read.
+# kuma.db holds notification credentials and secret Push paths — no world-read.
 chown -R "${KUMA_USER}:${KUMA_USER}" "$KUMA_DIR/data"
 find "$KUMA_DIR/data" -type d -exec chmod 750 {} +
 find "$KUMA_DIR/data" -type f -exec chmod 640 {} +

@@ -25,12 +25,29 @@ checks. Minecraft log-directory default ACLs cover newly rotated files.
 ```bash
 sudo systemctl status loki alloy --no-pager
 curl -fsS http://127.0.0.1:3100/ready
-curl -fsS http://127.0.0.1:12345/-/ready
+curl -fsS http://127.0.0.1:12345/-/healthy
 curl -fsS http://127.0.0.1:3100/loki/api/v1/labels
 sudo journalctl -u loki -u alloy --since '10 minutes ago' --no-pager
 ```
 
-In Grafana Explore, select `Parallel Works Logs` and query `{job=~".+"}`.
+Grafana provisions the `Parallel Works Logs` data source and the `Parallel
+Works Logs` dashboard. Use its service, error, Minecraft, audit, and backup
+panels for routine investigation; use Explore with `{job=~".+"}` for ad hoc
+queries.
+
+## Monitoring enhancements
+
+After central logging is installed, apply the smaller idempotent metrics and
+dashboard update without reinstalling Loki or Alloy:
+
+```bash
+sudo ./infrastructure/install-monitoring-enhancements.sh
+./monitoring/verify-observability.sh
+```
+
+This adds the loopback cloudflared metrics target, predictive disk capacity,
+Prometheus rule-evaluation, tunnel health, and Loki health alerts. It also
+refreshes the operational systemd collector and both provisioned dashboards.
 
 ## Capacity and security
 

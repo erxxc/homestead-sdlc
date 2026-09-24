@@ -7,7 +7,7 @@ Cloudflare Access at `https://status-admin.geigercapital.us`.
 
 - Install: `/opt/uptime-kuma` (Uptime Kuma 2.2.1, root-owned, read-only to the service)
 - Data (SQLite): `/opt/uptime-kuma/data/kuma.db` — owned `uptime-kuma:uptime-kuma`, 750/640
-  (the DB stores the Discord webhook)
+  (the DB stores notification credentials and secret Push paths)
 - Service: `uptime-kuma.service` (repo: `infrastructure/systemd/uptime-kuma.service`),
   runs `node server/server.js` as the `uptime-kuma` system user on Node 22
   (NodeSource, pinned via `/etc/apt/preferences.d/nodesource`)
@@ -37,7 +37,7 @@ never reaches systemd's `failed` state is invisible to the alerting.
 | SkyFactory Page | `https://play.geigercapital.us/skyfactory.html` | HTTP GET |
 | Cloudflare Tunnel | `http://127.0.0.1:2000/ready` | HTTP GET |
 | Loki | `http://127.0.0.1:3100/ready` | HTTP GET |
-| Alloy | `http://127.0.0.1:12345/-/ready` | HTTP GET |
+| Alloy | `http://127.0.0.1:12345/-/healthy` | HTTP GET |
 | Homestead Verified Backup | local secret Push URL | Push heartbeat |
 | SkyFactory Verified Backup | local secret Push URL | Push heartbeat |
 

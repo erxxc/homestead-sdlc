@@ -47,6 +47,10 @@ done
 
 install -d -o root -g grafana -m 0750 /etc/grafana/provisioning/datasources
 install -o root -g grafana -m 0640 "$ROOT/monitoring/grafana/provisioning/datasources/loki.yml" /etc/grafana/provisioning/datasources/parallel-works-loki.yml
+install -d -o root -g grafana -m 0750 /var/lib/grafana/dashboards/parallel-works
+for dashboard in "$ROOT"/monitoring/grafana/dashboards/*.json; do
+    install -o root -g grafana -m 0640 "$dashboard" "/var/lib/grafana/dashboards/parallel-works/$(basename "$dashboard")"
+done
 install -d -o prometheus -g prometheus -m 0755 /opt/prometheus
 install -o prometheus -g prometheus -m 0644 "$ROOT/monitoring/prometheus/prometheus.yml" /opt/prometheus/prometheus.yml
 
