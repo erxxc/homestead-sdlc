@@ -28,6 +28,7 @@ For current state, **use v1.1**. The v1.0 PDF is kept for audit-trail continuity
 |---|---|---|
 | `2026-04-26-ZAP-Report.html` (+ asset dir) | OWASP ZAP DAST | Generated against api.geigercapital.us and map.geigercapital.us |
 | `2026-05-24-post-pr-audit-follow-up.md` | Post-PR audit follow-up | Additional findings, VPS deploy changes, Nginx tuning, and CI evidence triggers |
+| `2026-09-24-security-evidence-refresh.md` | Security evidence refresh | External exposure, edge headers, CI scans, service sandboxing, monitoring, and recovery evidence |
 | `lynis-baseline-summary.md` | Lynis CIS benchmark | Post-remediation score 67/100 (baseline was 65) |
 | `lynis-baseline.txt` | Lynis raw output | Gitignored — re-run on the VPS to regenerate |
 | `nikto-api.txt` | Nikto web scanner | API endpoint findings |
