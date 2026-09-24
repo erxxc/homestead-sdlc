@@ -37,12 +37,24 @@ queries.
 
 ## Monitoring enhancements
 
-After central logging is installed, apply the smaller idempotent metrics and
-dashboard update without reinstalling Loki or Alloy:
+After central logging is installed, package the smaller idempotent metrics and
+dashboard update from the local Git checkout and copy it to the VPS. The VPS
+does not contain a Git working tree.
+
+On the local workstation:
 
 ```bash
-sudo ./infrastructure/install-monitoring-enhancements.sh
-./monitoring/verify-observability.sh
+tar -czf /tmp/parallel-works-monitoring.tar.gz infrastructure/install-monitoring-enhancements.sh infrastructure/systemd/parallel-works-metrics.service infrastructure/systemd/parallel-works-metrics.timer monitoring/prometheus/prometheus.yml monitoring/prometheus/rules/parallel-works.rules.yml monitoring/prometheus/parallel-works-metrics.sh monitoring/grafana/dashboards/parallel-works-overview.json monitoring/grafana/dashboards/parallel-works-logs.json monitoring/verify-observability.sh
+scp -P 2222 /tmp/parallel-works-monitoring.tar.gz eric@mc.geigercapital.us:/tmp/
+```
+
+On the VPS:
+
+```bash
+rm -rf /tmp/parallel-works-monitoring && mkdir -p /tmp/parallel-works-monitoring
+tar -xzf /tmp/parallel-works-monitoring.tar.gz -C /tmp/parallel-works-monitoring
+sudo /tmp/parallel-works-monitoring/infrastructure/install-monitoring-enhancements.sh
+/tmp/parallel-works-monitoring/monitoring/verify-observability.sh
 ```
 
 This adds the loopback cloudflared metrics target, predictive disk capacity,
