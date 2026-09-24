@@ -39,6 +39,9 @@ metric_service minecraft-exporter-homestead.service homestead
 metric_service minecraft-exporter-skyfactory.service skyfactory
 metric_service grafana-server.service
 metric_service uptime-kuma.service
+metric_service loki.service
+metric_service alloy.service
+metric_service cloudflared.service
 printf '# HELP parallel_works_backup_latest_timestamp_seconds Modification time of the newest profile backup.\n# TYPE parallel_works_backup_latest_timestamp_seconds gauge\n' >> "$tmp"
 metric_backup homestead /opt/minecraft/backups/homestead /opt/minecraft/backups
 metric_backup skyfactory /opt/minecraft/backups/skyfactory4

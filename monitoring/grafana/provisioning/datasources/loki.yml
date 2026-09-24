@@ -1,0 +1,9 @@
+apiVersion: 1
+
+datasources:
+  - name: Parallel Works Logs
+    uid: parallel-works-loki
+    type: loki
+    access: proxy
+    url: http://127.0.0.1:3100
+    editable: false

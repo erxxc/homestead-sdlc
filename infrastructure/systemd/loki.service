@@ -1,0 +1,19 @@
+[Unit]
+Description=Grafana Loki log store
+After=network.target
+
+[Service]
+User=loki
+Group=loki
+ExecStart=/usr/local/bin/loki -config.file=/etc/loki/loki.yml
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/loki
+MemoryMax=1G
+
+[Install]
+WantedBy=multi-user.target

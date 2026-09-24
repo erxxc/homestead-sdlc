@@ -29,3 +29,11 @@ scrape_configs:
       - targets: ['127.0.0.1:9226']
         labels:
           world: skyfactory
+
+  - job_name: 'loki'
+    static_configs:
+      - targets: ['127.0.0.1:3100']
+
+  - job_name: 'alloy'
+    static_configs:
+      - targets: ['127.0.0.1:12345']

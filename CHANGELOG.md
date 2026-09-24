@@ -22,6 +22,9 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- Centralized loopback-only logging with Loki 3.7 and Alloy: both Minecraft
+  profiles, audit JSON, backup lifecycle logs, Nginx, and the systemd journal,
+  with TSDB v13 storage, 14-day retention, and bounded ingestion.
 - Uptime Kuma verified-backup heartbeat: the secret push URL remains root-only
   and uses Kuma's loopback listener; successful archive extraction is the only
   path that emits a heartbeat.
