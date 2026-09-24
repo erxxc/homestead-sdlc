@@ -27,6 +27,7 @@ if tar -xzf "$latest" -C "$TEMP_DIR" world/level.dat 2>/dev/null ||
     tar -xzf "$latest" -C "$TEMP_DIR" ./world/level.dat 2>/dev/null; then
     SIZE=$(stat -c%s "$latest")
     log "PASS backup verified — $latest (${SIZE} bytes)"
+    /usr/local/bin/uptime-kuma-backup-heartbeat
     exit 0
 else
     log "FAIL backup corrupt or missing level.dat — $latest"

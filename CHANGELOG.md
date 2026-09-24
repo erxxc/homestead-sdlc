@@ -22,6 +22,9 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- Uptime Kuma verified-backup heartbeat: the secret push URL remains root-only
+  and uses Kuma's loopback listener; successful archive extraction is the only
+  path that emits a heartbeat.
 - Hardened Cloudflare Tunnel installer for browser-based Grafana and Uptime
   Kuma administration: unprivileged service, file-backed token, loopback-only
   metrics, and no new inbound firewall exposure.

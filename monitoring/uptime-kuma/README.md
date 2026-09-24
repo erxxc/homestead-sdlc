@@ -35,6 +35,15 @@ never reaches systemd's `failed` state is invisible to the alerting.
 
 Alerts route to Discord via webhook.
 
+## Verified-backup heartbeat
+
+Create a Push monitor named `Verified Backup`, set its heartbeat interval to
+26 hours with two retries, and configure its generated URL using
+`infrastructure/configure-backup-heartbeat.sh`. The configurator preserves the
+secret push path but rewrites the origin to Kuma's loopback listener. A
+heartbeat is sent only after `verify-backup` successfully extracts
+`world/level.dat`; failed or missing verification becomes a missed heartbeat.
+
 ## Control reference
 
 - C-019 — Availability monitoring

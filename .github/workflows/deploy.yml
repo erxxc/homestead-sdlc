@@ -28,6 +28,7 @@ jobs:
       ONLINE_PLAYERS_DEST: /usr/local/bin/minecraft-online-players
       PRUNE_DEST: /usr/local/bin/prune-backups
       BACKUP_WORLD_DEST: /usr/local/bin/backup-world
+      BACKUP_HEARTBEAT_DEST: /usr/local/bin/uptime-kuma-backup-heartbeat
       LOGROTATE_DEST: /etc/logrotate.d/minecraft
       NOTIFY_FAILURE_DEST: /usr/local/bin/notify-failure
       BLUEMAP_WORLD_DEST: /opt/minecraft/homestead/config/bluemap/maps/world.conf
@@ -75,6 +76,7 @@ jobs:
             security/audit-logger/minecraft-online-players.sh \
             security/audit-logger/security-monitor.py \
             security/backup-world.sh \
+            monitoring/uptime-kuma/backup-heartbeat.sh \
             security/mod-watcher.sh \
             security/prune-backups.sh \
             security/verify-backup.sh
@@ -90,7 +92,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ env.SSH_PORT }}
-          envs: DEPLOY_STAGING_DIR,DEPLOY_ARCHIVE,STATUS_API_SERVICE,STATUS_API_DEST,AUDIT_SERVICE,MOD_WATCHER_SERVICE,SECURITY_MONITOR_DEST,MOD_WATCHER_DEST,MC_RESTART_DEST,VERIFY_BACKUP_DEST,ONLINE_PLAYERS_DEST,PRUNE_DEST,BACKUP_WORLD_DEST,LOGROTATE_DEST,NOTIFY_FAILURE_DEST,BLUEMAP_WORLD_DEST,MAP_MODE_DEST,MAP_OFFLINE_ROOT,GITHUB_SHA
+          envs: DEPLOY_STAGING_DIR,DEPLOY_ARCHIVE,STATUS_API_SERVICE,STATUS_API_DEST,AUDIT_SERVICE,MOD_WATCHER_SERVICE,SECURITY_MONITOR_DEST,MOD_WATCHER_DEST,MC_RESTART_DEST,VERIFY_BACKUP_DEST,ONLINE_PLAYERS_DEST,PRUNE_DEST,BACKUP_WORLD_DEST,BACKUP_HEARTBEAT_DEST,LOGROTATE_DEST,NOTIFY_FAILURE_DEST,BLUEMAP_WORLD_DEST,MAP_MODE_DEST,MAP_OFFLINE_ROOT,GITHUB_SHA
           script: |
             set -euo pipefail
 
@@ -104,6 +106,7 @@ jobs:
               "$MOD_WATCHER_DEST" \
               "$MC_RESTART_DEST" \
               "$VERIFY_BACKUP_DEST" \
+              "$BACKUP_HEARTBEAT_DEST" \
               "$ONLINE_PLAYERS_DEST" \
               "$LOGROTATE_DEST" \
               "$BLUEMAP_WORLD_DEST" \
@@ -118,6 +121,7 @@ jobs:
             sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/security/mod-watcher.sh" "$MOD_WATCHER_DEST"
             sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/infrastructure/mc-restart.sh" "$MC_RESTART_DEST"
             sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/security/verify-backup.sh" "$VERIFY_BACKUP_DEST"
+            sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/monitoring/uptime-kuma/backup-heartbeat.sh" "$BACKUP_HEARTBEAT_DEST"
             sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/security/audit-logger/minecraft-online-players.sh" "$ONLINE_PLAYERS_DEST"
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/minecraft-logrotate.conf" "$LOGROTATE_DEST"
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/bluemap-world.conf" "$BLUEMAP_WORLD_DEST"
@@ -155,6 +159,7 @@ jobs:
 
             bash -n "$MC_RESTART_DEST"
             bash -n "$VERIFY_BACKUP_DEST"
+            bash -n "$BACKUP_HEARTBEAT_DEST"
             bash -n "$ONLINE_PLAYERS_DEST"
             bash -n "$PRUNE_DEST"
             bash -n "$BACKUP_WORLD_DEST"
