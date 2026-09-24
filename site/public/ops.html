@@ -202,6 +202,7 @@
       <ul class="change-list">
         <li>Every mod jar on the server is SHA-256 baselined. The server refuses to start if any jar fails verification — the integrity check is a boot gate, not a report.</li>
         <li>A file watcher monitors the mods directory in real time and flags any change for manual review.</li>
+        <li>Custom API, audit, and integrity services run inside narrow systemd sandboxes. A reviewed-path checksum gate can extend boot-time integrity enforcement to pack scripts and configuration trees without automatically trusting unreviewed content.</li>
         <li>New mods enter through a gated installer: the artifact is pinned to an exact upstream release, SHA-512 verified before it touches the server, checked against the running loader's declared compatibility constraints, and installed with an automatic rollback if the server doesn't boot cleanly.</li>
         <li>A software bill of materials tracks what runs and where it came from.</li>
       </ul>

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 ### Security
+- Custom-service hardening adds capability removal, read-only system views,
+  private devices and temporary storage, narrow address families, and explicit
+  write paths for the status API, audit logger, and mod watcher. A reviewed-path
+  configuration-integrity gate is ready for KubeJS or future pack scripts.
 - Administrative listeners are reduced to loopback where the service supports
   it, beginning with Uptime Kuma; OPS-006 documents equivalent Grafana and
   BlueMap changes plus the dual-firewall isolation required for Minecraft's

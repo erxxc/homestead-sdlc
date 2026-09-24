@@ -2,6 +2,7 @@
 
 ## Version
 
+v1.4 — Service sandboxing, reviewed-path integrity gate, and R-002 control decision (2026-09-24)
 v1.3 — R-001/F-001 closed via exporter env-var credential; backup retention redesigned after 2026-08-13 incident
 v1.2 — Quarterly review; no new threats identified (2026-08-13)
 v1.1 — Status sweep post-PoC weekend (2026-05-23)
@@ -73,7 +74,7 @@ STRIDE per component analysis across all identified attack surface elements.
 | Malformed packet injection | Tampering | Medium | High | High | Neruina crash handler | Implemented |
 | No persistent chat audit log | Repudiation | High | Medium | High | Audit logger captures join/leave/op/kick/ban; chat lines not classified | Partial |
 | Protocol sniffing | Information Disclosure | Low | Low | Low | Encrypted Minecraft protocol | Implemented |
-| Packet flood / DDoS | Denial of Service | Medium | High | High | UFW rate limiting planned | Planned |
+| Packet flood / DDoS | Denial of Service | Medium | High | High | Provider and host firewalls, SYN cookies, reverse-path filtering; volumetric residual risk accepted for current private audience | Partial |
 | OP privilege escalation via exploit | Elevation of Privilege | Low | Critical | Medium | online-mode, no known exploits | Monitor |
 
 ### Component: RCON (Port 25575)
@@ -114,7 +115,7 @@ STRIDE per component analysis across all identified attack surface elements.
 | Threat | Category | Likelihood | Impact | Risk | Control | Status |
 |---|---|---|---|---|---|---|
 | — | Spoofing | Low | Low | Low | Scripts are server-side only | Accepted |
-| Script injection via config file | Tampering | Low | High | Medium | File integrity monitoring planned | Planned |
+| Script injection via config file | Tampering | Low | High | Medium | Reviewed-path checksum gate and recursive watcher available; activate when a deployed pack contains managed script trees | Partial |
 | No script change audit trail | Repudiation | High | Medium | High | Git version control | Implemented |
 | — | Information Disclosure | Low | Low | Low | No player data in scripts | Accepted |
 | Malformed script crashes server | Denial of Service | Medium | High | High | Neruina, syntax validation | Partial |
@@ -136,7 +137,7 @@ STRIDE per component analysis across all identified attack surface elements.
 | Risk ID | Component | Threat | Risk Level | Status |
 |---|---|---|---|---|
 | R-001 | RCON | Password in plaintext | Critical | Implemented — secrets file 640 + exporter env-var credential; F-001 closed 2026-08-13 |
-| R-002 | Minecraft | Packet flood / DDoS | High | Planned |
+| R-002 | Minecraft | Packet flood / DDoS | High | Partial — host/provider filtering and kernel protections; application-aware proxy deferred |
 | R-003 | Mod Supply Chain | Arbitrary code execution | High | Implemented — checksums + mod-watcher |
 | R-004 | Minecraft | No chat audit log | High | Partial — session events captured; chat lines not classified |
 | R-005 | RCON | No command audit log | High | Implemented — RCON_COMMAND in audit log |
@@ -156,8 +157,11 @@ STRIDE per component analysis across all identified attack surface elements.
 
 ## Next Review
 
-Reviewed 2026-08-13 (quarterly). No new threats identified; attack surface unchanged
-since v1.1. Same-day updates (v1.3): R-001 closed via exporter env-var credential
-(F-001 evidence captured); backup retention redesigned after the disk-full incident
-(see reports/2026-08-13-backup-incident-and-rcon-remediation.md). R-002 remains
-Planned, R-004 remains Partial. Next review 2026-11-13.
+Reviewed 2026-09-24. R-001 remains closed. Observability now includes central
+logging, log-derived alerts, SLOs, and full-extraction restore drills. R-002 has
+host/provider filtering and kernel protections but retains volumetric risk;
+generic per-IP UFW connection limiting was rejected because it can disrupt
+legitimate shared-NAT players without stopping upstream saturation. The
+reviewed-path configuration-integrity gate is available but remains inactive
+until a deployed pack's script trees are explicitly reviewed and baselined.
+R-004 remains Partial. Next review 2026-12-24.
