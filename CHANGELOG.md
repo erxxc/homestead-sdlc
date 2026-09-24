@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 ### Security
+- GitHub Actions dependencies are pinned to immutable commit SHAs, including
+  checkout, Python setup, CodeQL, ZAP, Checkov, SSH deployment, and markdown
+  linting, removing mutable-tag execution from CI and deployment workflows.
 - Custom-service hardening adds capability removal, read-only system views,
   private devices and temporary storage, narrow address families, and explicit
   write paths for the status API, audit logger, and mod watcher. A reviewed-path
