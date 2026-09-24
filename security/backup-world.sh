@@ -8,9 +8,10 @@ set -euo pipefail
 BACKUP_DIR="${BACKUP_DIR:-/opt/minecraft/backups}"
 WORLD_PARENT="${WORLD_PARENT:-/opt/minecraft/homestead}"
 MIN_FREE_GIB="${MIN_FREE_GIB:-20}"
+RCON_PORT="${RCON_PORT:-25575}"
 
 rcon() {
-    python3 - "$1" <<'PY'
+    python3 - "$1" "$RCON_PORT" <<'PY'
 import socket
 import struct
 import sys
@@ -46,7 +47,7 @@ def response(conn):
     return request_id, payload[8:-2].decode("utf-8", errors="replace")
 
 
-with socket.create_connection(("localhost", 25575), timeout=10) as conn:
+with socket.create_connection(("localhost", int(sys.argv[2])), timeout=10) as conn:
     conn.settimeout(10)
     request(conn, 1, 3, read_secret())
     auth_id, _ = response(conn)

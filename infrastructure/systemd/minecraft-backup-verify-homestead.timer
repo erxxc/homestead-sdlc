@@ -1,0 +1,9 @@
+[Unit]
+Description=Daily Homestead backup verification
+
+[Timer]
+OnCalendar=*-*-* 00:45:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

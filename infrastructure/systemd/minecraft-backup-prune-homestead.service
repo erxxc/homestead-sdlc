@@ -1,0 +1,13 @@
+[Unit]
+Description=Prune Homestead backups
+After=minecraft-backup-verify-homestead.service
+OnFailure=minecraft-alert@%p.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/minecraft/profiles/homestead.env
+Environment=CAP_GIB=35
+Environment=MIN_KEEP=2
+Environment=MIN_SIZE_MIB=1024
+Environment=LOG=/var/log/minecraft-backup-prune-homestead.log
+ExecStart=/usr/local/bin/prune-backups

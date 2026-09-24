@@ -1,0 +1,9 @@
+[Unit]
+Description=Verify latest Homestead backup
+After=minecraft-backup-homestead.service
+OnFailure=minecraft-alert@%p.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/minecraft/profiles/homestead.env
+ExecStart=/usr/local/bin/verify-backup

@@ -1,7 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-readonly DEST=/etc/minecraft/secrets/uptime-kuma-backup-push-url
+profile="${1:-homestead}"
+case "$profile" in
+    homestead|skyfactory4) ;;
+    *) echo "usage: sudo $0 [homestead|skyfactory4]" >&2; exit 2 ;;
+esac
+readonly DEST="/etc/minecraft/secrets/uptime-kuma-backup-push-url-${profile}"
 if [ "${EUID:-$(id -u)}" -ne 0 ]; then
     echo "run as root: sudo $0" >&2
     exit 1
@@ -28,4 +33,4 @@ chown root:minecraft "$tmp"
 chmod 0640 "$tmp"
 mv -f "$tmp" "$DEST"
 trap - EXIT
-echo "backup heartbeat URL stored for the local Kuma listener"
+echo "$profile backup heartbeat URL stored for the local Kuma listener"

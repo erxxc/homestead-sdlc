@@ -1,0 +1,13 @@
+[Unit]
+Description=Back up Homestead world
+Requires=minecraft.service
+After=minecraft.service
+OnFailure=minecraft-alert@%p.service
+
+[Service]
+Type=oneshot
+User=minecraft
+EnvironmentFile=/etc/minecraft/profiles/homestead.env
+Nice=19
+IOSchedulingClass=idle
+ExecStart=/usr/local/bin/backup-world

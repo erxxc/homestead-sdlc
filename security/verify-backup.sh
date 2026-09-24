@@ -1,5 +1,6 @@
 #!/bin/bash
-LOG="/var/log/minecraft-backup-verify.log"
+MC_PROFILE="${MC_PROFILE:-homestead}"
+LOG="${LOG:-/var/log/minecraft-backup-verify-${MC_PROFILE}.log}"
 BACKUP_DIR="/opt/minecraft/backups"
 TEMP_DIR=$(mktemp -d /tmp/minecraft-backup-verify.XXXXXX)
 TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
@@ -27,7 +28,7 @@ if tar -xzf "$latest" -C "$TEMP_DIR" world/level.dat 2>/dev/null ||
     tar -xzf "$latest" -C "$TEMP_DIR" ./world/level.dat 2>/dev/null; then
     SIZE=$(stat -c%s "$latest")
     log "PASS backup verified — $latest (${SIZE} bytes)"
-    /usr/local/bin/uptime-kuma-backup-heartbeat
+    MC_PROFILE="$MC_PROFILE" /usr/local/bin/uptime-kuma-backup-heartbeat
     exit 0
 else
     log "FAIL backup corrupt or missing level.dat — $latest"

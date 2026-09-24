@@ -1,0 +1,13 @@
+[Unit]
+Description=Back up SkyFactory world
+Requires=minecraft-skyfactory4-staging.service
+After=minecraft-skyfactory4-staging.service
+OnFailure=minecraft-alert@%p.service
+
+[Service]
+Type=oneshot
+User=minecraft
+EnvironmentFile=/etc/minecraft/profiles/skyfactory4-staging.env
+Nice=19
+IOSchedulingClass=idle
+ExecStart=/usr/local/bin/backup-world

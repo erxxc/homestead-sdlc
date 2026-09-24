@@ -1,0 +1,9 @@
+[Unit]
+Description=Verify latest SkyFactory backup
+After=minecraft-backup-skyfactory4.service
+OnFailure=minecraft-alert@%p.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/minecraft/profiles/skyfactory4-staging.env
+ExecStart=/usr/local/bin/verify-backup

@@ -102,6 +102,11 @@ Add TCP monitors for Homestead `25565` and SkyFactory `25566`, HTTP monitors for
 the public status API and both product pages, and a push or heartbeat monitor
 for backups. Do not create a TCP monitor for UDP voice chat.
 
+Use separate push monitors for Homestead and SkyFactory. Install the staggered
+backup, verification, and pruning timers with
+`infrastructure/install-dual-profile-backups.sh`; Homestead runs from 00:00
+UTC and SkyFactory from 02:00 UTC so their archives never contend for disk I/O.
+
 ## Rollback
 
 ```bash

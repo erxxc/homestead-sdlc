@@ -37,9 +37,11 @@ Alerts route to Discord via webhook.
 
 ## Verified-backup heartbeat
 
-Create a Push monitor named `Verified Backup`, set its heartbeat interval to
-26 hours with two retries, and configure its generated URL using
-`infrastructure/configure-backup-heartbeat.sh`. The configurator preserves the
+Create Push monitors named `Homestead Verified Backup` and
+`SkyFactory Verified Backup`, set each heartbeat interval to 26 hours with two
+retries, and configure their generated URLs using
+`infrastructure/configure-backup-heartbeat.sh homestead` and
+`infrastructure/configure-backup-heartbeat.sh skyfactory4`. The configurator preserves the
 secret push path but rewrites the origin to Kuma's loopback listener. A
 heartbeat is sent only after `verify-backup` successfully extracts
 `world/level.dat`; failed or missing verification becomes a missed heartbeat.

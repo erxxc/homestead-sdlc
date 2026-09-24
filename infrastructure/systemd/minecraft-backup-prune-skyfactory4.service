@@ -1,0 +1,13 @@
+[Unit]
+Description=Prune SkyFactory backups
+After=minecraft-backup-verify-skyfactory4.service
+OnFailure=minecraft-alert@%p.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/minecraft/profiles/skyfactory4-staging.env
+Environment=CAP_GIB=5
+Environment=MIN_KEEP=2
+Environment=MIN_SIZE_MIB=1
+Environment=LOG=/var/log/minecraft-backup-prune-skyfactory4.log
+ExecStart=/usr/local/bin/prune-backups

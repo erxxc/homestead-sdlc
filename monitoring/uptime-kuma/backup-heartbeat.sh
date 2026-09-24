@@ -1,7 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-readonly SECRET=/etc/minecraft/secrets/uptime-kuma-backup-push-url
+profile="${MC_PROFILE:-homestead}"
+SECRET="/etc/minecraft/secrets/uptime-kuma-backup-push-url-${profile}"
+if [ "$profile" = homestead ] && [ ! -s "$SECRET" ]; then
+    SECRET=/etc/minecraft/secrets/uptime-kuma-backup-push-url
+fi
+readonly SECRET
 if [ ! -s "$SECRET" ]; then
     echo "INFO backup heartbeat disabled: $SECRET is not configured"
     exit 0

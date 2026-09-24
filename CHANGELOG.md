@@ -25,6 +25,9 @@
 - Uptime Kuma verified-backup heartbeat: the secret push URL remains root-only
   and uses Kuma's loopback listener; successful archive extraction is the only
   path that emits a heartbeat.
+- Independent Homestead and SkyFactory backup lanes with profile-specific RCON
+  ports, directories, verification heartbeats, retention caps, and staggered
+  schedules to avoid disk and CPU contention.
 - Hardened Cloudflare Tunnel installer for browser-based Grafana and Uptime
   Kuma administration: unprivileged service, file-backed token, loopback-only
   metrics, and no new inbound firewall exposure.
