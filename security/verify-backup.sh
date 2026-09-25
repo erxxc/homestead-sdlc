@@ -1,7 +1,7 @@
 #!/bin/bash
 MC_PROFILE="${MC_PROFILE:-homestead}"
 LOG="${LOG:-/var/log/minecraft-backup-verify-${MC_PROFILE}.log}"
-BACKUP_DIR="/opt/minecraft/backups"
+BACKUP_DIR="${BACKUP_DIR:-/opt/minecraft/backups}"
 TEMP_DIR=$(mktemp -d /tmp/minecraft-backup-verify.XXXXXX)
 TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 

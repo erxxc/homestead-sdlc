@@ -6,7 +6,10 @@
 set -euo pipefail
 
 BACKUP_DIR="${BACKUP_DIR:-/opt/minecraft/backups}"
-WORLD_PARENT="${WORLD_PARENT:-/opt/minecraft/homestead}"
+# Profile files use MC_WORLD_PARENT. Keep WORLD_PARENT as an explicit
+# one-shot override, then fall back to the profile value before the legacy
+# Homestead default.
+WORLD_PARENT="${WORLD_PARENT:-${MC_WORLD_PARENT:-/opt/minecraft/homestead}}"
 MIN_FREE_GIB="${MIN_FREE_GIB:-20}"
 RCON_PORT="${RCON_PORT:-25575}"
 

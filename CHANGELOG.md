@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 ### Security
+- Fixed profile-variable handling in backup creation and verification:
+  SkyFactory now archives `MC_WORLD_PARENT` instead of falling back to the
+  Homestead world, and each verification lane honors its own `BACKUP_DIR`.
 - GitHub Actions dependencies are pinned to immutable commit SHAs, including
   checkout, Python setup, CodeQL, ZAP, Checkov, SSH deployment, and markdown
   linting, removing mutable-tag execution from CI and deployment workflows.
