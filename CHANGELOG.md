@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 ### Security
+- Added a pinned, fail-closed All of Create 2.6 installation lane: the official
+  pack and NeoForge 21.1.256 installer are SHA-256 verified, upstream dynamic
+  bootstrap scripts are retained outside the executable path, NeoForge setup
+  runs as `minecraft`, RCON credentials are injected at launch, and staging is
+  constrained to a loopback listener and a 6 GiB systemd memory ceiling.
 - Fixed profile-variable handling in backup creation and verification:
   SkyFactory now archives `MC_WORLD_PARENT` instead of falling back to the
   Homestead world, and each verification lane honors its own `BACKUP_DIR`.
@@ -32,6 +37,10 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- All of Create 2.6 candidate for the primary `mc` slot, with explicit
+  NeoForge argument-file launch support, two-boot staging validation, listener
+  isolation checks, and a read-back world archive gate. Homestead 2.0.1 stays
+  unchanged as the rollback release.
 - Release-backed `mc` and `sb` slots with guarded, backup-first switching and
   automatic rollback. Homestead 2.0.1 now runs with a fresh world while the
   1.3.6 world, runtime, and final verified archive remain available. Its

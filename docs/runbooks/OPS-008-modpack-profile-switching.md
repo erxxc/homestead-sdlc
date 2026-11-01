@@ -23,6 +23,7 @@ must never open the Fabric 1.20.1 Homestead world.
 /opt/minecraft/releases/homestead/1.3.6/  # retained; render cache omitted
 /opt/minecraft/releases/homestead/2.0.1/  # active long-lived release
 /opt/minecraft/releases/skyfactory4/4.2.4/
+/opt/minecraft/releases/all-of-create/2.6/ # prepared alternate for mc
 /opt/minecraft/slots/mc -> ../releases/homestead/2.0.1
 /opt/minecraft/slots/sb -> ../releases/skyfactory4/4.2.4
 /opt/minecraft/homestead -> slots/mc      # compatibility path
@@ -49,6 +50,7 @@ directory; the switcher never copies or converts another release's world.
 | Homestead 1.3.6 | `/opt/minecraft/releases/homestead/1.3.6/world` | Retained, disabled |
 | Homestead 2.0.1 | `/opt/minecraft/releases/homestead/2.0.1/world` | Active on `mc` |
 | SkyFactory 4.2.4 | `/opt/minecraft/releases/skyfactory4/4.2.4/world` | Active on `sb` |
+| All of Create 2.6 | `/opt/minecraft/releases/all-of-create/2.6/world` | Isolated staging; alternate for `mc` |
 
 The final pre-2.0 Homestead reference archive is stored outside normal backup
 retention under `/opt/minecraft/archive/homestead-pre-2.0-*/`. The retained
@@ -87,6 +89,59 @@ configuration, mods, integrity baseline, and reference archive remain.
    backup, verification, restore drill, and automatic rollback.
 7. Register any new service, API route, monitoring labels, site page, DNS, and
    firewall rule before advertising the release.
+
+## All of Create 2.6 candidate
+
+All of Create 2.6 is the selected industrial alternate for the primary `mc`
+slot. It runs Minecraft 1.21.1 on NeoForge 21.1.256 with Temurin Java 21. The
+pack includes Create 6.0.10, Create: New Age's quested nuclear progression,
+Power Grid, Electro Energetics, and the pack's supported performance mods.
+
+The installer pins and verifies both upstream artifacts before use:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `All_of_Create_v2.6_serverpack.zip` | `62d50ce36847068ecb40e1653f2f5e3bfedf8c8d4daffbb645055536e21b67d0` |
+| `neoforge-21.1.256-installer.jar` | `4aad931e8fd85fbf6ba35bab647811069d35ff010900492e39db1cb8b017348c` |
+
+The upstream ServerPackCreator scripts are retained read-only for provenance,
+but are not executed. This removes their floating `latest` dependency and
+Java installer pipe-to-shell path. The pinned NeoForge installer runs as the
+unprivileged `minecraft` account. The resulting release has an immutable mod
+checksum baseline and a root-owned slot profile.
+
+Install the candidate without starting it:
+
+```bash
+sudo ACCEPT_MINECRAFT_EULA=TRUE bash /tmp/aoc-deploy/infrastructure/install-all-of-create-v2.6.sh
+```
+
+The staging unit conflicts with SkyFactory because the host has 15 GiB RAM and
+cannot safely run all three packs together. Homestead stays online while the
+test stops SkyFactory and uses the same 6 GiB service memory ceiling. Staging
+binds only `127.0.0.1:25567`; RCON binds to 25577 and remains inaccessible from
+the network.
+
+```bash
+sudo bash /tmp/aoc-deploy/infrastructure/validate-all-of-create-v2.6.sh
+```
+
+The gate performs two clean boots, checks that Homestead stays active, rejects
+a non-loopback game listener, scans the server log for terminal startup errors,
+and creates and reads back a world archive. A successful run leaves All of
+Create running on loopback and SkyFactory stopped. Stop the candidate and
+restore the secondary slot with:
+
+```bash
+sudo systemctl stop minecraft-all-of-create-staging.service
+sudo systemctl start minecraft-skyfactory4-staging.service
+```
+
+Promotion is a separate change. Before switching `mc`, install and validate
+the generic primary unit against the active Homestead release, change the
+candidate's listener pair to 25565/25575, take and verify a Homestead backup,
+then run `minecraft-slot-switch mc all-of-create/2.6`. Retain Homestead 2.0.1
+unchanged so the inverse switch is the rollback command.
 
 Install the guarded switcher and shared profile validation through the normal
 deployment workflow. For a manual recovery install:

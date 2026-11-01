@@ -1,0 +1,46 @@
+[Unit]
+Description=Parallel Works primary Minecraft profile
+After=network-online.target
+Wants=network-online.target
+OnFailure=minecraft-alert@%p.service
+
+[Service]
+Type=simple
+User=minecraft
+Group=minecraft
+WorkingDirectory=/opt/minecraft/homestead
+EnvironmentFile=/etc/minecraft/profiles/homestead.env
+EnvironmentFile=-/etc/minecraft/secrets/rcon
+ExecStartPre=/usr/local/bin/minecraft-profile-validate
+ExecStartPre=/usr/local/bin/verify-profile-mods
+ExecStart=/usr/local/bin/minecraft-profile-launch
+ExecStop=/bin/kill -s SIGINT $MAINPID
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=20min
+TimeoutStopSec=180
+MemoryMax=9G
+OOMPolicy=stop
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectHome=true
+ProtectSystem=full
+ProtectClock=true
+ProtectControlGroups=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectHostname=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/opt/minecraft/homestead /opt/minecraft/backups/homestead /var/log
+
+[Install]
+WantedBy=multi-user.target
