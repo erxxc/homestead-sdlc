@@ -55,6 +55,7 @@ jobs:
             infrastructure/minecraft-map-mode.sh \
             infrastructure/minecraft-profile-launch.sh \
             infrastructure/minecraft-profile-validate.sh \
+            infrastructure/minecraft-slot-switch.sh \
             infrastructure/profiles/skyfactory4-staging.env \
             infrastructure/systemd/minecraft-skyfactory4-staging.service \
             infrastructure/nginx/bluemap-online.conf \
@@ -128,6 +129,7 @@ jobs:
             sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/infrastructure/minecraft-map-mode.sh" "$MAP_MODE_DEST"
             sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/infrastructure/minecraft-profile-launch.sh" /usr/local/bin/minecraft-profile-launch
             sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/infrastructure/minecraft-profile-validate.sh" /usr/local/bin/minecraft-profile-validate
+            sudo install -o root -g root -m 0755 "$DEPLOY_STAGING_DIR/infrastructure/minecraft-slot-switch.sh" /usr/local/sbin/minecraft-slot-switch
             sudo install -d -o root -g root -m 0755 /etc/minecraft/profiles
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/profiles/skyfactory4-staging.env" /etc/minecraft/profiles/skyfactory4-staging.env
             sudo install -o root -g root -m 0644 "$DEPLOY_STAGING_DIR/infrastructure/systemd/minecraft-skyfactory4-staging.service" /etc/systemd/system/minecraft-skyfactory4-staging.service

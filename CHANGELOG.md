@@ -32,6 +32,9 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
+- Release-backed `mc` and `sb` slots with guarded, backup-first switching and
+  automatic rollback. Homestead 2.0.1 now runs with a fresh world while the
+  complete 1.3.6 runtime and final verified world archive remain available.
 - Observability phase 2: profile availability SLOs, status-API player gauges,
   actionable Loki log alerts, monthly full-extraction restore drills, a weekly
   ntfy health digest, and a dedicated service-level Grafana dashboard.

@@ -28,7 +28,7 @@ loopback-only staging instance. See
 matrix under `docs/migrations/`. The complete production 1.20.1 runtime remains
 untouched as the rollback instance.
 
-For temporary packs, OPS-008 defines isolated runtimes and a future atomic
-switch path. SkyFactory 4 currently runs beside Homestead on TCP 25566 with its
+For temporary packs, OPS-008 defines versioned releases and guarded `mc` and
+`sb` slot switches. SkyFactory 4 currently runs beside Homestead on TCP 25566 with its
 own Forge 1.12.2 runtime, Java 8 binary, world, and logs. Homestead remains on
 TCP 25565 and neither service opens the other's world.

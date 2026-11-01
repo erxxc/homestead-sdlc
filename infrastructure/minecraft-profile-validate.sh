@@ -32,8 +32,10 @@ if [ "${MC_ALLOW_NEW_WORLD:-false}" != "true" ]; then
 fi
 test -d "$BACKUP_DIR"
 test -f "$MC_ROOT/server.properties"
-test "$(stat -c %U "$MC_ROOT")" = minecraft
-test "$(stat -c %U "$BACKUP_DIR")" = minecraft
+# Compatibility paths may be root-owned symlinks into the release store.
+# Validate the resolved directory owner rather than the link owner.
+test "$(stat -Lc %U "$MC_ROOT")" = minecraft
+test "$(stat -Lc %U "$BACKUP_DIR")" = minecraft
 
 grep -Eq "^server-port=${MC_SERVER_PORT}$" "$MC_ROOT/server.properties"
 grep -Eq "^rcon.port=${RCON_PORT}$" "$MC_ROOT/server.properties"

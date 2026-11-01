@@ -12,7 +12,7 @@
 
 | Source | Count | Verification |
 |---|---|---|
-| CurseForge client pack (1.3.6) | 427 | SHA-256 checksum |
+| Official Homestead server pack (2.0.1) | 305 bundled mods | SHA-256 checksum |
 | Client-only mods removed | 45 | Excluded from server deployment |
 | FTB mods (manual transfer) | 6 | SHA-256 checksum |
 | Performance mods (Modrinth, gated install) | 5 | SHA-512 at download + SHA-256 baseline |
@@ -46,8 +46,8 @@
 - Automated verification runs as systemd ExecStartPre on every server start
 - Any checksum failure stops the server and logs to /var/log/minecraft-integrity.log
 - Checksum baseline regenerated after any approved mod addition or update
-- Modpack version: Homestead 1.3.6 (1.3.1 → 1.3.4 on 2026-05-02; 1.3.5 and 1.3.6 minor bumps since, no breaking changes)
-- Live server version re-verified 2026-08-13 via status API — still Homestead 1.3.6; per-mod inventory snapshot dates from 2026-04-12 and is regenerated on modpack upgrades
+- Active modpack version: Homestead 2.0.1, deployed 2026-10-31 from the official server pack; Homestead 1.3.6 remains retained as a disabled release.
+- The 2.0.1 per-mod checksum baseline was generated during deployment. The previous release retains its own baseline for rollback verification.
 
 ## Infrastructure Dependencies
 

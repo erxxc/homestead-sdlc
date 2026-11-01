@@ -16,7 +16,7 @@ This directory is a structural placeholder. The actual integrity-control assets 
 ## Current state
 - 427 server-side mod jars under integrity tracking (see `docs/sbom.md`)
 - Baseline regeneration is manual after approved mod additions/updates
-- Modpack: Homestead 1.3.6
+- Active modpack: Homestead 2.0.1 (the retained 1.3.6 release has its own baseline)
 
 ## Control reference
 - C-011 — Mod integrity verification (SHA-256 + ExecStartPre)

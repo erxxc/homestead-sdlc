@@ -16,13 +16,13 @@ from pathlib import Path
 app = Flask(__name__)
 CORS(app, origins=["https://play.geigercapital.us", "https://geigercapital.us"])
 
-ACTIVE_PROFILE = Path("/etc/minecraft/active-profile")
+ACTIVE_PROFILE = Path("/etc/minecraft/profiles/homestead.env")
 PROFILE_FILES = {
     "skyfactory4": Path("/etc/minecraft/profiles/skyfactory4-staging.env"),
 }
 DEFAULT_PROFILE = {
     "MC_PROFILE": "homestead",
-    "MC_PACK_NAME": "Homestead 1.3.6",
+    "MC_PACK_NAME": "Homestead 2.0.1",
     "MC_MINECRAFT_VERSION": "1.20.1",
     "MC_ADDRESS": "mc.geigercapital.us",
     "RCON_PORT": "25575",

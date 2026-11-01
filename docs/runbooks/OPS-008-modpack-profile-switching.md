@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Run short-lived modpacks without replacing or upgrading the Homestead runtime.
-SkyFactory currently runs concurrently on its own game and RCON ports. Every
-pack has an isolated runtime, world, Java executable, logs, and integrity
-baseline. The atomic profile-switch design below remains the future path for a
-pack that must take over the primary production address.
+Run long-lived and one-off modpacks from two stable public slots without
+discarding previous releases. The `mc` slot serves TCP 25565 and the `sb` slot
+serves TCP 25566. Every release keeps an isolated runtime, world, Java profile,
+logs, and integrity baseline. Switching a slot changes a symlink only after a
+verified backup, and automatically restores the prior target if startup fails.
 
 Parallel Works is the public operating brand. Homestead and SkyFactory 4 are
 world products within it; future packs receive their own world page, status
@@ -20,20 +20,23 @@ must never open the Fabric 1.20.1 Homestead world.
 ## Layout
 
 ```text
-/opt/minecraft/homestead/                 # existing Fabric runtime; unchanged
-/opt/minecraft/skyfactory4-4.2.4/         # isolated Forge runtime and world
+/opt/minecraft/releases/homestead/1.3.6/  # retained, normally disabled
+/opt/minecraft/releases/homestead/2.0.1/  # active long-lived release
+/opt/minecraft/releases/skyfactory4/4.2.4/
+/opt/minecraft/slots/mc -> ../releases/homestead/2.0.1
+/opt/minecraft/slots/sb -> ../releases/skyfactory4/4.2.4
+/opt/minecraft/homestead -> slots/mc      # compatibility path
+/opt/minecraft/skyfactory4-4.2.4 -> slots/sb
 /opt/minecraft/backups/homestead/
 /opt/minecraft/backups/skyfactory4/
 /etc/minecraft/profiles/homestead.env
-/etc/minecraft/profiles/skyfactory4.env
-/etc/minecraft/active-profile             # root-owned symlink to one profile
+/etc/minecraft/profiles/skyfactory4-staging.env
 /etc/minecraft/secrets/rcon                # existing secret; never in profiles
 ```
 
-The current staging unit does not use the active-profile symlink: Homestead
-runs as `minecraft.service` on TCP 25565 and SkyFactory runs as
-`minecraft-skyfactory4-staging.service` on TCP 25566. A future exclusive switch
-changes one symlink while both runtime trees remain in place.
+Existing systemd units and operational collectors continue to use the two
+compatibility paths. This keeps service hardening, exporters, backup jobs,
+status APIs, and public addresses stable while the slot targets change.
 
 ## Current concurrent safety properties
 
@@ -132,29 +135,32 @@ Use the GitHub Actions `SkyFactory Staging Control` workflow with `start`,
 Players use `mc.geigercapital.us` for Homestead and `sb.geigercapital.us` for
 SkyFactory.
 
-## Future exclusive switch commands
+## Release switch commands
 
-The future switch refuses unknown profile names and concurrent switches, takes
-a verified backup before stopping the active service, and rolls back after a
-failed target health check. After every consumer passes that staging gate:
+The switcher accepts only registered releases under `/opt/minecraft/releases`.
+It serializes changes with a lock, takes and verifies a backup, validates
+root-owned release metadata, stops the affected service, changes the slot and
+compatibility links, and rolls back after a failed target health check.
 
 ```bash
-sudo /usr/local/sbin/minecraft-profile-switch skyfactory4
+sudo /usr/local/sbin/minecraft-slot-switch mc homestead/1.3.6
+sudo /usr/local/sbin/minecraft-slot-switch mc homestead/2.0.1
 ```
 
-Return to the untouched Homestead runtime with:
+SkyFactory remains the registered `sb` release. A future one-off pack prepared
+for that slot can be selected with the same command:
 
 ```bash
-sudo /usr/local/sbin/minecraft-profile-switch homestead
+sudo /usr/local/sbin/minecraft-slot-switch sb skyfactory4/4.2.4
 ```
 
 Confirm the selected profile and public health after either command:
 
 ```bash
-readlink -f /etc/minecraft/active-profile
-systemctl is-active minecraft minecraft-audit minecraft_exporter minecraft-status-api
-systemctl show minecraft -p MainPID -p ExecMainStartTimestamp --no-pager
+readlink -f /opt/minecraft/slots/mc /opt/minecraft/slots/sb
+systemctl is-active minecraft minecraft-skyfactory4-staging
 curl -fsS http://127.0.0.1:5000/status
+curl -fsS http://127.0.0.1:5000/status/skyfactory4
 ```
 
 ## Session closeout

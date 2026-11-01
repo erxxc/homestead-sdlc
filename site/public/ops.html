@@ -127,7 +127,8 @@
       </div>
       <div class="version-title">Two packs, two services, separate worlds</div>
       <ul class="change-list">
-        <li>Homestead remains on Fabric 1.20.1 at <strong>mc.geigercapital.us</strong> while SkyFactory 4.2.4 runs on Forge 1.12.2 at <strong>sb.geigercapital.us</strong>.</li>
+        <li>Homestead 2.0.1 runs on Fabric 1.20.1 at <strong>mc.geigercapital.us</strong> while SkyFactory 4.2.4 runs on Forge 1.12.2 at <strong>sb.geigercapital.us</strong>.</li>
+        <li>Versioned <strong>mc</strong> and <strong>sb</strong> release slots preserve disabled runtimes and require a verified backup before guarded switches.</li>
         <li>Each service has its own runtime directory, world, Java version, game port, and RCON port. Neither process opens the other server's world.</li>
         <li>The Minecraft TCP listeners on 25565 and 25566 are reachable publicly. RCON 25575 and 25576 remain denied by both firewall layers.</li>
         <li>SkyFactory is controlled independently through a manual GitHub Actions workflow and can be stopped without interrupting Homestead.</li>
