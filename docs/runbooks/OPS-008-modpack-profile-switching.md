@@ -20,7 +20,7 @@ must never open the Fabric 1.20.1 Homestead world.
 ## Layout
 
 ```text
-/opt/minecraft/releases/homestead/1.3.6/  # retained, normally disabled
+/opt/minecraft/releases/homestead/1.3.6/  # retained; render cache omitted
 /opt/minecraft/releases/homestead/2.0.1/  # active long-lived release
 /opt/minecraft/releases/skyfactory4/4.2.4/
 /opt/minecraft/slots/mc -> ../releases/homestead/2.0.1
