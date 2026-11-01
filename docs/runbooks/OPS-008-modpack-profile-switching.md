@@ -38,6 +38,23 @@ Existing systemd units and operational collectors continue to use the two
 compatibility paths. This keeps service hardening, exporters, backup jobs,
 status APIs, and public addresses stable while the slot targets change.
 
+## World ownership
+
+Worlds belong to releases, not to public addresses or slots. Changing `mc` or
+`sb` selects the target release's complete runtime and its own `world/`
+directory; the switcher never copies or converts another release's world.
+
+| Release | World path | Current state |
+| --- | --- | --- |
+| Homestead 1.3.6 | `/opt/minecraft/releases/homestead/1.3.6/world` | Retained, disabled |
+| Homestead 2.0.1 | `/opt/minecraft/releases/homestead/2.0.1/world` | Active on `mc` |
+| SkyFactory 4.2.4 | `/opt/minecraft/releases/skyfactory4/4.2.4/world` | Active on `sb` |
+
+The final pre-2.0 Homestead reference archive is stored outside normal backup
+retention under `/opt/minecraft/archive/homestead-pre-2.0-*/`. The retained
+1.3.6 BlueMap render cache was removed because it is regenerable; its world,
+configuration, mods, integrity baseline, and reference archive remain.
+
 ## Current concurrent safety properties
 
 - Profile files must be root-owned and not group/world writable.
@@ -47,50 +64,50 @@ status APIs, and public addresses stable while the slot targets change.
 - Homestead binds TCP 25565 and RCON 25575; SkyFactory binds TCP 25566 and RCON
   25576. Both RCON ports remain denied at the host and provider firewalls.
 
-## One-time preparation
+## Registering another release
 
-1. Install a supported Temurin 8 runtime alongside Java 21. Do not change the
-   system default Java; the SkyFactory profile uses an absolute executable.
-2. Download the official SkyFactory 4 4.2.4 **server files** from CurseForge.
-   Record the source URL and SHA-256 before extracting as `minecraft`.
-3. Run the pack's server installation process in the isolated directory. Review
-   its scripts before execution and do not run downloaded installers as root.
-4. Preserve the pack's intended SkyFactory world-generation configuration and
-   confirm it creates a skyblock world, not a normal overworld.
-5. Set `online-mode=true`. The current private group mirrors Homestead with
-   `white-list=false`; enable and populate a UUID whitelist before widening the
-   audience. Never copy player data between worlds.
-6. Generate a dedicated mod checksum baseline for the SkyFactory directory.
-7. Install the scripts, unit, and reviewed profile files:
+1. Put the reviewed runtime under
+   `/opt/minecraft/releases/<family>/<version>`. Record the source URL, release
+   version, archive SHA-256, Minecraft version, loader, and required Java.
+2. Review downloaded installers before running them, execute pack setup as the
+   unprivileged `minecraft` user, and keep `online-mode=true`.
+3. Give the release its own `world/`, logs, configuration, mod checksum
+   baseline, and pack-specific Java executable. Never copy a world or player
+   data from another release.
+4. Create `.parallel-works-slot` containing exactly `mc` or `sb`, plus a
+   root-owned, non-writable `.parallel-works-profile.env`. The profile must use
+   the stable compatibility path and port pair for its slot: `25565`/`25575`
+   for `mc`, or `25566`/`25576` for `sb`.
+5. Confirm enough disk exists for the extracted release, its expected world,
+   the configured retained backups, and one in-progress backup. Confirm the
+   host can run the target alongside the other active slot without swap or OOM
+   pressure.
+6. Boot twice in staging and validate the exact protocol, world generator,
+   public authentication, RCON isolation, startup logs, exporter, status API,
+   backup, verification, restore drill, and automatic rollback.
+7. Register any new service, API route, monitoring labels, site page, DNS, and
+   firewall rule before advertising the release.
+
+Install the guarded switcher and shared profile validation through the normal
+deployment workflow. For a manual recovery install:
 
 ```bash
-sudo install -o root -g root -m 0755 infrastructure/minecraft-profile-launch.sh /usr/local/bin/minecraft-profile-launch
 sudo install -o root -g root -m 0755 infrastructure/minecraft-profile-validate.sh /usr/local/bin/minecraft-profile-validate
-sudo install -o root -g root -m 0755 infrastructure/minecraft-profile-switch.sh /usr/local/sbin/minecraft-profile-switch
-sudo install -o root -g root -m 0644 infrastructure/systemd/minecraft-profile.service /etc/systemd/system/minecraft.service
-sudo install -d -o root -g root -m 0755 /etc/minecraft/profiles
-sudo install -o root -g root -m 0644 infrastructure/profiles/homestead.env.example /etc/minecraft/profiles/homestead.env
-sudo install -o root -g root -m 0644 infrastructure/profiles/skyfactory4.env.example /etc/minecraft/profiles/skyfactory4.env
-sudo ln -sfn /etc/minecraft/profiles/homestead.env /etc/minecraft/active-profile
-sudo systemctl daemon-reload
+sudo install -o root -g root -m 0755 infrastructure/minecraft-slot-switch.sh /usr/local/sbin/minecraft-slot-switch
 ```
 
-The pinned preparation script can perform the Java 8 and server-pack setup
-without activating the profile:
+SkyFactory was originally prepared with the pinned installer below. It records
+EULA acceptance, verifies the official 4.2.4 archive against SHA-256
+`72b1bae61cbd6a07ab55d71f9e1a94239a4992f35a7f9f4a149e4f1eea04a16b`,
+and uses a separate Temurin 8 executable:
 
 ```bash
 sudo ACCEPT_MINECRAFT_EULA=TRUE /tmp/install-skyfactory4.sh
 ```
 
-Setting `ACCEPT_MINECRAFT_EULA=TRUE` records the operator's acceptance of the
-Minecraft EULA. The script verifies the official 4.2.4 server archive against
-SHA-256 `72b1bae61cbd6a07ab55d71f9e1a94239a4992f35a7f9f4a149e4f1eea04a16b`,
-uses the absolute Temurin 8 executable, and leaves the pack on its dedicated
-staging game port. It does not stop or restart Homestead.
-
-Do not install the generic service until backup, audit, exporter, status API,
-restart, integrity, and map consumers have been updated to read the active
-profile. Until then this runbook and the profile layer are preparation only.
+The original installer predates the release-slot layout. Move a prepared
+runtime into the release store and add its slot metadata before using the
+switcher; do not run the installer over a registered release.
 
 ## Staging gate
 
@@ -112,9 +129,9 @@ sudo ufw allow 25566/tcp comment 'Temporary SkyFactory staging'
 ```
 
 The same TCP 25566 inbound allowance is required in the Hetzner firewall,
-preferably restricted to the players' public IP addresses. Remove both
-allowances after the session; stopping the staging workflow also closes the
-process listener.
+preferably restricted to the players' public IP addresses. Stopping the `sb`
+service closes the process listener; remove the allowance if that slot will no
+longer host a public pack.
 
 Cloudflare DNS provides a short, port-free client address. These records must
 remain **DNS only** because the standard Cloudflare proxy does not carry the

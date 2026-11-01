@@ -109,12 +109,12 @@
           <div class="stat-label">Pentest Findings Tracked</div>
         </div>
         <div class="stat reveal">
-          <div class="stat-number stat-number--green" data-count="428">428</div>
+          <div class="stat-number stat-number--green" data-count="305">305</div>
           <div class="stat-label">Homestead Mods Verified</div>
         </div>
         <div class="stat reveal">
           <div class="stat-number" data-count="19.97">19.97</div>
-          <div class="stat-label">Measured TPS</div>
+          <div class="stat-label">1.3.6 TPS Baseline</div>
         </div>
       </div>
     </section>
@@ -129,7 +129,8 @@
       <ul class="change-list">
         <li>Homestead 2.0.1 runs on Fabric 1.20.1 at <strong>mc.geigercapital.us</strong> while SkyFactory 4.2.4 runs on Forge 1.12.2 at <strong>sb.geigercapital.us</strong>.</li>
         <li>Versioned <strong>mc</strong> and <strong>sb</strong> release slots preserve disabled runtimes and require a verified backup before guarded switches.</li>
-        <li>Each service has its own runtime directory, world, Java version, game port, and RCON port. Neither process opens the other server's world.</li>
+        <li>Each release owns its runtime and world. Switching a public slot selects that complete release; it never copies, converts, or overwrites another release's world.</li>
+        <li>Homestead 1.3.6 remains disabled with its 19 GB world and final verified reference archive. Its regenerable map render cache was removed to preserve backup headroom.</li>
         <li>The Minecraft TCP listeners on 25565 and 25566 are reachable publicly. RCON 25575 and 25576 remain denied by both firewall layers.</li>
         <li>SkyFactory is controlled independently through a manual GitHub Actions workflow and can be stopped without interrupting Homestead.</li>
       </ul>
@@ -199,7 +200,7 @@
         <span class="version-tag">Supply Chain</span>
         <span class="version-date">Every jar, every boot</span>
       </div>
-      <div class="version-title">428 Homestead mods, none of them on trust</div>
+      <div class="version-title">305 Homestead 2.0.1 pack mods, none of them on trust</div>
       <ul class="change-list">
         <li>Every mod jar on the server is SHA-256 baselined. The server refuses to start if any jar fails verification — the integrity check is a boot gate, not a report.</li>
         <li>A file watcher monitors the mods directory in real time and flags any change for manual review.</li>
@@ -235,11 +236,11 @@
         <span class="version-tag">Performance</span>
         <span class="version-date">Measured, then decided</span>
       </div>
-      <div class="version-title">Optimized by profiler, not by folklore</div>
+      <div class="version-title">The retained 1.3.6 performance baseline</div>
       <ul class="change-list">
-        <li>August 2026: a spark profile under real player load measured 19.97 TPS with comfortable headroom per tick — after a server-side performance stack (Lithium, FerriteCore, ModernFix, Krypton) was installed one gated phase at a time.</li>
+        <li>August 2026: a spark profile of Homestead 1.3.6 under real player load measured 19.97 TPS with comfortable headroom per tick — after a server-side performance stack (Lithium, FerriteCore, ModernFix, Krypton) was installed one gated phase at a time.</li>
         <li>The profile attributed just 3.4% of tick time to Create, the pack's flagship mod — so two further "Create optimizer" mods that folklore recommends were <em>declined</em>, with the reasoning recorded. Restraint is also an optimization decision.</li>
-        <li>The world was pre-generated to a 10,000-block radius, which is why chunk generation contributes nothing to tick time — and why the world (and its backups) stay a predictable size.</li>
+        <li>The retained 1.3.6 world was pre-generated to a 10,000-block radius. Homestead 2.0.1 started with a fresh world and receives its own capacity baseline before similar tuning claims are carried forward.</li>
       </ul>
     </div>
 

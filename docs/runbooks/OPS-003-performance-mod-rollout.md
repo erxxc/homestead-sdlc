@@ -1,5 +1,9 @@
 # OPS-003 — Performance Mod Rollout (spark-first, supply-chain gated)
 
+> Historical scope: the measurements, world border, and mod decisions in this
+> runbook apply to retained Homestead 1.3.6. Homestead 2.0.1 started with a new
+> world and requires a new baseline before these conclusions are reused.
+
 ## Purpose
 
 Add the standard Fabric 1.20.1 server-side performance stack — measured with

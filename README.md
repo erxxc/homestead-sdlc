@@ -1,8 +1,9 @@
 # Parallel Works SDLC PoC
 
 Secure software development lifecycle proof of concept for Parallel Works, an
-operating layer for isolated multiplayer worlds. Its current products are the
-persistent Homestead world and the limited SkyFactory 4 session. The platform
+operating layer for isolated multiplayer worlds. Its current products are
+Homestead 2.0.1 and the limited SkyFactory 4 session. Versioned `mc` and `sb`
+release slots keep each pack, world, and rollback target isolated. The platform
 runs on a Hetzner CX43 VPS with 30 controls mapped to SOC 2 TSC, ISO 27001
 Annex A, and NIST CSF.
 
@@ -21,6 +22,7 @@ Public site: [play.geigercapital.us](https://play.geigercapital.us) · Homestead
 - Mod supply chain — SHA-256 checksums + systemd `ExecStartPre` verification + inotify alerts requiring checksum review on jar changes
 - Security audit log — Python daemon classifies player join/leave, OP grants, kicks/bans, RCON commands into structured JSON
 - Scheduled restart — RCON-driven announcements + audit-logged `save-all flush` before systemd restart
+- Release switching — backup-first `mc` and `sb` slot changes with health checks and automatic rollback
 - Backup verification — daily integrity check script
 - Log rotation — 30-day retention on audit and Nginx logs
 - BlueMap POI markers — server spawn pinned on the live map

@@ -20,15 +20,15 @@ SkyFactory are isolated world products on the shared operating layer.
 - `minecraft-logrotate.conf` — log rotation policy for the audit log and Nginx logs (30-day retention). Sole owner of the Nginx logs: the stock `/etc/logrotate.d/nginx` is deleted on the VPS (a duplicate claim makes the nightly logrotate run exit 1), and the deploy workflow fails validation if it reappears.
 - `bluemap-world.conf` — BlueMap world-rendering config, including POI marker definitions (server spawn pin)
 
-## Planned migration
+## Release layout and future pack evaluation
 
-The Minecraft 1.21.1 NeoForge pack uses a fresh world in a separate,
-loopback-only staging instance. See
-`docs/runbooks/OPS-007-neoforge-1.21.1-migration.md` and the feature-preservation
-matrix under `docs/migrations/`. The complete production 1.20.1 runtime remains
-untouched as the rollback instance.
+Earlier Minecraft 1.21.1 NeoForge planning remains in
+`docs/runbooks/OPS-007-neoforge-1.21.1-migration.md` and `docs/migrations/` as a
+feature-preservation reference. Any future pack must be reassessed against the
+current slot layout, storage headroom, memory budget, and its own fresh world.
 
-For temporary packs, OPS-008 defines versioned releases and guarded `mc` and
-`sb` slot switches. SkyFactory 4 currently runs beside Homestead on TCP 25566 with its
-own Forge 1.12.2 runtime, Java 8 binary, world, and logs. Homestead remains on
-TCP 25565 and neither service opens the other's world.
+OPS-008 defines versioned releases and guarded `mc` and `sb` slot switches.
+Homestead 2.0.1 currently occupies `mc` on TCP 25565; its 1.3.6 release and
+world remain disabled and available for rollback. SkyFactory 4.2.4 occupies
+`sb` on TCP 25566 with its own Forge 1.12.2 runtime, Java 8 binary, world, and
+logs. Neither service opens another release's world.

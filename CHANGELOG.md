@@ -65,9 +65,9 @@
 - Profile-aware public status and landing pages: SkyFactory sessions receive a
   dedicated landing page and intentional map-offline response while API status,
   player counts, backups, audit, alerts, and metrics remain available.
-- OPS-008 and a profile-switch scaffold for reversible, isolated modpack
-  sessions. The first alternate profile targets SkyFactory 4 4.2.4 without
-  sharing the Homestead world, Java runtime, logs, or backups.
+- OPS-008 and guarded release slots for reversible, isolated modpack sessions.
+  SkyFactory 4.2.4 and both Homestead releases keep separate worlds, Java
+  runtimes, logs, integrity baselines, and backups.
 - OPS-007 defines a parallel, loopback-only migration lane for the planned
   Minecraft 1.21.1 NeoForge server pack, with a fresh-world feature matrix,
   promotion gates, and an exact rollback sequence that preserves the complete

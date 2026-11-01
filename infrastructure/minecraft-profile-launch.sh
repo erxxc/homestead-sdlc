@@ -1,5 +1,5 @@
 #!/bin/bash
-# Launch the Minecraft runtime selected by /etc/minecraft/active-profile.
+# Launch a Minecraft runtime from its systemd EnvironmentFile profile.
 set -euo pipefail
 
 : "${MC_ROOT:?MC_ROOT is required}"
