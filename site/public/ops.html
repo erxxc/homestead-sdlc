@@ -109,8 +109,8 @@
           <div class="stat-label">Pentest Findings Tracked</div>
         </div>
         <div class="stat reveal">
-          <div class="stat-number stat-number--green" data-count="305">305</div>
-          <div class="stat-label">Homestead Mods Verified</div>
+          <div class="stat-number stat-number--green" data-count="181">181</div>
+          <div class="stat-label">Active Mod Jars Verified</div>
         </div>
         <div class="stat reveal">
           <div class="stat-number" data-count="19.97">19.97</div>
@@ -125,14 +125,14 @@
         <span class="version-tag">Runtime isolation</span>
         <span class="version-date">September 22, 2026</span>
       </div>
-      <div class="version-title">Two packs, two services, separate worlds</div>
+      <div class="version-title">Versioned profiles, separate worlds</div>
       <ul class="change-list">
-        <li>Homestead 2.0.1 runs on Fabric 1.20.1 at <strong>mc.geigercapital.us</strong> while SkyFactory 4.2.4 runs on Forge 1.12.2 at <strong>sb.geigercapital.us</strong>.</li>
+        <li>All of Create 2.6 runs on NeoForge 1.21.1 at <strong>mc.geigercapital.us</strong>. Homestead 2.0.1 is its retained rollback release; SkyFactory 4.2.4 remains in the paused secondary slot.</li>
         <li>Versioned <strong>mc</strong> and <strong>sb</strong> release slots preserve disabled runtimes and require a verified backup before guarded switches.</li>
         <li>Each release owns its runtime and world. Switching a public slot selects that complete release; it never copies, converts, or overwrites another release's world.</li>
         <li>Homestead 1.3.6 remains disabled with its 19 GB world and final verified reference archive. Its regenerable map render cache was removed to preserve backup headroom.</li>
-        <li>The Minecraft TCP listeners on 25565 and 25566 are reachable publicly. RCON 25575 and 25576 remain denied by both firewall layers.</li>
-        <li>SkyFactory is controlled independently through a manual GitHub Actions workflow and can be stopped without interrupting Homestead.</li>
+        <li>The active Minecraft listener on 25565 is reachable publicly. RCON 25575 and 25576 remain denied by both firewall layers; stopped profiles have no process listener.</li>
+        <li>SkyFactory is controlled independently through a manual GitHub Actions workflow and remains stopped while All of Create uses the host's available memory.</li>
       </ul>
     </div>
 
@@ -144,9 +144,9 @@
         <span class="version-tag">Observability</span>
         <span class="version-date">Versioned baseline</span>
       </div>
-      <div class="version-title">Both worlds measured, failures routed</div>
+      <div class="version-title">Every profile measured, failures routed</div>
       <ul class="change-list">
-        <li>Homestead and SkyFactory have separate loopback-only metric exporters and labels, while a node collector reports service state and per-world backup freshness.</li>
+        <li>The primary and secondary slots have separate loopback-only metric exporters and labels, while a node collector reports service state and per-world backup freshness. All of Create currently occupies the primary slot.</li>
         <li>Prometheus rules cover scrape failures, current and forecast disk pressure, memory, sustained CPU load, stale backups, collector health, Cloudflare tunnel redundancy, Loki health, configuration failures, and write-ahead-log corruption. Alertmanager groups and routes the resulting notifications to ntfy.</li>
         <li>Version-controlled Grafana dashboards show host capacity, service and exporter health, backup age, active alerts, tunnel connections, log ingestion, errors, Minecraft events, audit records, and the backup lifecycle. Metrics and logs have bounded retention to protect the game host from unbounded monitoring growth.</li>
         <li>Loki retains 14 days of centralized logs while Alloy collects both profile logs, structured audit events, backup operations, Nginx, cloudflared, and the systemd journal. Both services and their metrics endpoints remain loopback-only.</li>
@@ -180,9 +180,9 @@
         <span class="version-tag">Backups</span>
         <span class="version-date">Nightly, verified</span>
       </div>
-      <div class="version-title">Homestead backups that are proven, not assumed</div>
+      <div class="version-title">Primary-world backups that are proven, not assumed</div>
       <ul class="change-list">
-        <li>Every night, Homestead receives a world-consistent snapshot: saving is paused and flushed first, the archive is written atomically, and a free-disk preflight makes exhaustion fail loudly.</li>
+        <li>Every night, the selected primary release receives a world-consistent snapshot: saving is paused and flushed first, the archive is written atomically, and a free-disk preflight makes exhaustion fail loudly.</li>
         <li>45 minutes later, an automated job extracts and checks the newest archive and logs a PASS or FAIL — because a backup that has never been restored from is a hope, not a backup.</li>
         <li>30 minutes after that, retention pruning keeps the archive set under a fixed disk budget — always preserving the newest verified copies, and refusing to run at all if nothing healthy would remain.</li>
       </ul>
@@ -200,7 +200,7 @@
         <span class="version-tag">Supply Chain</span>
         <span class="version-date">Every jar, every boot</span>
       </div>
-      <div class="version-title">305 Homestead 2.0.1 pack mods, none of them on trust</div>
+      <div class="version-title">181 active All of Create mod jars, verified at every boot</div>
       <ul class="change-list">
         <li>Every mod jar on the server is SHA-256 baselined. The server refuses to start if any jar fails verification — the integrity check is a boot gate, not a report.</li>
         <li>A file watcher monitors the mods directory in real time and flags any change for manual review.</li>

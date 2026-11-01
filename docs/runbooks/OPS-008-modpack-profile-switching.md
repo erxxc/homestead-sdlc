@@ -8,10 +8,10 @@ serves TCP 25566. Every release keeps an isolated runtime, world, Java profile,
 logs, and integrity baseline. Switching a slot changes a symlink only after a
 verified backup, and automatically restores the prior target if startup fails.
 
-Parallel Works is the public operating brand. Homestead and SkyFactory 4 are
-world products within it; future packs receive their own world page, status
-route, connection address, and isolated runtime rather than becoming a rename
-of the platform.
+Parallel Works is the public operating brand. All of Create, Homestead, and
+SkyFactory 4 are world products within it; future packs receive their own world
+page, status route, connection address, and isolated runtime rather than
+becoming a rename of the platform.
 
 The first alternate profile is SkyFactory 4 version 4.2.4: Minecraft 1.12.2 on
 Forge. It is a legacy pack and must use a separately pinned Java 8 runtime. It
@@ -21,10 +21,10 @@ must never open the Fabric 1.20.1 Homestead world.
 
 ```text
 /opt/minecraft/releases/homestead/1.3.6/  # retained; render cache omitted
-/opt/minecraft/releases/homestead/2.0.1/  # active long-lived release
+/opt/minecraft/releases/homestead/2.0.1/  # retained primary rollback
 /opt/minecraft/releases/skyfactory4/4.2.4/
-/opt/minecraft/releases/all-of-create/2.6/ # prepared alternate for mc
-/opt/minecraft/slots/mc -> ../releases/homestead/2.0.1
+/opt/minecraft/releases/all-of-create/2.6/ # active primary release
+/opt/minecraft/slots/mc -> ../releases/all-of-create/2.6
 /opt/minecraft/slots/sb -> ../releases/skyfactory4/4.2.4
 /opt/minecraft/homestead -> slots/mc      # compatibility path
 /opt/minecraft/skyfactory4-4.2.4 -> slots/sb
@@ -48,9 +48,9 @@ directory; the switcher never copies or converts another release's world.
 | Release | World path | Current state |
 | --- | --- | --- |
 | Homestead 1.3.6 | `/opt/minecraft/releases/homestead/1.3.6/world` | Retained, disabled |
-| Homestead 2.0.1 | `/opt/minecraft/releases/homestead/2.0.1/world` | Active on `mc` |
-| SkyFactory 4.2.4 | `/opt/minecraft/releases/skyfactory4/4.2.4/world` | Active on `sb` |
-| All of Create 2.6 | `/opt/minecraft/releases/all-of-create/2.6/world` | Isolated staging; alternate for `mc` |
+| Homestead 2.0.1 | `/opt/minecraft/releases/homestead/2.0.1/world` | Retained, primary rollback |
+| SkyFactory 4.2.4 | `/opt/minecraft/releases/skyfactory4/4.2.4/world` | Retained; `sb` paused |
+| All of Create 2.6 | `/opt/minecraft/releases/all-of-create/2.6/world` | Active on `mc` |
 
 The final pre-2.0 Homestead reference archive is stored outside normal backup
 retention under `/opt/minecraft/archive/homestead-pre-2.0-*/`. The retained
@@ -62,9 +62,10 @@ configuration, mods, integrity baseline, and reference archive remain.
 - Profile files must be root-owned and not group/world writable.
 - The concurrent services use separate ports, runtime directories, and worlds.
 - The target profile is validated before launch.
-- Homestead and SkyFactory never share a world or backup directory.
-- Homestead binds TCP 25565 and RCON 25575; SkyFactory binds TCP 25566 and RCON
-  25576. Both RCON ports remain denied at the host and provider firewalls.
+- Releases never share a world or backup directory.
+- The active `mc` release binds TCP 25565 and RCON 25575; the `sb` release uses
+  TCP 25566 and RCON 25576 when enabled. Both RCON ports remain denied at the
+  host and provider firewalls.
 
 ## Registering another release
 
@@ -90,7 +91,7 @@ configuration, mods, integrity baseline, and reference archive remain.
 7. Register any new service, API route, monitoring labels, site page, DNS, and
    firewall rule before advertising the release.
 
-## All of Create 2.6 candidate
+## All of Create 2.6 primary release
 
 All of Create 2.6 is the selected industrial alternate for the primary `mc`
 slot. It runs Minecraft 1.21.1 on NeoForge 21.1.256 with Temurin Java 21. The
@@ -110,38 +111,41 @@ Java installer pipe-to-shell path. The pinned NeoForge installer runs as the
 unprivileged `minecraft` account. The resulting release has an immutable mod
 checksum baseline and a root-owned slot profile.
 
-Install the candidate without starting it:
+Install the release without starting it:
 
 ```bash
 sudo ACCEPT_MINECRAFT_EULA=TRUE bash /tmp/aoc-deploy/infrastructure/install-all-of-create-v2.6.sh
 ```
 
 The staging unit conflicts with SkyFactory because the host has 15 GiB RAM and
-cannot safely run all three packs together. Homestead stays online while the
-test stops SkyFactory and uses the same 6 GiB service memory ceiling. Staging
-binds only `127.0.0.1:25567`; RCON binds to 25577 and remains inaccessible from
-the network.
+cannot safely run all three packs together. During validation, Homestead stayed
+online while the test stopped SkyFactory and used the same 6 GiB service memory
+ceiling. Staging bound only `127.0.0.1:25567`; RCON used 25577 and remained
+inaccessible from the network.
 
 ```bash
 sudo bash /tmp/aoc-deploy/infrastructure/validate-all-of-create-v2.6.sh
 ```
 
-The gate performs two clean boots, checks that Homestead stays active, rejects
-a non-loopback game listener, scans the server log for terminal startup errors,
-and creates and reads back a world archive. A successful run leaves All of
-Create running on loopback and SkyFactory stopped. Stop the candidate and
-restore the secondary slot with:
+The gate performed two clean boots, checked that Homestead stayed active,
+rejected a non-loopback game listener, scanned the server log for terminal
+startup errors, and created and read back a world archive. The successful run
+left All of Create running on loopback and SkyFactory stopped. The staging unit
+was then stopped before promotion.
 
 ```bash
 sudo systemctl stop minecraft-all-of-create-staging.service
-sudo systemctl start minecraft-skyfactory4-staging.service
 ```
 
-Promotion is a separate change. Before switching `mc`, install and validate
-the generic primary unit against the active Homestead release, change the
-candidate's listener pair to 25565/25575, take and verify a Homestead backup,
-then run `minecraft-slot-switch mc all-of-create/2.6`. Retain Homestead 2.0.1
-unchanged so the inverse switch is the rollback command.
+All of Create 2.6 was promoted to `mc` on November 1, 2026 after the generic
+primary unit was validated against Homestead, the candidate listener pair was
+changed to 25565/25575, and a final Homestead backup was created and verified.
+The guarded switch and post-start checks passed. Homestead 2.0.1 remains
+unchanged, and the exact rollback command is:
+
+```bash
+sudo /usr/local/sbin/minecraft-slot-switch mc homestead/2.0.1
+```
 
 Install the guarded switcher and shared profile validation through the normal
 deployment workflow. For a manual recovery install:
@@ -169,8 +173,8 @@ switcher; do not run the installer over a registered release.
 SkyFactory passed two clean boots, protocol and version checks, public DNS and
 TCP reachability checks, memory checks, and isolation checks against the live
 Homestead service. BlueMap support for this legacy Forge pack is out of scope.
-The SkyFactory status endpoint reports `map_available: false`; the Homestead
-map remains online because both servers are currently running concurrently.
+The SkyFactory status endpoint reports `map_available: false`. SkyFactory is
+currently paused while All of Create uses the primary slot.
 
 Use the manual `SkyFactory Staging Control` workflow to start, stop, restart,
 or inspect the staging service. It asserts that Homestead remains the
@@ -203,9 +207,9 @@ Set SRV priority and weight to `0`. Players can then enter
 ## Concurrent control commands
 
 Use the GitHub Actions `SkyFactory Staging Control` workflow with `start`,
-`stop`, `restart`, or `status`. Homestead remains active during each action.
-Players use `mc.geigercapital.us` for Homestead and `sb.geigercapital.us` for
-SkyFactory.
+`stop`, `restart`, or `status`. The `mc` release remains active during each
+action. Players use `mc.geigercapital.us` for All of Create and
+`sb.geigercapital.us` for SkyFactory when the secondary slot is enabled.
 
 ## Release switch commands
 
@@ -217,6 +221,7 @@ compatibility links, and rolls back after a failed target health check.
 ```bash
 sudo /usr/local/sbin/minecraft-slot-switch mc homestead/1.3.6
 sudo /usr/local/sbin/minecraft-slot-switch mc homestead/2.0.1
+sudo /usr/local/sbin/minecraft-slot-switch mc all-of-create/2.6
 ```
 
 SkyFactory remains the registered `sb` release. A future one-off pack prepared
@@ -239,8 +244,10 @@ curl -fsS http://127.0.0.1:5000/status/skyfactory4
 
 Stop the SkyFactory staging service, take and verify a SkyFactory world backup,
 remove the TCP 25566 allowances from UFW and Hetzner, and retain the isolated
-runtime for a later session. Homestead continues running throughout.
+runtime for a later session. The active `mc` release continues running
+throughout.
 
-The Homestead landing page reads `/status`; the SkyFactory page reads
-`/status/skyfactory4`. Each page therefore reports its own concurrent service,
-player count, version, address, and map availability.
+The All of Create landing page reads `/status`; the SkyFactory page reads
+`/status/skyfactory4`. Each page therefore reports its own service, player
+count, version, address, and map availability. The Homestead page records its
+retained rollback state without presenting stale live data.

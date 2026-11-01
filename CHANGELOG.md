@@ -7,6 +7,11 @@
   bootstrap scripts are retained outside the executable path, NeoForge setup
   runs as `minecraft`, RCON credentials are injected at launch, and staging is
   constrained to a loopback listener and a 6 GiB systemd memory ceiling.
+- Made release-slot changes transactional across every post-link operation.
+  A failed integrity-baseline generation, service start, or health check now
+  restores the prior symlink, profile, integrity baseline, and services.
+- Configuration integrity now selects reviewed paths and baselines by active
+  profile, preventing Homestead paths from blocking another isolated release.
 - Fixed profile-variable handling in backup creation and verification:
   SkyFactory now archives `MC_WORLD_PARENT` instead of falling back to the
   Homestead world, and each verification lane honors its own `BACKUP_DIR`.
@@ -37,10 +42,10 @@
   consumer outage (`reports/2026-08-13-backup-incident-and-rcon-remediation.md`).
 
 ### Added
-- All of Create 2.6 candidate for the primary `mc` slot, with explicit
-  NeoForge argument-file launch support, two-boot staging validation, listener
-  isolation checks, and a read-back world archive gate. Homestead 2.0.1 stays
-  unchanged as the rollback release.
+- Promoted All of Create 2.6 to the primary `mc` slot after explicit NeoForge
+  argument-file launch support, two clean staging boots, listener isolation
+  checks, and a read-back world archive gate passed. Homestead 2.0.1 remains
+  unchanged as the one-command rollback release; SkyFactory remains paused.
 - Release-backed `mc` and `sb` slots with guarded, backup-first switching and
   automatic rollback. Homestead 2.0.1 now runs with a fresh world while the
   1.3.6 world, runtime, and final verified archive remain available. Its

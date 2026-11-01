@@ -1,13 +1,14 @@
 # Parallel Works SDLC PoC
 
 Secure software development lifecycle proof of concept for Parallel Works, an
-operating layer for isolated multiplayer worlds. Its current products are
-Homestead 2.0.1 and the limited SkyFactory 4 session. Versioned `mc` and `sb`
+operating layer for isolated multiplayer worlds. Its active primary world is
+All of Create 2.6; Homestead 2.0.1 is retained for rollback and SkyFactory 4
+is a paused secondary session. Versioned `mc` and `sb`
 release slots keep each pack, world, and rollback target isolated. The platform
 runs on a Hetzner CX43 VPS with 30 controls mapped to SOC 2 TSC, ISO 27001
 Annex A, and NIST CSF.
 
-Public site: [play.geigercapital.us](https://play.geigercapital.us) · Homestead: `mc.geigercapital.us` · SkyFactory: `sb.geigercapital.us` · Map: [map.geigercapital.us](https://map.geigercapital.us)
+Public site: [play.geigercapital.us](https://play.geigercapital.us) · All of Create: `mc.geigercapital.us` · SkyFactory: `sb.geigercapital.us` when enabled
 
 ## Structure
 - `infrastructure/` — systemd units, nginx, ufw, scheduled-restart script

@@ -144,6 +144,27 @@
   color: #c4b5fd;
 }
 
+.world-entry--create h2,
+.world-entry--create .address,
+.profile-create .ticker-item--accent {
+  color: #fbbf24;
+}
+
+.create-hero {
+  text-align: center;
+}
+
+.pack-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-lg);
+  image-rendering: pixelated;
+}
+
+.create-actions {
+  justify-content: center;
+}
+
 .world-entry-status {
   display: flex;
   flex-direction: column;

@@ -21,12 +21,12 @@ PROFILE_FILES = {
     "skyfactory4": Path("/etc/minecraft/profiles/skyfactory4-staging.env"),
 }
 DEFAULT_PROFILE = {
-    "MC_PROFILE": "homestead",
-    "MC_PACK_NAME": "Homestead 2.0.1",
-    "MC_MINECRAFT_VERSION": "1.20.1",
+    "MC_PROFILE": "all-of-create",
+    "MC_PACK_NAME": "All of Create 2.6",
+    "MC_MINECRAFT_VERSION": "1.21.1",
     "MC_ADDRESS": "mc.geigercapital.us",
     "RCON_PORT": "25575",
-    "MC_MAP_MODE": "online",
+    "MC_MAP_MODE": "offline",
 }
 
 

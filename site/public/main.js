@@ -278,13 +278,14 @@ function initCommandPalette() {
 
   const items = [
     { icon: '◫', label: 'World Directory', hint: 'Parallel Works', href: '/' },
-    { icon: '🟢', label: 'Homestead', hint: 'Persistent', href: '/homestead.html' },
+    { icon: '🟠', label: 'All of Create', hint: 'Primary', href: '/all-of-create.html' },
+    { icon: '🟢', label: 'Homestead', hint: 'Retained', href: '/homestead.html' },
     { icon: '🟣', label: 'SkyFactory', hint: 'Limited Session', href: '/skyfactory.html' },
     { icon: '📖', label: 'Getting Started', hint: 'Guide', href: '/guide.html' },
     { icon: '📋', label: 'Changelog', hint: 'Updates', href: '/changelog.html' },
     { icon: '🛡️', label: 'Ops & Security', hint: 'SDLC', href: '/ops.html' },
     { icon: '🗺️', label: 'Live Map', hint: 'External', href: 'https://map.geigercapital.us' },
-    { icon: '📦', label: 'Homestead Pack', hint: 'CurseForge', href: 'https://www.curseforge.com/minecraft/modpacks/homestead-cozy' },
+    { icon: '📦', label: 'All of Create Pack', hint: 'CurseForge', href: 'https://www.curseforge.com/minecraft/modpacks/aoc/files/9164652' },
     { icon: '💬', label: 'Community', hint: 'Coming Soon', href: '#' },
     { icon: '#', label: 'Stats', hint: 'Section', action: () => scrollToSelector('.stats') },
     { icon: '🏗️', label: 'Featured Build', hint: 'Section', action: () => scrollToSelector('.spotlight') },
@@ -456,6 +457,18 @@ function initServerStatus() {
     if (versionEl) versionEl.textContent = '';
   };
 
+  if (document.body.dataset.profile === 'homestead-retained') {
+    offline('Retained offline');
+    if (address) address.textContent = 'Rollback release';
+    if (versionEl) versionEl.textContent = 'Homestead 2.0.1 · Minecraft 1.20.1';
+    if (mapLink) {
+      mapLink.removeAttribute('href');
+      mapLink.textContent = 'Map Offline';
+      mapLink.setAttribute('aria-disabled', 'true');
+    }
+    return;
+  }
+
   async function fetchStatus() {
     const ctl = new AbortController();
     const bail = setTimeout(() => ctl.abort(), 8000);
@@ -516,7 +529,7 @@ function initWorldDirectory() {
   if (document.body.dataset.page !== 'worlds') return;
 
   const worlds = [
-    { id: 'homestead', endpoint: '/status' },
+    { id: 'all-of-create', endpoint: '/status' },
     { id: 'skyfactory', endpoint: '/status/skyfactory4' },
   ];
 

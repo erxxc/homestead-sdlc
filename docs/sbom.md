@@ -13,6 +13,8 @@
 | Source | Count | Verification |
 |---|---|---|
 | Official Homestead server pack (2.0.1) | 305 bundled mods | SHA-256 checksum |
+| Official All of Create server pack (2.6) | 181 active mod jars | SHA-256 checksum |
+| NeoForge installer (21.1.256) | Pinned loader installer | SHA-256 checksum |
 | Client-only mods removed | 45 | Excluded from server deployment |
 | FTB mods (manual transfer) | 6 | SHA-256 checksum |
 | Performance mods (Modrinth, gated install) | 5 | SHA-512 at download + SHA-256 baseline |
@@ -46,7 +48,12 @@
 - Automated verification runs as systemd ExecStartPre on every server start
 - Any checksum failure stops the server and logs to /var/log/minecraft-integrity.log
 - Checksum baseline regenerated after any approved mod addition or update
-- Active modpack version: Homestead 2.0.1, deployed 2026-10-31 from the official server pack; Homestead 1.3.6 remains retained as a disabled release.
+- Active modpack version: All of Create 2.6 on Minecraft 1.21.1 and NeoForge
+  21.1.256. Homestead 2.0.1 and 1.3.6 remain retained as disabled releases.
+- All of Create pack SHA-256:
+  `62d50ce36847068ecb40e1653f2f5e3bfedf8c8d4daffbb645055536e21b67d0`.
+- NeoForge installer SHA-256:
+  `4aad931e8fd85fbf6ba35bab647811069d35ff010900492e39db1cb8b017348c`.
 - The 2.0.1 per-mod checksum baseline was generated during deployment. The previous release retains its own baseline for rollback verification.
 
 ## Infrastructure Dependencies

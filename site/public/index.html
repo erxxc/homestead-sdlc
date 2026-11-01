@@ -13,7 +13,7 @@
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#0a0a0a">
   <meta property="og:title" content="Parallel Works">
-  <meta property="og:description" content="Independent worlds, shared infrastructure. Explore Homestead and SkyFactory 4.">
+  <meta property="og:description" content="Independent worlds, shared infrastructure. Explore All of Create, Homestead, and SkyFactory.">
   <meta property="og:image" content="https://play.geigercapital.us/apple-touch-icon.png">
   <meta property="og:url" content="https://play.geigercapital.us">
   <meta name="twitter:card" content="summary">
@@ -67,17 +67,29 @@
     </section>
 
     <section class="world-list container" aria-label="Available worlds">
-      <article class="world-entry world-entry--homestead reveal">
+      <article class="world-entry world-entry--create reveal">
         <div class="world-entry-main">
-          <div class="world-entry-meta"><span>Persistent world</span><span>Homestead 2.0.1 · Fabric 1.20.1</span></div>
-          <h2>Homestead</h2>
-          <p>A long-running cooperative world built around Create, farming, building, and a town worth returning to.</p>
+          <div class="world-entry-meta"><span>Primary world</span><span>All of Create 2.6 · NeoForge 1.21.1</span></div>
+          <h2>All of Create</h2>
+          <p>A fresh industrial world built around Create, connected power grids, electrical systems, and a quested nuclear endgame.</p>
         </div>
         <div class="world-entry-status">
-          <div class="world-live-state" id="homestead-state" role="status" aria-live="polite"><span class="status-dot"></span><span>Checking...</span></div>
+          <div class="world-live-state" id="all-of-create-state" role="status" aria-live="polite"><span class="status-dot"></span><span>Checking...</span></div>
           <div class="address">mc.geigercapital.us</div>
-          <div class="players" id="homestead-players"></div>
-          <a href="/homestead.html" class="btn btn--primary">Open Homestead</a>
+          <div class="players" id="all-of-create-players"></div>
+          <a href="/all-of-create.html" class="btn btn--primary">Open All of Create</a>
+        </div>
+      </article>
+
+      <article class="world-entry world-entry--homestead reveal">
+        <div class="world-entry-main">
+          <div class="world-entry-meta"><span>Retained release</span><span>Homestead 2.0.1 · Fabric 1.20.1</span></div>
+          <h2>Homestead</h2>
+          <p>The complete 2.0.1 runtime and world remain available as the tested rollback release for the primary slot.</p>
+        </div>
+        <div class="world-entry-status">
+          <div class="world-live-state"><span class="status-dot status-dot--offline"></span><span>Retained offline</span></div>
+          <a href="/homestead.html" class="btn btn--secondary">View Homestead</a>
         </div>
       </article>
 
@@ -85,7 +97,7 @@
         <div class="world-entry-main">
           <div class="world-entry-meta"><span>Limited session</span><span>Forge 1.12.2</span></div>
           <h2>SkyFactory</h2>
-          <p>A fresh skyblock experiment running in an isolated world beside Homestead for a short-form group session.</p>
+          <p>An isolated skyblock world retained for short sessions when the secondary slot is enabled.</p>
         </div>
         <div class="world-entry-status">
           <div class="world-live-state" id="skyfactory-state" role="status" aria-live="polite"><span class="status-dot"></span><span>Checking...</span></div>
@@ -104,7 +116,7 @@
   </main>
 
   <footer class="footer">
-    <div class="footer-text">Parallel Works · Homestead · SkyFactory</div>
+    <div class="footer-text">Parallel Works · All of Create · Homestead · SkyFactory</div>
   </footer>
 </body>
 </html>

@@ -3,8 +3,18 @@
 set -euo pipefail
 
 action=${1:-verify}
-paths_file=/etc/minecraft/integrity/paths
-baseline=/etc/minecraft/integrity/config.sha256
+profile=${MC_PROFILE:-}
+if [ -z "$profile" ] && [ -r /etc/minecraft/profiles/homestead.env ]; then
+    profile=$(sed -n 's/^MC_PROFILE=//p' /etc/minecraft/profiles/homestead.env | tail -1 | tr -d '"')
+fi
+profile=${profile:-homestead}
+case "$profile" in *[!a-zA-Z0-9._-]*|'') echo "invalid integrity profile: $profile" >&2; exit 1 ;; esac
+paths_file=/etc/minecraft/integrity/paths.$profile
+baseline=/etc/minecraft/integrity/config.$profile.sha256
+if [ "$profile" = homestead ] && [ ! -e "$paths_file" ]; then
+    paths_file=/etc/minecraft/integrity/paths
+    baseline=/etc/minecraft/integrity/config.sha256
+fi
 log=/var/log/minecraft-integrity.log
 
 log_event() {
