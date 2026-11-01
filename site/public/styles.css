@@ -241,6 +241,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.tip a,
+.subtitle a {
+  color: var(--color-green-bright);
+  text-decoration-color: rgba(74, 222, 128, 0.45);
+  text-underline-offset: 3px;
+}
+
 /* ── Navigation ── */
 
 .nav {
@@ -758,15 +765,41 @@ p {
 
   .nav {
     padding: var(--space-sm) var(--space-md);
-    gap: var(--space-md);
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-sm) var(--space-md);
   }
 
   .nav-links {
-    gap: var(--space-md);
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+    gap: var(--space-sm);
   }
 
   .container {
+    width: 100%;
+    min-width: 0;
     padding: var(--space-xl) var(--space-md);
+  }
+
+  .main {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .status,
+  .version-block,
+  .step,
+  .world-entry,
+  .world-entry-main,
+  .world-entry-status {
+    min-width: 0;
+  }
+
+  .address {
+    overflow-wrap: anywhere;
   }
 
   .step {
@@ -1872,7 +1905,7 @@ body.time-night .particles .particle { background: rgba(74, 222, 128, 0.3); }
    first thing that has to go, but the glyph still marks the parent. */
 @media (max-width: 760px) {
   .nav-parent-text { display: none; }
-  .nav-parent { margin-left: var(--space-md); padding-left: var(--space-md); }
+  .nav-parent { margin-left: var(--space-sm); padding-left: var(--space-md); }
 }
 
 @media print {
@@ -1954,6 +1987,8 @@ body.time-night .particles .particle { background: rgba(74, 222, 128, 0.3); }
 
 .session-badge {
   display: inline-flex;
+  max-width: 100%;
+  justify-content: center;
   margin-bottom: var(--space-lg);
   padding: 7px 12px;
   border: 1px solid rgba(192, 132, 252, 0.35);
@@ -1961,6 +1996,8 @@ body.time-night .particles .particle { background: rgba(74, 222, 128, 0.3); }
   color: var(--color-green-bright);
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-wider);
+  line-height: 1.5;
+  text-align: center;
   text-transform: uppercase;
 }
 
